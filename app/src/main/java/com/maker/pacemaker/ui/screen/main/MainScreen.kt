@@ -132,11 +132,12 @@ fun MainScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewModel, v
             modifier = Modifier
                 .fillMaxWidth()
                 .height(360.dp)
-                .padding(start = 20.dp, end = 20.dp)
+                .padding(start = 20.dp, end = 20.dp, bottom = 5.dp)
                 .constrainAs(contentBox) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    top.linkTo(ranking.bottom, margin = 20.dp)
+                    top.linkTo(ranking.bottom)
+                    bottom.linkTo(bottomBar.top)
                 },
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally

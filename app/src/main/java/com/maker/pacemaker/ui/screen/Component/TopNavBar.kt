@@ -26,7 +26,8 @@ fun TopNavBar(baseViewModel: BaseViewModel) {
 
     ConstraintLayout(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .height(60.dp)
             .background(Color.Transparent) //color = Color(0xFFFAFAFA))
     ) {
         // Constraints 정의
@@ -37,7 +38,7 @@ fun TopNavBar(baseViewModel: BaseViewModel) {
                 .background(Color.Transparent)
                 .fillMaxWidth()
                 .height(60.dp)
-                .padding(top = 20.dp, start = 30.dp, end = 30.dp)
+                .padding(start = 30.dp, end = 30.dp)
                 .constrainAs(navBar) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)

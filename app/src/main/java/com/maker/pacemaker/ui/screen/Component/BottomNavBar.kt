@@ -56,7 +56,7 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
         ) {
             // 랭킹
             Image(
-                painter = painterResource(id = R.drawable.alarm),
+                painter = painterResource(id = R.drawable.trophy),
                 contentDescription = "Ranking",
                 modifier = Modifier
                     .size(40.dp)
@@ -67,7 +67,7 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
 
             // 문제 검색
             Image(
-                painter = painterResource(id = R.drawable.alarm),
+                painter = painterResource(id = R.drawable.search),
                 contentDescription = "Search",
                 modifier = Modifier
                     .size(40.dp)
@@ -78,7 +78,7 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
 
             // 실험실
             Image(
-                painter = painterResource(id = R.drawable.alarm),
+                painter = painterResource(id = R.drawable.lab),
                 contentDescription = "Lab",
                 modifier = Modifier
                     .size(40.dp)
@@ -89,7 +89,7 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
 
             // etc...
             Image(
-                painter = painterResource(id = R.drawable.alarm),
+                painter = painterResource(id = R.drawable.setting),
                 contentDescription = "Etc",
                 modifier = Modifier
                     .size(40.dp)
