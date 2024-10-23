@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 open class BaseViewModel : ViewModel() {
 
     // 전역 Context 접근
-    //private val context: Context by lazy { MyApplication.getContext() }
+    private val context: Context by lazy { MyApplication.getContext() }
 
     // SharedPreferences 접근
     //protected val sharedPreferences: SharedPreferences

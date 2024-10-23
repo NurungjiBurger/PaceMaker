@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-
+    id("kotlin-kapt") // Room annotation processor
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -35,19 +36,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "1.8" // 또는 "17"로 변경 가능 (코틀린 1.8.0 이상에서 사용)
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.1" // Compose Compiler 버전도 확인
     }
 }
 
 dependencies {
-
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -60,6 +59,17 @@ dependencies {
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+
+    // Room
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1") // annotationProcessor는 제거
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    // hilt
+    implementation("com.google.dagger:hilt-android:2.46") // 힐트 버전 업데이트
+    kapt("com.google.dagger:hilt-compiler:2.46") // Hilt 컴파일러 버전 업데이트
+
+    implementation(libs.androidx.material3.v100alpha06)
 
     // 지문 인증
     implementation(libs.androidx.biometric)
@@ -88,7 +98,7 @@ dependencies {
 
     // 이미지 로딩
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
 
     // mqtt
     implementation(libs.org.eclipse.paho.client.mqttv3)
@@ -101,10 +111,18 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.8")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.8")
 
+    // Coroutine for background processing
+    implementation(libs.kotlinx.coroutines.core.v160)
+    implementation(libs.kotlinx.coroutines.android.v160)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation("com.google.android.material:material:1.12.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+kapt {
+    correctErrorTypes = true
 }

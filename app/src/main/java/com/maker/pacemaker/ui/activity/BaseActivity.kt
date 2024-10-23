@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 open class BaseActivity : ComponentActivity() {
 
     protected lateinit var baseViewModel: BaseViewModel

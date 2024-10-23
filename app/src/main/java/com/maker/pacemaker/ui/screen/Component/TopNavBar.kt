@@ -2,6 +2,7 @@ package com.maker.pacemaker.ui.screen.Component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
+import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.data.model.test.DummyBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 
@@ -58,6 +60,9 @@ fun TopNavBar(baseViewModel: BaseViewModel) {
                 painter = painterResource(id = R.drawable.alarm),
                 contentDescription = "alarm",
                 modifier = Modifier.size(40.dp)
+                    .clickable(onClick = {
+                        baseViewModel.goScreen(ScreenType.ALARM)
+                    })
             )
         }
 
