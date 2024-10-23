@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 open class BaseViewModel : ViewModel() {
 
     // 전역 Context 접근
-    private val context: Context by lazy { MyApplication.getContext() }
+   // private val context: Context by lazy { MyApplication.getContext() }
 
     //private val networkStatusTracker = NetworkStatusTracker(application)
 
@@ -41,11 +41,11 @@ open class BaseViewModel : ViewModel() {
     val screenNavigationTo: LiveData<ScreenNavigationTo> get() = _screenNavigationTo
 
     // SharedPreferences 접근
-    protected val sharedPreferences: SharedPreferences
-        get() = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+    //protected val sharedPreferences: SharedPreferences
+        //get() = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 
     // Editor 객체를 가져옵니다.
-    protected val editor = sharedPreferences.edit()
+    //protected val editor = sharedPreferences.edit()
 
     init {
         viewModelScope.launch {

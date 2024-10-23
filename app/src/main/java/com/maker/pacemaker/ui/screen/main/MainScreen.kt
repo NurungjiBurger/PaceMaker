@@ -23,6 +23,7 @@ import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import androidx.constraintlayout.compose.ConstraintLayout
 
+
 @Composable
 fun MainScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewModel, viewModel: MainScreenViewModel) {
 
@@ -92,3 +93,4 @@ fun MainScreenPreview() {
     // 모든 더미 ViewModel을 전달하여 미리보기 실행
     MainScreen(dummyBaseViewModel, dummyMainBaseViewModel, dummyMainScreenViewModel)
 }
+
