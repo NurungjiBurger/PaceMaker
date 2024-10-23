@@ -6,6 +6,10 @@ import kotlinx.coroutines.flow.Flow
 
 class AlarmRepository(private val alarmDao: AlarmDao) {
 
+    suspend fun insertAlarm(alarm: AlarmEntity) {
+        alarmDao.insertAlarm(alarm)
+    }
+
     fun getAllAlarms(): Flow<List<AlarmEntity>> {
         return alarmDao.getAllAlarms() // Flow<List<AlarmEntity>>
     }

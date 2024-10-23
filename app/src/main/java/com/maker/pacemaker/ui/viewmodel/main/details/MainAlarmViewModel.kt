@@ -38,6 +38,14 @@ open class MainAlarmScreenViewModel @Inject constructor(
         }
     }
 
+    fun addAlarm(alarmType: String, content: String, dateTime: Long) {
+        viewModelScope.launch {
+            val newAlarm = AlarmEntity(alarmType = alarmType, content = content, dateTime = dateTime)
+            alarmRepository.insertAlarm(newAlarm) // 새 알람을 데이터베이스에 추가
+            loadAlarms() // 알람 목록을 다시 로드하여 UI 업데이트
+        }
+    }
+
     fun deleteAlarm(alarm: AlarmEntity) {
         viewModelScope.launch {
             alarmRepository.deleteAlarm(alarm)

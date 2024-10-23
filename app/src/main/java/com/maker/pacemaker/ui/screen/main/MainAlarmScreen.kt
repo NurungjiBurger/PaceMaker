@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
@@ -38,7 +41,7 @@ fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMod
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
-        val (upBar, contentBox) = createRefs()
+        val (upBar, addButton, contentBox) = createRefs()
 
         Box(
             modifier = Modifier
@@ -51,6 +54,17 @@ fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMod
         )
         {
             UpBar(baseViewModel, "새 소식", false, ActivityType.FINISH, ScreenType.MAIN)
+        }
+
+        Button(
+            onClick = { viewModel.addAlarm("New Alarm", "This is a new alarm!", System.currentTimeMillis()) }, // 알람 추가
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(addButton) {
+                    bottom.linkTo(parent.bottom, margin = 16.dp)
+                }
+        ) {
+            Text(text = "Add Alarm")
         }
 
         LazyColumn(

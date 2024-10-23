@@ -66,8 +66,8 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
 
     // hilt
-    implementation("com.google.dagger:hilt-android:2.46") // 힐트 버전 업데이트
-    kapt("com.google.dagger:hilt-compiler:2.46") // Hilt 컴파일러 버전 업데이트
+    implementation("com.google.dagger:hilt-android:2.46.1") // 힐트 버전 업데이트
+    kapt("com.google.dagger:hilt-compiler:2.46.1") // Hilt 컴파일러 버전 업데이트
 
     implementation(libs.androidx.material3.v100alpha06)
 
