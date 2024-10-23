@@ -12,17 +12,17 @@ class PreviewTest {
 class MockApplication : Application()
 
 // 미리보기를 위한 더미 ViewModel
-class DummyBaseViewModel(application: Application) : BaseViewModel(application) {
+class DummyBaseViewModel() : BaseViewModel() {
     fun navigateToScreen() {
         // 미리보기에서 처리할 로직 (예: 아무것도 안 하거나 로그 출력)
     }
 }
 
-class DummyMainBaseViewModel(application: Application) : MainBaseViewModel(application) {
+class DummyMainBaseViewModel() : MainBaseViewModel() {
     // 필요한 상태나 메서드를 정의
 }
 
 // 미리보기를 위한 더미 MainScreenViewModel
-class DummyMainScreenViewModel(application: Application) : MainScreenViewModel(application) {
+class DummyMainScreenViewModel() : MainScreenViewModel() {
     // 필요한 상태나 메서드를 정의
 }

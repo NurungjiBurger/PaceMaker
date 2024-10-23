@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maker.pacemaker.data.model.ScreenType
@@ -82,11 +83,11 @@ fun MainScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewModel, v
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    // MockApplication을 생성하여 더미 ViewModel을 전달
-    val mockApplication = MockApplication()
-    val dummyBaseViewModel = DummyBaseViewModel(mockApplication)
-    val dummyMainScreenViewModel = DummyMainScreenViewModel(mockApplication)
-    val dummyMainBaseViewModel = DummyMainBaseViewModel(mockApplication)
+
+    // MockApplication 대신 Application 컨텍스트를 직접 전달합니다.
+    val dummyBaseViewModel = DummyBaseViewModel()
+    val dummyMainScreenViewModel = DummyMainScreenViewModel()
+    val dummyMainBaseViewModel = DummyMainBaseViewModel()
 
     // 모든 더미 ViewModel을 전달하여 미리보기 실행
     MainScreen(dummyBaseViewModel, dummyMainBaseViewModel, dummyMainScreenViewModel)

@@ -1,5 +1,6 @@
 package com.maker.pacemaker.ui.screen.main
 
+import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
@@ -9,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -82,11 +84,10 @@ fun MainTestScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMode
 @Preview(showBackground = true)
 @Composable
 fun MainTestScreenPreview() {
-    // MockApplication을 생성하여 더미 ViewModel을 전달
-    val mockApplication = MockApplication()
-    val dummyBaseViewModel = DummyBaseViewModel(mockApplication)
-    val dummyMainScreenViewModel = DummyMainScreenViewModel(mockApplication)
-    val dummyMainBaseViewModel = DummyMainBaseViewModel(mockApplication)
+
+    val dummyBaseViewModel = DummyBaseViewModel()
+    val dummyMainScreenViewModel = DummyMainScreenViewModel()
+    val dummyMainBaseViewModel = DummyMainBaseViewModel()
 
     // 모든 더미 ViewModel을 전달하여 미리보기 실행
     MainScreen(dummyBaseViewModel, dummyMainBaseViewModel, dummyMainScreenViewModel)
