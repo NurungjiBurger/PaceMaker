@@ -48,14 +48,13 @@ fun AlarmBox(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Red),
+                    .background(Color.Transparent),
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Text("삭제", color = Color.White, modifier = Modifier.padding(16.dp))
             }
         },
         dismissContent = {
-            // 기존 AlarmBox UI 내용
             ConstraintLayout(
                 modifier = Modifier
                     .fillMaxWidth()
