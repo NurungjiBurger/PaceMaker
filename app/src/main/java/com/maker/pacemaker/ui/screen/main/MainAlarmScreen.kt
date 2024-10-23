@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -34,7 +36,7 @@ import java.util.Locale
 @Composable
 fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewModel, viewModel: MainAlarmScreenViewModel) {
 
-    val alarms by viewModel.alarms.collectAsState()
+    val alarms by viewModel.alarms.collectAsState(initial = emptyList())
 
     ConstraintLayout(
         modifier = Modifier
@@ -57,30 +59,34 @@ fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMod
         }
 
         Button(
-            onClick = { viewModel.addAlarm("New Alarm", "This is a new alarm!", System.currentTimeMillis()) }, // 알람 추가
+            onClick = {
+                viewModel.addAlarm("공지사항", "This is a new alarm!", System.currentTimeMillis()) // 알람 추가
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .constrainAs(addButton) {
-                    bottom.linkTo(parent.bottom, margin = 16.dp)
-                }
+                .padding(16.dp)
         ) {
             Text(text = "Add Alarm")
         }
 
         LazyColumn(
-            modifier = Modifier.constrainAs(contentBox) {
+            modifier = Modifier
+                .constrainAs(contentBox) {
                 top.linkTo(upBar.bottom)
                 bottom.linkTo(parent.bottom)
             }
         ) {
+            println("Alarms: ${alarms.size}")
+
             items(alarms) { alarm ->
                 AlarmBox(
                     baseViewModel = baseViewModel,
+                    alarmId = alarm.id,
                     alarmType = alarm.alarmType,
                     content = alarm.content,
                     dateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(alarm.dateTime)
                     ),
-                    onDismiss = { viewModel.deleteAlarm(alarm) } // 삭제 콜백
+                    onDismiss = { viewModel.deleteAlarm(alarm.id) } // 삭제 콜백
                 )
             }
         }

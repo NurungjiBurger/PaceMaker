@@ -1,5 +1,6 @@
 package com.maker.pacemaker.ui.viewmodel.main.details
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.maker.pacemaker.data.model.db.AlarmDao
 import com.maker.pacemaker.data.model.db.AlarmDatabase
@@ -7,6 +8,8 @@ import com.maker.pacemaker.data.model.db.AlarmEntity
 import com.maker.pacemaker.data.model.repository.AlarmRepository
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class MainAlarmScreenViewModel @Inject constructor(
-    private val alarmDao: AlarmDao
+    alarmDao: AlarmDao
 ) : MainBaseViewModel() {
 
     private val alarmRepository = AlarmRepository(alarmDao)
@@ -26,31 +29,35 @@ open class MainAlarmScreenViewModel @Inject constructor(
     val alarms: StateFlow<List<AlarmEntity>> get() = _alarms
 
     init {
-        // Repository 초기화
-        loadAlarms()
+        loadAlarms() // 초기 알람 로드
     }
 
     private fun loadAlarms() {
         viewModelScope.launch {
             alarmRepository.getAllAlarms().collect { alarmList ->
-                _alarms.value = alarmList.sortedByDescending { it.id } // ID 기준 내림차순 정렬
+                _alarms.value = alarmList // 정렬 없이 그대로 할당
+                Log.d("MainAlarmScreenViewModel", "Alarms loaded: $alarmList") // 로드된 알람 출력
             }
         }
     }
+
 
     fun addAlarm(alarmType: String, content: String, dateTime: Long) {
         viewModelScope.launch {
             val newAlarm = AlarmEntity(alarmType = alarmType, content = content, dateTime = dateTime)
             alarmRepository.insertAlarm(newAlarm) // 새 알람을 데이터베이스에 추가
-            loadAlarms() // 알람 목록을 다시 로드하여 UI 업데이트
+
+            // 알람 목록을 다시 로드하여 UI 업데이트
+            //loadAlarms()
+            Log.d("MainAlarmScreenViewModel", "New alarm added: $newAlarm") // 업데이트된 알람 출력
+            Log.d("MainAlarmScreenViewModel", "Alarms after addition: ${_alarms.value}") // 현재 알람 목록 출력
         }
     }
 
-    fun deleteAlarm(alarm: AlarmEntity) {
+    fun deleteAlarm(alarmId: Long) {
         viewModelScope.launch {
-            alarmRepository.deleteAlarm(alarm)
-            loadAlarms()
+            alarmRepository.deleteAlarmById(alarmId) // ID로 알람 삭제
+            loadAlarms() // 알람 삭제 후 목록 다시 로드
         }
     }
-
 }

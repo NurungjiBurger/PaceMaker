@@ -2,21 +2,8 @@ package com.maker.pacemaker.ui.screen.Component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.SwipeToDismissBoxValue
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,32 +18,44 @@ import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmBox(
     baseViewModel: BaseViewModel,
+    alarmId: Long,
     alarmType: String,
     content: String,
     dateTime: String,
     onDismiss: () -> Unit // 삭제 콜백 추가
 ) {
-    // Dismiss 상태 초기화
-    val dismissState = rememberSwipeToDismissBoxState()
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = { dismissValue ->
+            when (dismissValue) {
+                SwipeToDismissBoxValue.EndToStart -> {
+                    onDismiss() // 삭제 콜백 호출
+                    false // 상태를 false로 설정하여 삭제로 간주
+                }
+                else -> true // 스와이프가 취소된 경우
+            }
+        },
+        positionalThreshold = { it * 0.7f } // 스와이프 감지 임계값 설정
+    )
 
     SwipeToDismiss(
         state = dismissState,
         background = {
             // 삭제 배경
             Box(
-                modifier = Modifier.fillMaxWidth().background(Color.Red),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Red),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                Text("삭제", color = Color.White)
+                Text("삭제", color = Color.White, modifier = Modifier.padding(16.dp))
             }
         },
         dismissContent = {
-            // 기존 AlarmBox 코드
+            // 기존 AlarmBox UI 내용
             ConstraintLayout(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -64,10 +63,7 @@ fun AlarmBox(
                     .padding(start = 5.dp, end = 10.dp)
                     .background(Color.Transparent)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
                     Box(
                         modifier = Modifier
                             .background(color = Color(0xFFDFDFDF))
@@ -79,15 +75,14 @@ fun AlarmBox(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(start = 10.dp, end = 10.dp, top = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
                             painter = painterResource(
-                                id = when (alarmType) {
-                                    alarmType.contains("학습").toString() -> R.drawable.alarm
-                                    alarmType.contains("공지").toString() -> R.drawable.siren
-                                    alarmType.contains("경험치").toString() -> R.drawable.trophy
+                                id = when {
+                                    alarmType.contains("학습") -> R.drawable.alarm
+                                    alarmType.contains("공지") -> R.drawable.siren
+                                    alarmType.contains("경험치") -> R.drawable.trophy
                                     else -> R.drawable.siren
                                 }
                             ),
@@ -126,20 +121,19 @@ fun AlarmBox(
             }
         }
     )
-
-    // Swipe 상태에 따라 삭제 콜백 호출
-    if (dismissState.dismissDirection != SwipeToDismissBoxValue.EndToStart) {
-        onDismiss() // onDismiss를 호출합니다.
-    }
 }
-
-
 
 @Composable
 @Preview
 fun PreviewAlarmBox() {
-
-    //val baseViewModel = DummyMainBaseViewModel()
-
-    //AlarmBox(baseViewModel, "알람", "알람 내용", "11월 28일")
+    // Dummy ViewModel을 사용한 미리보기
+    val baseViewModel = DummyMainBaseViewModel()
+    AlarmBox(
+        baseViewModel = baseViewModel,
+        alarmId = 1L,
+        alarmType = "공지",
+        content = "새로운 공지가 있습니다.",
+        dateTime = "2024-10-24 12:00:00",
+        onDismiss = { /* 삭제 처리 로직 */ }
+    )
 }
