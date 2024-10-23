@@ -5,7 +5,7 @@ import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class MainTestScreenViewModel(application: Application) : MainBaseViewModel(application) {
+class MainTestScreenViewModel() : MainBaseViewModel() {
 
     // MutableStateFlow로 balance 값을 관리
     private val _balance = MutableStateFlow(0L)

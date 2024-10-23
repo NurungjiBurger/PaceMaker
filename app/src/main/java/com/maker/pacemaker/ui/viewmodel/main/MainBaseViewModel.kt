@@ -3,6 +3,6 @@ package com.maker.pacemaker.ui.viewmodel.main
 import android.app.Application
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 
-open class MainBaseViewModel(application: Application) : BaseViewModel(application) {
+open class MainBaseViewModel() : BaseViewModel() {
 
 }

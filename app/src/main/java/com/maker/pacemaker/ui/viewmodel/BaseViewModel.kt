@@ -6,16 +6,20 @@ import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maker.pacemaker.MyApplication
 import com.maker.pacemaker.data.model.ActivityNavigationTo
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenNavigationTo
 import com.maker.pacemaker.data.model.ScreenType
 import kotlinx.coroutines.launch
 
-open class BaseViewModel(application: Application) : AndroidViewModel(application) {
+open class BaseViewModel : ViewModel() {
 
-    private val context: Context = application.applicationContext
+    // 전역 Context 접근
+    private val context: Context by lazy { MyApplication.getContext() }
+
     //private val networkStatusTracker = NetworkStatusTracker(application)
 
 
