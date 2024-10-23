@@ -33,6 +33,7 @@ open class MainAlarmScreenViewModel @Inject constructor(
     }
 
     private fun loadAlarms() {
+        _alarms.value = emptyList() // 초기화
         viewModelScope.launch {
             alarmRepository.getAllAlarms().collect { alarmList ->
                 _alarms.value = alarmList // 정렬 없이 그대로 할당
@@ -46,18 +47,14 @@ open class MainAlarmScreenViewModel @Inject constructor(
         viewModelScope.launch {
             val newAlarm = AlarmEntity(alarmType = alarmType, content = content, dateTime = dateTime)
             alarmRepository.insertAlarm(newAlarm) // 새 알람을 데이터베이스에 추가
-
-            // 알람 목록을 다시 로드하여 UI 업데이트
-            //loadAlarms()
-            Log.d("MainAlarmScreenViewModel", "New alarm added: $newAlarm") // 업데이트된 알람 출력
-            Log.d("MainAlarmScreenViewModel", "Alarms after addition: ${_alarms.value}") // 현재 알람 목록 출력
         }
+        loadAlarms()
     }
 
     fun deleteAlarm(alarmId: Long) {
         viewModelScope.launch {
             alarmRepository.deleteAlarmById(alarmId) // ID로 알람 삭제
-            loadAlarms() // 알람 삭제 후 목록 다시 로드
         }
+        loadAlarms()
     }
 }
