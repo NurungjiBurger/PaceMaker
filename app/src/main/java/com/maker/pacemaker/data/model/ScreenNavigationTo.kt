@@ -18,5 +18,10 @@ enum class ScreenType(val navigateTo: (NavController) -> Unit) {
     ALARM({ navController -> navController.navigate("alarmScreen") }),
     MYPAGE({ navController -> navController.navigate("mypageScreen") }),
 
+    // 세팅
+    DAILY({ navController -> navController.navigate("dailyScreen") }),
+    RATIO({ navController -> navController.navigate("ratioScreen") }),
+    CATEGORY({ navController -> navController.navigate("categoryScreen") }),
+    LEVELTEST({ navController -> navController.navigate("levelTestScreen") }),
 
 }

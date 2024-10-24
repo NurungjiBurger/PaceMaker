@@ -1,6 +1,5 @@
 //package com.maker.pacemaker.ui.screen.sign
 //
-//
 //import androidx.compose.foundation.background
 //import androidx.compose.foundation.layout.fillMaxSize
 //import androidx.compose.foundation.layout.height
@@ -17,16 +16,15 @@
 //import androidx.compose.runtime.getValue
 //import androidx.compose.runtime.mutableStateOf
 //import androidx.compose.runtime.remember
-//import androidx.compose.ui.tooling.preview.Preview
 //import androidx.compose.ui.Modifier
 //import androidx.compose.ui.graphics.Color
 //import androidx.compose.ui.text.TextStyle
 //import androidx.compose.ui.text.font.FontWeight
 //import androidx.compose.ui.text.input.TextFieldValue
+//import androidx.compose.ui.tooling.preview.Preview
 //import androidx.compose.ui.unit.dp
 //import androidx.compose.ui.unit.sp
 //import androidx.constraintlayout.compose.ConstraintLayout
-//import androidx.navigation.compose.rememberNavController
 //import com.maker.pacemaker.data.model.ScreenType
 //import com.maker.pacemaker.data.model.test.DummyBaseViewModel
 //import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
@@ -36,32 +34,15 @@
 //
 //
 //@Composable
-//fun SignScreen(baseViewModel: BaseViewModel, mainViewModel: BaseViewModel, viewModel: MainScreenViewModel) {
-//
+//fun SignAuthScreen(baseViewModel: BaseViewModel, mainViewModel: BaseViewModel, viewModel: MainScreenViewModel) {
 //
 //    ConstraintLayout(
 //        modifier = Modifier
 //            .fillMaxSize()
 //            .background(color = Color(0xFFF4F2EE))
 //    ) {
-//
 //        val (titleText,authButton,minititleText,emailField) = createRefs()
 //        val emailState = remember { mutableStateOf(TextFieldValue("")) }
-//        val navController = rememberNavController()
-//
-////        Image(
-////            painter = painterResource(id = R.drawable.img), // 실제 이미지 파일 이름으로 교체
-////            contentDescription = "Clickable Image",
-////            modifier = Modifier
-////                .size(20.dp) // 원하는 크기로 설정
-////                .constrainAs(arrowImage) {
-////                    top.linkTo(parent.top, margin = 25.dp) // 부모의 상단에 여백을 두고 배치
-////                    start.linkTo(parent.start, margin = 25.dp)
-////                }
-////                .clickable {
-////                    navController.navigate("detailScreen") // DetailScreen으로 이동
-////                }
-////        )
 //
 //        Text(
 //            text = "이메일 인증",
@@ -88,7 +69,7 @@
 //                    top.linkTo(titleText.bottom, margin = 32.dp) // 부모의 상단에 연결
 //                    start.linkTo(parent.start, margin = 25.dp) // 부모의 왼쪽에 연결
 //                }
-//                //.padding(bottom = 10.dp) // 텍스트 아래에 여백 추가
+//            //.padding(bottom = 10.dp) // 텍스트 아래에 여백 추가
 //        )
 //
 //        TextField(
@@ -132,24 +113,24 @@
 //            )
 //        }
 //
+//
 //    }
+//
 //}
 //
-//@Composable
-//fun DetailScreen() {
-//    Text(text = "부트 화면2으로 돌아가자")
-//}
+//
+//
 //
 //@Preview(showBackground = true)
 //@Composable
-//fun SignScreenPreview() {
+//fun SignAuthScreenPreview() {
 //    // Preview용 더미 ViewModel을 생성하여 직접 사용
 //
 //
 //    val baseViewModel = DummyBaseViewModel()
-//    val mainScreenViewModel = DummyMainScreenViewModel()
-//    val signViewModel = DummyMainBaseViewModel()
+//    val signAuthscreenViewModel = DummyMainScreenViewModel()
+//    val signAuthViewModel = DummyMainBaseViewModel()
 //
 //    // 모든 더미 ViewModel을 전달하여 미리보기 실행
-//    SignScreen(baseViewModel, signViewModel, mainScreenViewModel)
+//    SignAuthScreen(baseViewModel, signAuthViewModel, signAuthscreenViewModel)
 //}

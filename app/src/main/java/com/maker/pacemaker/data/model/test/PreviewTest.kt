@@ -8,6 +8,8 @@ import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainMenuScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainMyPageScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.setting.SettingBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.setting.details.SettingDailyScreenViewModel
 
 class PreviewTest {
 }
@@ -40,5 +42,13 @@ class DummyMainMenuScreenViewModel() : MainMenuScreenViewModel() {
 }
 
 class DummyMainMyPageScreenViewModel() : MainMyPageScreenViewModel() {
+    // 필요한 상태나 메서드를 정의
+}
+
+class DummySettingBaseViewModel() : SettingBaseViewModel() {
+    // 필요한 상태나 메서드를 정의
+}
+
+class DummySettingDailyScreenViewModel() : SettingDailyScreenViewModel() {
     // 필요한 상태나 메서드를 정의
 }
