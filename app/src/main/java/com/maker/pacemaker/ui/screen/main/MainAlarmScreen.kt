@@ -50,7 +50,7 @@ fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMod
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(upBar) {
-                    start.linkTo(parent.start)
+                    start. linkTo(parent.start)
                     end.linkTo(parent.end)
                     top.linkTo(parent.top)
                 }
