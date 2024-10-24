@@ -29,7 +29,8 @@ fun AlarmBox(
     alarmType: String,
     content: String,
     dateTime: String,
-    onDismiss: () -> Unit // 삭제 콜백 추가
+    type: Boolean,
+    onDismiss: () -> Unit, // 삭제 콜백 추가
 ) {
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { dismissValue ->
@@ -63,10 +64,11 @@ fun AlarmBox(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
-                    .padding(start = 5.dp, end = 10.dp)
+                    .padding(start = 10.dp, end = 10.dp)
                     .background(Color.Transparent)
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
+
                     Box(
                         modifier = Modifier
                             .background(color = Color(0xFFDFDFDF))
@@ -115,12 +117,16 @@ fun AlarmBox(
                         modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
                     )
 
-                    Box(
-                        modifier = Modifier
-                            .background(color = Color(0xFFDFDFDF))
-                            .fillMaxWidth()
-                            .height(5.dp)
-                    )
+                    // 마지막 아이템은 아래쪽 추가
+                    if (type)
+                    {
+                        Box(
+                            modifier = Modifier
+                                .background(color = Color(0xFFDFDFDF))
+                                .fillMaxWidth()
+                                .height(5.dp)
+                        )
+                    }
                 }
             }
         }
@@ -138,6 +144,7 @@ fun PreviewAlarmBox() {
         alarmType = "공지",
         content = "새로운 공지가 있습니다.",
         dateTime = "2024-10-24 12:00:00",
+        type = true,
         onDismiss = { /* 삭제 처리 로직 */ }
     )
 }

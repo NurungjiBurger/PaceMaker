@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,7 +44,7 @@ fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMod
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
-        val (upBar, addButton, contentBox) = createRefs()
+        val (upBar, addButton, contentBoxBorder, contentBox) = createRefs()
 
         Box(
             modifier = Modifier
@@ -73,21 +74,24 @@ fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMod
 
         LazyColumn(
             modifier = Modifier
+                .fillMaxWidth()
+                .height(600.dp)
                 .constrainAs(contentBox) {
-                top.linkTo(upBar.bottom)
-                bottom.linkTo(parent.bottom)
+                top.linkTo(upBar.bottom, margin = 50.dp)
+                bottom.linkTo(parent.bottom, margin = 30.dp)
             }
         ) {
             println("Alarms: ${alarms.size}")
 
-            items(alarms) { alarm ->
+            // itemsIndexed를 사용하여 각 아이템의 인덱스 접근
+            itemsIndexed(alarms) { index, alarm ->
                 AlarmBox(
                     baseViewModel = baseViewModel,
                     alarmId = alarm.id,
                     alarmType = alarm.alarmType,
                     content = alarm.content,
-                    dateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(alarm.dateTime)
-                    ),
+                    dateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(alarm.dateTime)),
+                    type = index == alarms.size - 1, // 마지막 아이템 여부
                     onDismiss = { viewModel.deleteAlarm(alarm.id) } // 삭제 콜백
                 )
             }
