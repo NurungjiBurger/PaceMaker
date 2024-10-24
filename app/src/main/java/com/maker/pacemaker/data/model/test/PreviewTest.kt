@@ -1,8 +1,10 @@
 package com.maker.pacemaker.data.model.test
 
 import android.app.Application
+import com.maker.pacemaker.data.model.db.AlarmDao
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 
 class PreviewTest {
@@ -24,5 +26,9 @@ class DummyMainBaseViewModel() : MainBaseViewModel() {
 
 // 미리보기를 위한 더미 MainScreenViewModel
 class DummyMainScreenViewModel() : MainScreenViewModel() {
+    // 필요한 상태나 메서드를 정의
+}
+
+class DummyMainAlarmScreenViewModel(alarmDao: AlarmDao) : MainAlarmScreenViewModel(alarmDao) {
     // 필요한 상태나 메서드를 정의
 }

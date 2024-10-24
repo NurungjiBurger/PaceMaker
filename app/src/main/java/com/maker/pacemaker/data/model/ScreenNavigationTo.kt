@@ -14,6 +14,9 @@ enum class ScreenType(val navigateTo: (NavController) -> Unit) {
 
     // 메인
     MAIN({ navController -> navController.navigate("mainScreen") }),
-    TEST({ naveController -> naveController.navigate("testScreen") }),
+    MENU({ navController -> navController.navigate("menuScreen") }),
+    ALARM({ navController -> navController.navigate("alarmScreen") }),
+    MYPAGE({ navController -> navController.navigate("mypageScreen") }),
+
 
 }

@@ -11,12 +11,15 @@ firebaseFirestoreKtx = "25.1.0"
 firebaseMessagingVersion = "24.3.0"
 foundation = "1.7.0"
 googleFirebaseBom = "33.2.0"
+hiltAndroid = "2.38.1"
+jetbrainsKotlinxCoroutinesCore = "1.6.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 kotlinxCoroutinesAndroid = "1.7.3"
+kotlinxCoroutinesAndroidVersion = "1.6.0"
 kotlinxCoroutinesCore = "1.7.3"
 kotlinxSerializationJsonVersion = "1.6.0"
 lifecycleRuntimeKtx = "2.8.4"
@@ -24,6 +27,7 @@ activityCompose = "1.9.1"
 composeBom = "2024.04.01"
 material = "1.7.0"
 material3 = "1.3.0"
+material3Version = "1.0.0-alpha06"
 materialIconsCore = "1.7.0"
 materialIconsExtended = "1.7.0"
 materialZ = "1.7.0"
@@ -56,6 +60,7 @@ androidx-material-icons-core = { module = "androidx.compose.material:material-ic
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-material-z = { module = "androidx.compose.material:material-*", version.ref = "materialZVersion" }
 androidx-material-z-v170 = { module = "androidx.compose.material:material-*", version.ref = "materialZ" }
+androidx-material3-v100alpha06 = { module = "androidx.compose.material3:material3", version.ref = "material3Version" }
 androidx-runtime-livedata-v150 = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedataVersion" }
 androidx-runtime-livedata-v170 = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "androidxRuntimeLivedata" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
@@ -72,6 +77,7 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 gms-play-services = { module = "com.google.android.gms:play-services", version.ref = "playServicesVersion" }
 google-firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
 google-firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessagingVersion" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 jetbrains-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJsonVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -88,7 +94,9 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
+kotlinx-coroutines-android-v160 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroidVersion" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-coroutines-core-v160 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "jetbrainsKotlinxCoroutinesCore" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 org-eclipse-paho-android-service = { module = "org.eclipse.paho:org.eclipse.paho.android.service", version.ref = "orgEclipsePahoAndroidService" }
 org-eclipse-paho-client-mqttv3 = { module = "org.eclipse.paho:org.eclipse.paho.client.mqttv3", version.ref = "orgEclipsePahoClientMqttv3" }
