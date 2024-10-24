@@ -58,9 +58,11 @@ fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMod
             UpBar(baseViewModel, "새 소식", false, ActivityType.FINISH, ScreenType.MAIN)
         }
 
+        println("now : ${System.currentTimeMillis()}")
+
         Button(
             onClick = {
-                viewModel.addAlarm("공지사항", "This is a new alarm!", System.currentTimeMillis()) // 알람 추가
+                viewModel.addAlarm("학습해~", "공부 안한지 너무 오래되지 않았니?", System.currentTimeMillis() - 86400000) // 알람 추가
             },
             modifier = Modifier
                 .fillMaxWidth()

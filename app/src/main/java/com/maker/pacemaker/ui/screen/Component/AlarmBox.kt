@@ -17,6 +17,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,6 +38,7 @@ fun AlarmBox(
                     onDismiss() // 삭제 콜백 호출
                     false // 상태를 false로 설정하여 삭제로 간주
                 }
+                SwipeToDismissBoxValue.StartToEnd -> false // 삭제하지 않음
                 else -> true // 스와이프가 취소된 경우
             }
         },
@@ -79,10 +83,11 @@ fun AlarmBox(
                         Image(
                             painter = painterResource(
                                 id = when {
-                                    alarmType.contains("학습") -> R.drawable.alarm
-                                    alarmType.contains("공지") -> R.drawable.siren
-                                    alarmType.contains("경험치") -> R.drawable.trophy
-                                    else -> R.drawable.siren
+                                    alarmType.contains("학습") -> R.drawable.alarmicon
+                                    alarmType.contains("공지") -> R.drawable.noticeicon
+                                    alarmType.contains("경험치") -> R.drawable.expicon
+                                    alarmType.contains("친구") -> R.drawable.followicon
+                                    else -> R.drawable.checkicon
                                 }
                             ),
                             contentDescription = "alarm",
@@ -105,7 +110,7 @@ fun AlarmBox(
                     )
 
                     Text(
-                        text = dateTime,
+                        text = formatDateTime(dateTime),
                         fontSize = 10.sp,
                         modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
                     )
@@ -135,4 +140,40 @@ fun PreviewAlarmBox() {
         dateTime = "2024-10-24 12:00:00",
         onDismiss = { /* 삭제 처리 로직 */ }
     )
+}
+
+fun formatDateTime(dateTime: String): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val outputFormatTime = SimpleDateFormat("MM월 dd일 HH:mm", Locale.getDefault()) // 오늘의 메시지 형식
+    val outputFormatDate = SimpleDateFormat("MM월 dd일", Locale.getDefault()) // 이전 메시지 형식
+
+    // 현재 날짜와 비교하기 위해 오늘 날짜 구하기
+    val currentDate = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.time
+
+    return try {
+        // dateTime을 Date 객체로 파싱
+        val date = inputFormat.parse(dateTime)
+
+        if (date != null) {
+            // 오늘 날짜 이후인지 체크
+            if (date >= currentDate) {
+                // 오늘 날짜라면 시간까지 표시
+                outputFormatTime.format(date)
+            } else {
+                // 오늘 이전 날짜라면 날짜만 표시
+                outputFormatDate.format(date)
+            }
+        } else {
+            // dateTime이 잘못된 경우 원본 문자열 반환
+            dateTime
+        }
+    } catch (e: Exception) {
+        // 파싱 에러가 발생하면 원본 문자열 반환
+        dateTime
+    }
 }
