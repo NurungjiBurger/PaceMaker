@@ -64,7 +64,7 @@ fun AlarmBox(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
-                    .padding(start = 10.dp, end = 10.dp)
+                    .padding(start = 10.dp, end = 10.dp, top = 0.dp, bottom = 0.dp)
                     .background(Color.Transparent)
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
@@ -73,13 +73,13 @@ fun AlarmBox(
                         modifier = Modifier
                             .background(color = Color(0xFFDFDFDF))
                             .fillMaxWidth()
-                            .height(5.dp)
+                            .height(3.dp)
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 10.dp, end = 10.dp, top = 5.dp),
+                            .padding(start = 20.dp, end = 20.dp, top = 5.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
@@ -108,25 +108,24 @@ fun AlarmBox(
                     Text(
                         text = content,
                         fontSize = 15.sp,
-                        modifier = Modifier.padding(start = 10.dp)
+                        modifier = Modifier.padding(start = 20.dp)
                     )
 
                     Text(
                         text = formatDateTime(dateTime),
                         fontSize = 10.sp,
-                        modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
+                        modifier = Modifier
+                            .padding(start = 20.dp, top = 5.dp)
+                            .background(Color.White)
                     )
 
                     // 마지막 아이템은 아래쪽 추가
-                    if (type)
-                    {
-                        Box(
-                            modifier = Modifier
-                                .background(color = Color(0xFFDFDFDF))
-                                .fillMaxWidth()
-                                .height(5.dp)
-                        )
-                    }
+                    Box(
+                        modifier = Modifier
+                            .background(color = if (type) Color(0xFFDFDFDF) else Color.Transparent)
+                            .fillMaxWidth()
+                            .height(3.dp)
+                    )
                 }
             }
         }
@@ -144,7 +143,7 @@ fun PreviewAlarmBox() {
         alarmType = "공지",
         content = "새로운 공지가 있습니다.",
         dateTime = "2024-10-24 12:00:00",
-        type = true,
+        type = false,
         onDismiss = { /* 삭제 처리 로직 */ }
     )
 }
