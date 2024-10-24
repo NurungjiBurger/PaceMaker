@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
+import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.data.model.test.DummyBaseViewModel
 import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
@@ -94,7 +95,7 @@ fun MainMenuScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMode
                 color = Color.Black,
                 modifier = Modifier
                     .clickable(onClick = {
-                        baseViewModel.goScreen(ScreenType.MYPAGE)
+                        baseViewModel.goActivity(ActivityType.SETTING)
                     })
             )
 

@@ -3,6 +3,7 @@ package com.maker.pacemaker.ui.viewmodel
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -20,15 +21,15 @@ import kotlinx.coroutines.launch
 
 open class BaseViewModel : ViewModel() {
 
-    // 전역 Context 접근
-   // private val context: Context by lazy { MyApplication.getContext() }
-
-    // SharedPreferences 접근
-    //protected val sharedPreferences: SharedPreferences
-   //     get() = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-
-    // Editor 객체를 가져옵니다.
-    //protected val editor = sharedPreferences.edit()
+//    // 전역 Context 접근
+//    private val context: Context by lazy { MyApplication.getContext() }
+//
+//    // SharedPreferences 접근
+//    protected val sharedPreferences: SharedPreferences
+//        get() = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+//
+//    // Editor 객체를 가져옵니다.
+//    protected val editor = sharedPreferences.edit()
 
     //private val networkStatusTracker = NetworkStatusTracker(application)
 
@@ -69,13 +70,6 @@ open class BaseViewModel : ViewModel() {
     val previousActivity: ActivityType?
         get() = _previousActivity
 
-    // SharedPreferences 접근
-    //protected val sharedPreferences: SharedPreferences
-        //get() = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-
-    // Editor 객체를 가져옵니다.
-    //protected val editor = sharedPreferences.edit()
-
     init {
         viewModelScope.launch {
 //            networkStatusTracker.networkStatus.collect { status ->
@@ -87,6 +81,9 @@ open class BaseViewModel : ViewModel() {
 
     // Activity로 이동
     fun goActivity(activity: ActivityType) {
+
+        Log.d("BaseViewModel", "goActivity: $activity")
+
         _previousActivity = activityNavigationTo.value?.activityType
         _previousScreen = ScreenType.FINISH
         _activityNavigationTo.value = ActivityNavigationTo(activity)
@@ -94,6 +91,9 @@ open class BaseViewModel : ViewModel() {
 
     // Screen으로 이동
     fun goScreen(screen: ScreenType) {
+
+        Log.d("BaseViewModel", "goScreen: $screen")
+
         _previousScreen = screenNavigationTo.value?.screenType
         _previousActivity = ActivityType.FINISH
         _screenNavigationTo.value = ScreenNavigationTo(screen)
