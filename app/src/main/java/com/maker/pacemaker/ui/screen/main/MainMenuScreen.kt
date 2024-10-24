@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -52,11 +53,9 @@ fun MainMenuScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMode
         ) {
         val (leftBar, exitButton, navBox, settingButton) = createRefs()
 
-        Log.d("MainMenuScreen", "this is MainMenuScreen")
-
         Box(
            modifier = Modifier
-               .background(Color.White)
+               .background(Color.White, shape = RoundedCornerShape(15.dp))
                .width(boxWidth)
                .height(boxHeight)
                .constrainAs(leftBar) {
@@ -68,7 +67,7 @@ fun MainMenuScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMode
 
         Image(
             painter = painterResource(id = R.drawable.exit),
-            contentDescription = "Ranking",
+            contentDescription = "Exit",
             modifier = Modifier
                 .size(30.dp)
                 .constrainAs(exitButton) {

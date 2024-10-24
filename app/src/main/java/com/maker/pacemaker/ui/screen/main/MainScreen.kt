@@ -62,8 +62,6 @@ fun MainScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewModel, v
         // Constraints 정의
         val (upBar, logo, script, ranking, contentBox, bottomBar) = createRefs()
 
-        Log.d("MainScreen", "this is MainScreen")
-
         // 상단바
         Box(
             modifier = Modifier

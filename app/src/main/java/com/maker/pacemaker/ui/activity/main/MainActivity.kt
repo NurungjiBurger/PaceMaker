@@ -13,10 +13,12 @@ import com.maker.pacemaker.data.model.test.DummyMainScreenViewModel
 import com.maker.pacemaker.ui.activity.BaseActivity
 import com.maker.pacemaker.ui.screen.main.MainAlarmScreen
 import com.maker.pacemaker.ui.screen.main.MainMenuScreen
+import com.maker.pacemaker.ui.screen.main.MainMyPageScreen
 import com.maker.pacemaker.ui.screen.main.MainScreen
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainMenuScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.main.details.MainMyPageScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -30,6 +32,7 @@ class MainActivity : BaseActivity() {
     private val mainScreenViewModel: MainScreenViewModel by viewModels()
     private val mainAlarmScreenViewModel: MainAlarmScreenViewModel by viewModels()
     private val mainMenuScreenViewModel: MainMenuScreenViewModel by viewModels()
+    private val mainMyPageScreenViewModel: MainMyPageScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,27 +44,10 @@ class MainActivity : BaseActivity() {
             navController = rememberNavController()
 
             NavHost(navController as NavHostController, startDestination = "mainScreen") {
-                composable("mainScreen") {
-                    MainScreen(
-                        baseViewModel,
-                        mainViewModel,
-                        mainScreenViewModel
-                    )
-                }
-                composable("alarmScreen") {
-                    MainAlarmScreen(
-                        baseViewModel,
-                        mainViewModel,
-                        mainAlarmScreenViewModel
-                    )
-                }
-                composable("menuScreen") {
-                    MainMenuScreen(
-                        baseViewModel,
-                        mainViewModel,
-                        mainMenuScreenViewModel
-                    )
-                }
+                composable("mainScreen") { MainScreen(baseViewModel, mainViewModel, mainScreenViewModel) }
+                composable("alarmScreen") { MainAlarmScreen(baseViewModel, mainViewModel, mainAlarmScreenViewModel) }
+                composable("menuScreen") { MainMenuScreen(baseViewModel, mainViewModel, mainMenuScreenViewModel) }
+                composable("myPageScreen") { MainMyPageScreen(baseViewModel, mainViewModel, mainMyPageScreenViewModel) }
             }
         }
     }
@@ -77,6 +63,7 @@ class MainActivity : BaseActivity() {
             ScreenType.MAIN -> "mainscreen"
             ScreenType.ALARM -> "alarmscreen"
             ScreenType.MENU -> "menuscreen"
+            ScreenType.MYPAGE -> "mypagescreen"
             else -> return
         }
 

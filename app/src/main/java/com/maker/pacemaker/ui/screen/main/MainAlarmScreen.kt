@@ -47,8 +47,6 @@ fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMod
     ) {
         val (upBar, addButton, contentBoxBorder, contentBox) = createRefs()
 
-        Log.d("MainAlarmScreen", "this is MainAlarmScreen")
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
