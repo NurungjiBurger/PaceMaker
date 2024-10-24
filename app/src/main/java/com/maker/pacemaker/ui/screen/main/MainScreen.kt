@@ -1,6 +1,7 @@
 package com.maker.pacemaker.ui.screen.main
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
