@@ -12,9 +12,11 @@ import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.data.model.test.DummyMainScreenViewModel
 import com.maker.pacemaker.ui.activity.BaseActivity
 import com.maker.pacemaker.ui.screen.main.MainAlarmScreen
+import com.maker.pacemaker.ui.screen.main.MainMenuScreen
 import com.maker.pacemaker.ui.screen.main.MainScreen
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.main.details.MainMenuScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -24,15 +26,15 @@ class MainActivity : BaseActivity() {
 
 
     private lateinit var mainViewModel: MainBaseViewModel
-    private lateinit var mainScreenViewModel: MainScreenViewModel
 
+    private val mainScreenViewModel: MainScreenViewModel by viewModels()
     private val mainAlarmScreenViewModel: MainAlarmScreenViewModel by viewModels()
+    private val mainMenuScreenViewModel: MainMenuScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mainViewModel = ViewModelProvider(this).get(MainBaseViewModel::class.java)
-        mainScreenViewModel = ViewModelProvider(this).get(MainScreenViewModel::class.java)
 
         setContent {
             // rememberNavController는 @Composable 함수이므로 여기서 호출해야 합니다.
@@ -44,14 +46,21 @@ class MainActivity : BaseActivity() {
                         baseViewModel,
                         mainViewModel,
                         mainScreenViewModel
-                    ) // BaseViewModel 전달
+                    )
                 }
                 composable("alarmScreen") {
                     MainAlarmScreen(
                         baseViewModel,
                         mainViewModel,
                         mainAlarmScreenViewModel
-                    ) // BaseViewModel 전달
+                    )
+                }
+                composable("menuScreen") {
+                    MainMenuScreen(
+                        baseViewModel,
+                        mainViewModel,
+                        mainMenuScreenViewModel
+                    )
                 }
             }
         }
@@ -63,13 +72,16 @@ class MainActivity : BaseActivity() {
     }
 
     override fun navigateToScreen(screenType: ScreenType) {
+
         val route = when (screenType) {
             ScreenType.MAIN -> "mainscreen"
             ScreenType.ALARM -> "alarmscreen"
+            ScreenType.MENU -> "menuscreen"
             else -> return
         }
         navController.navigate(route) {
             launchSingleTop = true
+            restoreState = true // 이전 상태 복원
         }
     }
 }

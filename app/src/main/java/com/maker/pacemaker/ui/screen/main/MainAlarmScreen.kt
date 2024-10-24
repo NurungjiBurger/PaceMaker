@@ -1,6 +1,7 @@
 package com.maker.pacemaker.ui.screen.main
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,6 +47,8 @@ fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMod
     ) {
         val (upBar, addButton, contentBoxBorder, contentBox) = createRefs()
 
+        Log.d("MainAlarmScreen", "this is MainAlarmScreen")
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,21 +59,18 @@ fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMod
                 }
         )
         {
-            UpBar(baseViewModel, "새 소식", false, ActivityType.FINISH, ScreenType.MAIN)
+            if (baseViewModel.previousActivity != ActivityType.FINISH) baseViewModel.previousActivity?.let {
+                UpBar(baseViewModel, "새 소식", true,
+                    it, ScreenType.FINISH)
+            }
+            else if (baseViewModel.previousScreen != ScreenType.FINISH) baseViewModel.previousScreen?.let {
+                UpBar(baseViewModel, "새 소식", false, ActivityType.FINISH,
+                    it
+                )
+            }
         }
 
         println("now : ${System.currentTimeMillis()}")
-
-        Button(
-            onClick = {
-                viewModel.addAlarm("학습해~", "공부 안한지 너무 오래되지 않았니?", System.currentTimeMillis() - 86400000) // 알람 추가
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = "Add Alarm")
-        }
 
         LazyColumn(
             modifier = Modifier
@@ -95,6 +95,23 @@ fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMod
                     onDismiss = { viewModel.deleteAlarm(alarm.id) } // 삭제 콜백
                 )
             }
+        }
+
+        Button(
+            onClick = {
+                viewModel.addAlarm("학습해~", "공부 안한지 너무 오래되지 않았니?", System.currentTimeMillis() - 86400000) // 알람 추가
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .constrainAs(addButton) {
+                    top.linkTo(contentBox.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                }
+        ) {
+            Text(text = "Add Alarm")
         }
     }
 }

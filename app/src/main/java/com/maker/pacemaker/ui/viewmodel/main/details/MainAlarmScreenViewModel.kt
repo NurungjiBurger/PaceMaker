@@ -3,19 +3,13 @@ package com.maker.pacemaker.ui.viewmodel.main.details
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.maker.pacemaker.data.model.db.AlarmDao
-import com.maker.pacemaker.data.model.db.AlarmDatabase
 import com.maker.pacemaker.data.model.db.AlarmEntity
 import com.maker.pacemaker.data.model.repository.AlarmRepository
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel

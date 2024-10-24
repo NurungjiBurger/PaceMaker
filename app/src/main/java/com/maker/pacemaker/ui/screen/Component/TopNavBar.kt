@@ -53,13 +53,18 @@ fun TopNavBar(baseViewModel: BaseViewModel) {
             Image(
                 painter = painterResource(id = R.drawable.usermenu),
                 contentDescription = "usermenu",
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier
+                    .size(40.dp)
+                    .clickable(onClick = {
+                        baseViewModel.goScreen(ScreenType.MENU)
+                    })
             )
 
             Image(
                 painter = painterResource(id = R.drawable.alarm),
                 contentDescription = "alarm",
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier
+                    .size(40.dp)
                     .clickable(onClick = {
                         baseViewModel.goScreen(ScreenType.ALARM)
                     })

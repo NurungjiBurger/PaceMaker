@@ -15,6 +15,7 @@ import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenNavigationTo
 import com.maker.pacemaker.data.model.ScreenType
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 open class BaseViewModel : ViewModel() {
@@ -59,14 +60,26 @@ open class BaseViewModel : ViewModel() {
     private val _screenNavigationTo = MutableLiveData<ScreenNavigationTo>()
     val screenNavigationTo: LiveData<ScreenNavigationTo> get() = _screenNavigationTo
 
+    private var _previousScreen: ScreenType? = null
+    private var _previousActivity: ActivityType? = null
+
+    val previousScreen: ScreenType?
+        get() = _previousScreen
+
+    val previousActivity: ActivityType?
+        get() = _previousActivity
 
     // Activity로 이동
     fun goActivity(activity: ActivityType) {
+        _previousActivity = activityNavigationTo.value?.activityType
+        _previousScreen = ScreenType.FINISH
         _activityNavigationTo.value = ActivityNavigationTo(activity)
     }
 
     // Screen으로 이동
     fun goScreen(screen: ScreenType) {
+        _previousScreen = screenNavigationTo.value?.screenType
+        _previousActivity = ActivityType.FINISH
         _screenNavigationTo.value = ScreenNavigationTo(screen)
     }
 
