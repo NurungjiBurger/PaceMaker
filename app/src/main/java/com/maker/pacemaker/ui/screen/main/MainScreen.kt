@@ -48,6 +48,7 @@ import com.maker.pacemaker.ui.screen.Component.Logo
 import com.maker.pacemaker.ui.screen.Component.Rating
 import com.maker.pacemaker.ui.screen.Component.TopNavBar
 
+
 @Composable
 fun MainScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewModel, viewModel: MainScreenViewModel) {
 
@@ -242,3 +243,4 @@ fun MainScreenPreview() {
     // 모든 더미 ViewModel을 전달하여 미리보기 실행
     MainScreen(dummyBaseViewModel, dummyMainBaseViewModel, dummyMainScreenViewModel)
 }
+
