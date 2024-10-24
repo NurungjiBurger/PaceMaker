@@ -79,9 +79,12 @@ class MainActivity : BaseActivity() {
             ScreenType.MENU -> "menuscreen"
             else -> return
         }
+
         navController.navigate(route) {
+            popUpTo(route) {
+                inclusive = true // 포함하여 제거
+            }
             launchSingleTop = true
-            restoreState = true // 이전 상태 복원
         }
     }
 }
