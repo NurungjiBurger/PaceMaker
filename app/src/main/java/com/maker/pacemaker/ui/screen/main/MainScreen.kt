@@ -186,7 +186,9 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                     .fillMaxWidth()
                     .height(70.dp)
                     .background(Color(0xFFFEFEFF).copy(alpha = 0.3f), RoundedCornerShape(10.dp))
-                    .border(BorderStroke(2.dp, Color.Gray), shape = RoundedCornerShape(10.dp)),
+                    .border(BorderStroke(2.dp, Color.Gray), shape = RoundedCornerShape(10.dp))
+                    .clickable { baseViewModel.goScreen(ScreenType.PROBLEMADD) }
+                ,
                 contentAlignment = Alignment.Center
             ) {
                 Text(

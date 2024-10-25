@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
+import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
@@ -69,7 +70,7 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
                 modifier = Modifier
                     .size(40.dp)
                     .clickable {
-                        baseViewModel.floatingToastMessage("문제검색페이지입니다.")
+                        baseViewModel.goScreen(ScreenType.PROBLEMSEARCH)
                     }
             )
 
