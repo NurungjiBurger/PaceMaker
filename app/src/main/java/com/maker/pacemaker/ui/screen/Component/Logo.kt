@@ -13,7 +13,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 
 @Composable
@@ -51,8 +50,8 @@ fun Logo(baseViewModel: BaseViewModel) {
 @Composable
 @Preview
 fun PreviewLogo() {
-
-    val baseViewModel = DummyBaseViewModel()
-
-    Logo(baseViewModel)
+//
+//    val baseViewModel = DummyBaseViewModel()
+//
+//    Logo(baseViewModel)
 }

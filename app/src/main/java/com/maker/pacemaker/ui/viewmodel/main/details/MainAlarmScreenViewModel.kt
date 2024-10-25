@@ -1,6 +1,7 @@
 package com.maker.pacemaker.ui.viewmodel.main.details
 
 import android.util.Log
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maker.pacemaker.data.model.db.AlarmDao
 import com.maker.pacemaker.data.model.db.AlarmEntity
@@ -14,8 +15,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class MainAlarmScreenViewModel @Inject constructor(
+    private val base: MainBaseViewModel,
     alarmDao: AlarmDao
-) : MainBaseViewModel() {
+) : ViewModel() {
+
+    val baseViewModel = base
 
     private val alarmRepository = AlarmRepository(alarmDao)
 

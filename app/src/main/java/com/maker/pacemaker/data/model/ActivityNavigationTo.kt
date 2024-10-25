@@ -3,6 +3,7 @@ package com.maker.pacemaker.data.model
 import android.content.Context
 import android.content.Intent
 import com.maker.pacemaker.ui.activity.main.MainActivity
+import com.maker.pacemaker.ui.activity.setting.SettingActivity
 
 data class ActivityNavigationTo(val activityType: ActivityType)
 
@@ -10,4 +11,5 @@ data class ActivityNavigationTo(val activityType: ActivityType)
 enum class ActivityType(val intentCreator: (Context) -> Intent?) {
     FINISH({ null }),
     MAIN({ context -> Intent(context, MainActivity::class.java) }),
+    SETTING({context -> Intent(context, SettingActivity::class.java) })
 }

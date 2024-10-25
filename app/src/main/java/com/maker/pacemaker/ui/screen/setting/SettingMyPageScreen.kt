@@ -1,4 +1,4 @@
-package com.maker.pacemaker.ui.screen.main
+package com.maker.pacemaker.ui.screen.setting
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,27 +12,23 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainMyPageScreenViewModel
-import com.maker.pacemaker.data.model.test.DummyMainScreenViewModel
 import com.maker.pacemaker.ui.screen.Component.UpBar
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
-import com.maker.pacemaker.ui.viewmodel.main.details.MainMyPageScreenViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -41,9 +37,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.maker.pacemaker.R
 import com.maker.pacemaker.ui.screen.Component.NavCard
+import com.maker.pacemaker.ui.viewmodel.setting.SettingBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.setting.details.SettingMyPageScreenViewModel
 
 @Composable
-fun MainMyPageScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewModel, viewModel: MainMyPageScreenViewModel) {
+fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
+
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val settingViewModel = viewModel.baseViewModel
+
+    val dailyCount by settingViewModel.dailyCount.collectAsState()
+    val ratioMode by settingViewModel.ratioMode.collectAsState()
 
     ConstraintLayout(
         modifier = Modifier
@@ -144,9 +148,9 @@ fun MainMyPageScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMo
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
         ){
-            NavCard(baseViewModel, "1일 학습 목표")
-            NavCard(baseViewModel, "퀴즈 카테고리")
-            NavCard(baseViewModel, "복습 단어 비율")
+            NavCard(baseViewModel, "1일 학습 목표", dailyCount.toString(), { baseViewModel.goScreen(ScreenType.DAILY) })
+            NavCard(baseViewModel, "퀴즈 카테고리", "", { baseViewModel.goScreen(ScreenType.CATEGORY) })
+            NavCard(baseViewModel, "복습 단어 비율", ratioMode, { baseViewModel.goScreen(ScreenType.RATIO) })
         }
     }
 
@@ -156,9 +160,9 @@ fun MainMyPageScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMo
 @Preview
 fun MainMyPageScreenPreview() {
 
-    val baseViewModel = DummyBaseViewModel()
-    val mainViewModel = DummyMainBaseViewModel()
-    val viewModel = DummyMainMyPageScreenViewModel()
-
-    MainMyPageScreen(baseViewModel, mainViewModel, viewModel)
+//    val baseViewModel = DummyBaseViewModel()
+//    val mainViewModel = DummySettingBaseViewModel()
+//    val viewModel = DummyMainMyPageScreenViewModel()
+//
+//    SettingMyPageScreen(baseViewModel, mainViewModel, viewModel)
 }

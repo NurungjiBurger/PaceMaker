@@ -2,6 +2,7 @@ package com.maker.pacemaker.ui.screen.Component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,8 @@ import com.maker.pacemaker.R
 fun NavCard(
     baseViewModel: BaseViewModel,
     title: String,
+    contentText: String,
+    onClick: () -> Unit = { }
 ) {
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
@@ -39,6 +42,7 @@ fun NavCard(
             .height(boxHeight)
             .padding(10.dp)
             .background(color = Color(0xFFFAFAFA), shape = RoundedCornerShape(15.dp))
+            .clickable { onClick() }
     ) {
         val (titleText, content, nav) = createRefs()
 
@@ -51,12 +55,11 @@ fun NavCard(
                     start.linkTo(parent.start, margin = 20.dp)
                     top.linkTo(parent.top, margin = 20.dp)
                 }
+
         )
 
         Text(
-            text = ( if (title.contains("1일")) { "30개" }
-                    else if (title.contains("복습")) { "일반모드" }
-                    else { "" }),
+            text = contentText,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF1429A0),
@@ -88,5 +91,5 @@ fun NavCardPreview() {
 
     val baseViewModel = BaseViewModel()
 
-    NavCard(baseViewModel, "복습 단어 비율")
+    NavCard(baseViewModel, "복습 단어 비율", "일반모드")
 }

@@ -16,7 +16,14 @@ enum class ScreenType(val navigateTo: (NavController) -> Unit) {
     MAIN({ navController -> navController.navigate("mainScreen") }),
     MENU({ navController -> navController.navigate("menuScreen") }),
     ALARM({ navController -> navController.navigate("alarmScreen") }),
-    MYPAGE({ navController -> navController.navigate("mypageScreen") }),
+    PROBLEMADD({ navController -> navController.navigate("problemAddScreen") }),
+    PROBLEMSEARCH({ navController -> navController.navigate("problemSearchScreen") }),
 
+    // 세팅
+    MYPAGE({ navController -> navController.navigate("mypageScreen") }),
+    DAILY({ navController -> navController.navigate("dailyScreen") }),
+    RATIO({ navController -> navController.navigate("ratioScreen") }),
+    CATEGORY({ navController -> navController.navigate("categoryScreen") }),
+    LEVELTEST({ navController -> navController.navigate("levelTestScreen") }),
 
 }

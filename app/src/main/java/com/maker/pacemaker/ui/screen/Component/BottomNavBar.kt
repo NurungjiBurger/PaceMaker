@@ -21,9 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainScreenViewModel
+import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
@@ -72,7 +70,7 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
                 modifier = Modifier
                     .size(40.dp)
                     .clickable {
-                        baseViewModel.floatingToastMessage("문제검색페이지입니다.")
+                        baseViewModel.goScreen(ScreenType.PROBLEMSEARCH)
                     }
             )
 
@@ -107,8 +105,8 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
 @Composable
 fun BottomNavBarPreview() {
 
-    val baseViewModel = DummyBaseViewModel()
-
-    // 모든 더미 ViewModel을 전달하여 미리보기 실행
-    BottomNavBar(baseViewModel)
+//    val baseViewModel = DummyBaseViewModel()
+//
+//    // 모든 더미 ViewModel을 전달하여 미리보기 실행
+//    BottomNavBar(baseViewModel)
 }
