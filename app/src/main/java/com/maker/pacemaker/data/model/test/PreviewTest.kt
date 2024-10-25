@@ -1,6 +1,7 @@
 package com.maker.pacemaker.data.model.test
 
 import android.app.Application
+import com.google.firebase.auth.FirebaseAuth
 import com.maker.pacemaker.data.model.db.AlarmDao
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
@@ -37,6 +38,7 @@ class DummyMainAlarmScreenViewModel(alarmDao: AlarmDao) : MainAlarmScreenViewMod
 class DummySignBaseViewModel() : SignBaseViewModel() {
     // 필요한 상태나 메서드를 정의
 }
-class DummySignUpScreenViewModel() : SignUpScreenViewModel() {
-    // 필요한 상태나 메서드를 정의
+
+class DummySignUpScreenViewModel : SignUpScreenViewModel(FirebaseAuth.getInstance()) {
+    // 필요한 상태나 메서드를 추가로 정의
 }

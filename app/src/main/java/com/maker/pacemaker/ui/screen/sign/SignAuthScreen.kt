@@ -1,5 +1,6 @@
 package com.maker.pacemaker.ui.screen.sign
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +58,8 @@ fun SignAuthScreen(baseViewModel: BaseViewModel, mainViewModel: SignBaseViewMode
         val emailState = remember { mutableStateOf(TextFieldValue("")) }
         val PWState = remember { mutableStateOf(TextFieldValue("")) }
         val nicknameState = remember { mutableStateOf(TextFieldValue("")) }
+        val context = LocalContext.current
+        val keyboardController = LocalSoftwareKeyboardController.current
 
 
         Box(
@@ -123,94 +128,101 @@ fun SignAuthScreen(baseViewModel: BaseViewModel, mainViewModel: SignBaseViewMode
                 .width(360.dp) // 텍스트 필드 너비 설정
         )
 
-        Text(
-            text = "비밀번호",
-            style = TextStyle(
-                fontSize = 15.sp, // 원하는 글씨 크기로 설정
-                fontWeight = FontWeight.Light // 선택적으로 글씨 두께를 설정
-            ),
-            modifier = Modifier
-                .constrainAs(pwtitleText) {
-                    top.linkTo(emailField.bottom, margin = 0.dp) // 부모의 상단에 연결
-                    start.linkTo(parent.start, margin = 25.dp) // 부모의 왼쪽에 연결
-                }
-            //.padding(bottom = 10.dp) // 텍스트 아래에 여백 추가
-        )
-
-        TextField(
-            value = PWState.value,
-            onValueChange = { PWState.value = it },
-            placeholder = { Text("비밀번호를 입력하세요") },
-            modifier = Modifier
-                .constrainAs(pwField) {
-                    top.linkTo(pwtitleText.bottom, margin = 0.dp)
-                    start.linkTo(parent.start, margin = 16.dp)
-                    end.linkTo(parent.end, margin = 16.dp)
-                }
-                .padding(3.dp) // 내부 여백 설정
-                .background(Color(0xFFF5F5F5), shape = RoundedCornerShape(12.dp)) // 배경색과 모서리 둥글기 설정
-                .height(56.dp) // 텍스트 필드 높이 설정
-                .width(360.dp) // 텍스트 필드 너비 설정
-        )
-
-
-        Button(
-            onClick = {
-                // 이메일 인증 요청
-                // 이메일 주소를 가져와서 인증 메일을 보내는 기능을 구현
-                // 이메일 주소는 emailState.value.text로 가져올 수 있음
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF1429A0), // 버튼 배경색 설정
-                contentColor = Color.White // 버튼 텍스트 색상 설정
-            ),
-            shape = RoundedCornerShape(8.dp), // 모서리 둥글기 설정
-            modifier = Modifier
-                .constrainAs(authButton) {
-                    top.linkTo(pwField.bottom, margin = 16.dp) // 환영 메시지 아래에 배치
-                    end.linkTo(parent.end, margin = 16.dp) // 부모의 왼쪽에 배치
-                }
-                .size(width = 120.dp, height = 50.dp) // 버튼의 크기 설정
-
-        ) {
+        if (emailState.value.text.length >= 10) {
             Text(
-                text = "인증 요청",
-                fontSize = 18.sp, // 텍스트 크기 설정
-                color = Color.White, // 텍스트 색상 설정
-                fontWeight = FontWeight.Bold // 텍스트 두께 설정
+                text = "비밀번호",
+                style = TextStyle(
+                    fontSize = 15.sp, // 원하는 글씨 크기로 설정
+                    fontWeight = FontWeight.Light // 선택적으로 글씨 두께를 설정
+                ),
+                modifier = Modifier
+                    .constrainAs(pwtitleText) {
+                        top.linkTo(emailField.bottom, margin = 0.dp) // 부모의 상단에 연결
+                        start.linkTo(parent.start, margin = 25.dp) // 부모의 왼쪽에 연결
+                    }
+                //.padding(bottom = 10.dp) // 텍스트 아래에 여백 추가
+            )
+
+            TextField(
+                value = PWState.value,
+                onValueChange = { PWState.value = it },
+                placeholder = { Text("비밀번호를 입력하세요") },
+                modifier = Modifier
+                    .constrainAs(pwField) {
+                        top.linkTo(pwtitleText.bottom, margin = 0.dp)
+                        start.linkTo(parent.start, margin = 16.dp)
+                        end.linkTo(parent.end, margin = 16.dp)
+                    }
+                    .padding(3.dp) // 내부 여백 설정
+                    .background(
+                        Color(0xFFF5F5F5),
+                        shape = RoundedCornerShape(12.dp)
+                    ) // 배경색과 모서리 둥글기 설정
+                    .height(56.dp) // 텍스트 필드 높이 설정
+                    .width(360.dp) // 텍스트 필드 너비 설정
+            )
+            Button(
+                onClick = {
+                    //val context = LocalContext.current
+
+                    keyboardController?.hide() // 키보드 숨기기
+                    viewModel.checkUser(emailState.value.text, PWState.value.text)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF1429A0), // 버튼 배경색 설정
+                    contentColor = Color.White // 버튼 텍스트 색상 설정
+                ),
+                shape = RoundedCornerShape(8.dp), // 모서리 둥글기 설정
+                modifier = Modifier
+                    .constrainAs(authButton) {
+                        top.linkTo(pwField.bottom, margin = 16.dp) // 환영 메시지 아래에 배치
+                        end.linkTo(parent.end, margin = 16.dp) // 부모의 왼쪽에 배치
+                    }
+                    .size(width = 120.dp, height = 50.dp) // 버튼의 크기 설정
+            ) {
+                Text(
+                    text = "인증 요청",
+                    fontSize = 18.sp, // 텍스트 크기 설정
+                    color = Color.White, // 텍스트 색상 설정
+                    fontWeight = FontWeight.Bold // 텍스트 두께 설정
+                )
+            }
+
+
+
+            Text(
+                text = "닉네임",
+                style = TextStyle(
+                    fontSize = 15.sp, // 원하는 글씨 크기로 설정
+                    fontWeight = FontWeight.Light // 선택적으로 글씨 두께를 설정
+                ),
+                modifier = Modifier
+                    .constrainAs(nicknameText) {
+                        top.linkTo(authButton.bottom, margin = 32.dp) // 부모의 상단에 연결
+                        start.linkTo(parent.start, margin = 25.dp) // 부모의 왼쪽에 연결
+                    }
+                //.padding(bottom = 10.dp) // 텍스트 아래에 여백 추가
+            )
+
+            TextField(
+                value = nicknameState.value,
+                onValueChange = { nicknameState.value = it },
+                placeholder = { Text("닉네임을 입력하세요") },
+                modifier = Modifier
+                    .constrainAs(nicknameField) {
+                        top.linkTo(nicknameText.bottom, margin = 0.dp)
+                        start.linkTo(parent.start, margin = 16.dp)
+                        end.linkTo(parent.end, margin = 16.dp)
+                    }
+                    .padding(3.dp) // 내부 여백 설정
+                    .background(
+                        Color(0xFFF5F5F5),
+                        shape = RoundedCornerShape(12.dp)
+                    ) // 배경색과 모서리 둥글기 설정
+                    .height(56.dp) // 텍스트 필드 높이 설정
+                    .width(360.dp) // 텍스트 필드 너비 설정
             )
         }
-
-        Text(
-            text = "닉네임",
-            style = TextStyle(
-                fontSize = 15.sp, // 원하는 글씨 크기로 설정
-                fontWeight = FontWeight.Light // 선택적으로 글씨 두께를 설정
-            ),
-            modifier = Modifier
-                .constrainAs(nicknameText) {
-                    top.linkTo(authButton.bottom, margin = 32.dp) // 부모의 상단에 연결
-                    start.linkTo(parent.start, margin = 25.dp) // 부모의 왼쪽에 연결
-                }
-            //.padding(bottom = 10.dp) // 텍스트 아래에 여백 추가
-        )
-
-        TextField(
-            value = nicknameState.value,
-            onValueChange = { nicknameState.value = it },
-            placeholder = { Text("닉네임을 입력하세요") },
-            modifier = Modifier
-                .constrainAs(nicknameField) {
-                    top.linkTo(nicknameText.bottom, margin = 0.dp)
-                    start.linkTo(parent.start, margin = 16.dp)
-                    end.linkTo(parent.end, margin = 16.dp)
-                }
-                .padding(3.dp) // 내부 여백 설정
-                .background(Color(0xFFF5F5F5), shape = RoundedCornerShape(12.dp)) // 배경색과 모서리 둥글기 설정
-                .height(56.dp) // 텍스트 필드 높이 설정
-                .width(360.dp) // 텍스트 필드 너비 설정
-        )
-
         Button(
             onClick = {
                 // 이메일 인증 요청
