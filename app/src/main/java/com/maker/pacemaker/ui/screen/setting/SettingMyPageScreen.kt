@@ -41,7 +41,10 @@ import com.maker.pacemaker.ui.viewmodel.setting.SettingBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingMyPageScreenViewModel
 
 @Composable
-fun SettingMyPageScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBaseViewModel, viewModel: SettingMyPageScreenViewModel) {
+fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
+
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val settingViewModel = viewModel.baseViewModel
 
     val dailyCount by settingViewModel.dailyCount.collectAsState()
     val ratioMode by settingViewModel.ratioMode.collectAsState()

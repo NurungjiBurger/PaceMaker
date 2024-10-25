@@ -19,23 +19,19 @@ import com.maker.pacemaker.ui.viewmodel.setting.details.SettingMyPageScreenViewM
 
 class SettingActivity : BaseActivity() {
 
-    private lateinit var settingViewModel: SettingBaseViewModel
-
     private val settingMyPageScreenViewModel: SettingMyPageScreenViewModel by viewModels()
     private val settingDailyScreenViewModel: SettingDailyScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        settingViewModel = ViewModelProvider(this).get(SettingBaseViewModel::class.java)
-
         setContent {
             // rememberNavController는 @Composable 함수이므로 여기서 호출해야 합니다.
             navController = rememberNavController()
 
             NavHost(navController as NavHostController, startDestination = "myPageScreen") {
-                composable("dailyScreen") { SettingDailyScreen(baseViewModel, settingViewModel, settingDailyScreenViewModel) }
-                composable("myPageScreen") { SettingMyPageScreen(baseViewModel, settingViewModel, settingMyPageScreenViewModel)}
+                composable("dailyScreen") { SettingDailyScreen(settingDailyScreenViewModel) }
+                composable("myPageScreen") { SettingMyPageScreen(settingMyPageScreenViewModel)}
             }
         }
     }

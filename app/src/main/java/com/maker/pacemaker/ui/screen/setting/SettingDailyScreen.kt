@@ -38,10 +38,12 @@ import com.maker.pacemaker.ui.viewmodel.setting.SettingBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingDailyScreenViewModel
 
 @Composable
-fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBaseViewModel, viewModel: SettingDailyScreenViewModel) {
+fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
+
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val settingViewModel = viewModel.baseViewModel
 
     val dailyCount by settingViewModel.dailyCount.collectAsState()
-
     val dailySetting by viewModel.dailySetting.collectAsState()
 
     ConstraintLayout(
