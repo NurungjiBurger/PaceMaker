@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
-import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -136,16 +135,17 @@ fun AlarmBox(
 @Preview
 fun PreviewAlarmBox() {
     // Dummy ViewModel을 사용한 미리보기
-    val baseViewModel = DummyMainBaseViewModel()
-    AlarmBox(
-        baseViewModel = baseViewModel,
-        alarmId = 1L,
-        alarmType = "공지",
-        content = "새로운 공지가 있습니다.",
-        dateTime = "2024-10-24 12:00:00",
-        type = false,
-        onDismiss = { /* 삭제 처리 로직 */ }
-    )
+//    val baseViewModel = DummyMainBaseViewModel()
+//
+//    AlarmBox(
+//        baseViewModel = baseViewModel,
+//        alarmId = 1L,
+//        alarmType = "공지",
+//        content = "새로운 공지가 있습니다.",
+//        dateTime = "2024-10-24 12:00:00",
+//        type = false,
+//        onDismiss = { /* 삭제 처리 로직 */ }
+//    )
 }
 
 fun formatDateTime(dateTime: String): String {

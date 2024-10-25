@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 
 @Composable
@@ -80,8 +79,8 @@ fun BoxCard(
 @Preview
 fun BoxCardPreview() {
 
-    val baseViewModel = DummyBaseViewModel()
-
-    BoxCard(baseViewModel, 100.dp, 100.dp, "여유롭게", "20개", true,
-        { baseViewModel.goScreen(ScreenType.FINISH) })
+//    val baseViewModel = DummyBaseViewModel()
+//
+//    BoxCard(baseViewModel, 100.dp, 100.dp, "여유롭게", "20개", true,
+//        { baseViewModel.goScreen(ScreenType.FINISH) })
 }

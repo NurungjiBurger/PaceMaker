@@ -32,15 +32,16 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainMenuScreenViewModel
+
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainMenuScreenViewModel
 
 @Composable
-fun MainMenuScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewModel, viewModel: MainMenuScreenViewModel) {
+fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
+
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val mainViewModel = viewModel.baseViewModel
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
@@ -76,7 +77,7 @@ fun MainMenuScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMode
                     top.linkTo(parent.top, margin = 20.dp)
                 }
                 .clickable {
-                    mainViewModel.goScreen(ScreenType.MAIN)
+                    baseViewModel.goScreen(ScreenType.MAIN)
                 }
         )
 
@@ -158,9 +159,9 @@ fun MainMenuScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMode
 @Preview
 fun MainMenuScreenPreview() {
 
-    val baseViewModel = DummyBaseViewModel()
-    val mainViewModel = DummyMainBaseViewModel()
-    val viewModel = DummyMainMenuScreenViewModel()
-
-    MainMenuScreen(baseViewModel, mainViewModel, viewModel)
+//    val baseViewModel = DummyBaseViewModel()
+//    val mainViewModel = DummyMainBaseViewModel()
+//    val viewModel = DummyMainMenuScreenViewModel()
+//
+//    MainMenuScreen(baseViewModel, mainViewModel, viewModel)
 }

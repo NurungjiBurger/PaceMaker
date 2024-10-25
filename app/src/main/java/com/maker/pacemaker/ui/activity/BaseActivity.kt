@@ -8,18 +8,18 @@ import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 open class BaseActivity : ComponentActivity() {
 
-    protected lateinit var baseViewModel: BaseViewModel
+    @Inject
+    lateinit var baseViewModel: BaseViewModel
+
     protected lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // BaseViewModel 초기화
-        baseViewModel = ViewModelProvider(this).get(BaseViewModel::class.java)
 
         // ViewModel의 activity 전환 처리
         baseViewModel.activityNavigationTo.observe(this) { activityType ->
@@ -48,11 +48,6 @@ open class BaseActivity : ComponentActivity() {
     }
 
     protected open fun navigateToActivity(activityType: ActivityType) {
-        val intent = activityType.intentCreator(this)
-        if (activityType == ActivityType.FINISH) {
-            finish() // 현재 Activity 종료
-        } else if (intent != null) {
-            startActivity(intent) // Intent가 null이 아닐 때만 Activity 시작
-        }
+        // 상속받은 클래스에서 구현 가능하도록
     }
 }

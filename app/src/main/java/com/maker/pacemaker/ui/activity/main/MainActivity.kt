@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.activity.BaseActivity
 import com.maker.pacemaker.ui.screen.main.MainAlarmScreen
@@ -23,8 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
 
-    private lateinit var mainViewModel: MainBaseViewModel
-
+    private val mainViewModel: MainBaseViewModel by viewModels()
     private val mainScreenViewModel: MainScreenViewModel by viewModels()
     private val mainAlarmScreenViewModel: MainAlarmScreenViewModel by viewModels()
     private val mainMenuScreenViewModel: MainMenuScreenViewModel by viewModels()
@@ -32,16 +32,14 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mainViewModel = ViewModelProvider(this).get(MainBaseViewModel::class.java)
-
         setContent {
             // rememberNavController는 @Composable 함수이므로 여기서 호출해야 합니다.
             navController = rememberNavController()
 
             NavHost(navController as NavHostController, startDestination = "mainScreen") {
-                composable("mainScreen") { MainScreen(baseViewModel, mainViewModel, mainScreenViewModel) }
-                composable("alarmScreen") { MainAlarmScreen(baseViewModel, mainViewModel, mainAlarmScreenViewModel) }
-                composable("menuScreen") { MainMenuScreen(baseViewModel, mainViewModel, mainMenuScreenViewModel) }
+                composable("mainScreen") { MainScreen(mainScreenViewModel) }
+                composable("alarmScreen") { MainAlarmScreen(mainAlarmScreenViewModel) }
+                composable("menuScreen") { MainMenuScreen(mainMenuScreenViewModel) }
             }
         }
     }
@@ -49,6 +47,15 @@ class MainActivity : BaseActivity() {
     // NavController 초기화 메서드 구현
     override fun initNavController(): NavHostController {
         return navController as NavHostController
+    }
+
+    override fun navigateToActivity(activityType: ActivityType) {
+        val intent = activityType.intentCreator(this)
+        if (activityType == ActivityType.FINISH) {
+            finish() // 현재 Activity 종료
+        } else if (intent != null) {
+            startActivity(intent) // Intent가 null이 아닐 때만 Activity 시작
+        }
     }
 
     override fun navigateToScreen(screenType: ScreenType) {

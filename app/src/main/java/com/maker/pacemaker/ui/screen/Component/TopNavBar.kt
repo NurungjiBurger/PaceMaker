@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 
 @Composable
@@ -78,8 +77,8 @@ fun TopNavBar(baseViewModel: BaseViewModel) {
 @Composable
 fun TopNavBarPreview() {
 
-    val baseViewModel = DummyBaseViewModel()
-
-    // 모든 더미 ViewModel을 전달하여 미리보기 실행
-    TopNavBar(baseViewModel)
+//    val baseViewModel = DummyBaseViewModel()
+//
+//    // 모든 더미 ViewModel을 전달하여 미리보기 실행
+//    TopNavBar(baseViewModel)
 }

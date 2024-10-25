@@ -35,10 +35,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainScreenViewModel
-import com.maker.pacemaker.data.model.test.MockApplication
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
@@ -51,7 +47,10 @@ import com.maker.pacemaker.ui.screen.Component.TopNavBar
 
 
 @Composable
-fun MainScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewModel, viewModel: MainScreenViewModel) {
+fun MainScreen(viewModel: MainScreenViewModel) {
+
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val mainViewModel = viewModel.baseViewModel
 
     val userName by baseViewModel.userName.collectAsState()
 
@@ -237,11 +236,9 @@ fun MainScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewModel, v
 fun MainScreenPreview() {
 
     // MockApplication 대신 Application 컨텍스트를 직접 전달합니다.
-    val dummyBaseViewModel = DummyBaseViewModel()
-    val dummyMainScreenViewModel = DummyMainScreenViewModel()
-    val dummyMainBaseViewModel = DummyMainBaseViewModel()
+
 
     // 모든 더미 ViewModel을 전달하여 미리보기 실행
-    MainScreen(dummyBaseViewModel, dummyMainBaseViewModel, dummyMainScreenViewModel)
+   // MainScreen(dummyBaseViewModel, dummyMainBaseViewModel, dummyMainScreenViewModel)
 }
 

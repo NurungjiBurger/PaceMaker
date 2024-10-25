@@ -23,9 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainAlarmScreenViewModel
-import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
 import com.maker.pacemaker.ui.screen.Component.AlarmBox
 import com.maker.pacemaker.ui.screen.Component.UpBar
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
@@ -36,7 +33,10 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewModel, viewModel: MainAlarmScreenViewModel) {
+fun MainAlarmScreen(viewModel: MainAlarmScreenViewModel) {
+
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val mainViewModel = viewModel.baseViewModel
 
     val alarms by viewModel.alarms.collectAsState(initial = emptyList())
 
@@ -118,8 +118,6 @@ fun MainAlarmScreen(baseViewModel: BaseViewModel, mainViewModel: MainBaseViewMod
 @Preview
 fun PreviewMainAlarmScreen() {
 
-    val baseViewModel = DummyBaseViewModel()
-    val mainViewModel = DummyMainBaseViewModel()
     //val mainAlarmScreenViewModel = DummyMainAlarmScreenViewModel()
 
     //MainAlarmScreen(baseViewModel, mainViewModel, mainAlarmScreenViewModel)

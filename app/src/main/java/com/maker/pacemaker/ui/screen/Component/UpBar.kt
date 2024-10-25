@@ -24,7 +24,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 
 @Composable
@@ -88,7 +87,7 @@ fun UpBar(baseViewModel: BaseViewModel, titleName: String, type: Boolean, activi
 @Preview
 fun PreviewUpBar() {
 
-    val baseViewModel = DummyMainBaseViewModel()
-
-    UpBar(baseViewModel, "새 소식", false, ActivityType.FINISH, ScreenType.MAIN)
+//    val baseViewModel = DummyMainBaseViewModel()
+//
+//    UpBar(baseViewModel, "새 소식", false, ActivityType.FINISH, ScreenType.MAIN)
 }

@@ -27,6 +27,7 @@ import com.maker.pacemaker.R
 fun NavCard(
     baseViewModel: BaseViewModel,
     title: String,
+    contentText: String,
     onClick: () -> Unit = { }
 ) {
 
@@ -58,9 +59,7 @@ fun NavCard(
         )
 
         Text(
-            text = ( if (title.contains("1일")) { "30개" }
-                    else if (title.contains("복습")) { "일반모드" }
-                    else { "" }),
+            text = contentText,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF1429A0),
@@ -92,5 +91,5 @@ fun NavCardPreview() {
 
     val baseViewModel = BaseViewModel()
 
-    NavCard(baseViewModel, "복습 단어 비율")
+    NavCard(baseViewModel, "복습 단어 비율", "일반모드")
 }

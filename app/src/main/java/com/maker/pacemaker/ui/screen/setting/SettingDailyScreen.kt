@@ -31,9 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummySettingBaseViewModel
-import com.maker.pacemaker.data.model.test.DummySettingDailyScreenViewModel
 import com.maker.pacemaker.ui.screen.Component.BoxCard
 import com.maker.pacemaker.ui.screen.Component.BoxCardPreview
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
@@ -43,7 +40,7 @@ import com.maker.pacemaker.ui.viewmodel.setting.details.SettingDailyScreenViewMo
 @Composable
 fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBaseViewModel, viewModel: SettingDailyScreenViewModel) {
 
-    val myDailyCount by viewModel.myDailyCount.collectAsState()
+    val dailyCount by settingViewModel.dailyCount.collectAsState()
 
     val dailySetting by viewModel.dailySetting.collectAsState()
 
@@ -149,7 +146,7 @@ fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBa
                                 .clickable {
                                     viewModel.selectDailySetting(
                                         "나만의 목표",
-                                        myDailyCount - 5
+                                        dailyCount - 5
                                     )
                                 }
                                 .constrainAs(minusButton) {
@@ -178,7 +175,7 @@ fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBa
                                 .clickable {
                                     viewModel.selectDailySetting(
                                         "나만의 목표",
-                                        myDailyCount + 5
+                                        dailyCount + 5
                                     )
                                 }
                                 .constrainAs(plusButton) {
@@ -200,7 +197,7 @@ fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBa
                     }
 
                     Text(
-                        text = if (dailySetting == "나만의 목표") "${myDailyCount}개" else "",
+                        text = if (dailySetting == "나만의 목표") "${dailyCount}개" else "",
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -277,9 +274,9 @@ fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBa
 @Preview
 fun SettingDailyScreenPreview() {
 
-    val baseViewModel = DummyBaseViewModel()
-    val settingViewModel = DummySettingBaseViewModel()
-    val viewModel = DummySettingDailyScreenViewModel()
-
-    SettingDailyScreen(baseViewModel, settingViewModel, viewModel)
+//    val baseViewModel = DummyBaseViewModel()
+//    val settingViewModel = DummySettingBaseViewModel()
+//    val viewModel = DummySettingDailyScreenViewModel()
+//
+//    SettingDailyScreen(baseViewModel, settingViewModel, viewModel)
 }

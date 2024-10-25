@@ -15,21 +15,25 @@ import com.maker.pacemaker.data.model.ActivityNavigationTo
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenNavigationTo
 import com.maker.pacemaker.data.model.ScreenType
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-open class BaseViewModel : ViewModel() {
+@HiltViewModel
+open class BaseViewModel @Inject constructor(
+) : ViewModel() {
 
     // 전역 Context 접근
-    private val context: Context by lazy { MyApplication.getContext() }
+    val context: Context by lazy { MyApplication.getContext() }
 
     // SharedPreferences 접근
-    protected val sharedPreferences: SharedPreferences
+    val sharedPreferences: SharedPreferences
         get() = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 
     // Editor 객체를 가져옵니다.
-    protected val editor = sharedPreferences.edit()
+    val editor = sharedPreferences.edit()
 
     //private val networkStatusTracker = NetworkStatusTracker(application)
 
@@ -51,19 +55,19 @@ open class BaseViewModel : ViewModel() {
     //    RetrofitClient.getRetrofitInstance(context).create(ApiService::class.java)
     //)
 
-    private val _userName = MutableStateFlow<String>("상빈")
+   val _userName = MutableStateFlow<String>("상빈")
     val userName: MutableStateFlow<String> get() = _userName
 
     // Activity navigation을 위한 LiveData
-    private val _activityNavigationTo = MutableLiveData<ActivityNavigationTo>()
+    val _activityNavigationTo = MutableLiveData<ActivityNavigationTo>()
     val activityNavigationTo: LiveData<ActivityNavigationTo> get() = _activityNavigationTo
 
     // Screen navigation을 위한 LiveData
-    private val _screenNavigationTo = MutableLiveData<ScreenNavigationTo>()
+    val _screenNavigationTo = MutableLiveData<ScreenNavigationTo>()
     val screenNavigationTo: LiveData<ScreenNavigationTo> get() = _screenNavigationTo
 
-    private var _previousScreen: ScreenType? = null
-    private var _previousActivity: ActivityType? = null
+    var _previousScreen: ScreenType? = null
+    var _previousActivity: ActivityType? = null
 
     val previousScreen: ScreenType?
         get() = _previousScreen

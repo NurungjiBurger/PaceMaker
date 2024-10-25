@@ -18,15 +18,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainMyPageScreenViewModel
 import com.maker.pacemaker.ui.screen.Component.UpBar
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
@@ -37,13 +36,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.maker.pacemaker.R
-import com.maker.pacemaker.data.model.test.DummySettingBaseViewModel
 import com.maker.pacemaker.ui.screen.Component.NavCard
 import com.maker.pacemaker.ui.viewmodel.setting.SettingBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingMyPageScreenViewModel
 
 @Composable
 fun SettingMyPageScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBaseViewModel, viewModel: SettingMyPageScreenViewModel) {
+
+    val dailyCount by settingViewModel.dailyCount.collectAsState()
+    val ratioMode by settingViewModel.ratioMode.collectAsState()
 
     ConstraintLayout(
         modifier = Modifier
@@ -144,9 +145,9 @@ fun SettingMyPageScreen(baseViewModel: BaseViewModel, settingViewModel: SettingB
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
         ){
-            NavCard(baseViewModel, "1일 학습 목표", { baseViewModel.goScreen(ScreenType.DAILY) })
-            NavCard(baseViewModel, "퀴즈 카테고리")
-            NavCard(baseViewModel, "복습 단어 비율")
+            NavCard(baseViewModel, "1일 학습 목표", dailyCount.toString(), { baseViewModel.goScreen(ScreenType.DAILY) })
+            NavCard(baseViewModel, "퀴즈 카테고리", "", { baseViewModel.goScreen(ScreenType.CATEGORY) })
+            NavCard(baseViewModel, "복습 단어 비율", ratioMode, { baseViewModel.goScreen(ScreenType.RATIO) })
         }
     }
 
@@ -156,9 +157,9 @@ fun SettingMyPageScreen(baseViewModel: BaseViewModel, settingViewModel: SettingB
 @Preview
 fun MainMyPageScreenPreview() {
 
-    val baseViewModel = DummyBaseViewModel()
-    val mainViewModel = DummySettingBaseViewModel()
-    val viewModel = DummyMainMyPageScreenViewModel()
-
-    SettingMyPageScreen(baseViewModel, mainViewModel, viewModel)
+//    val baseViewModel = DummyBaseViewModel()
+//    val mainViewModel = DummySettingBaseViewModel()
+//    val viewModel = DummyMainMyPageScreenViewModel()
+//
+//    SettingMyPageScreen(baseViewModel, mainViewModel, viewModel)
 }
