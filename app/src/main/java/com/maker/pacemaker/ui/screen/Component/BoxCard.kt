@@ -28,15 +28,20 @@ fun BoxCard(
     height: Dp,
     text: String,
     subText: String,
+    isSelect: Boolean,
     onClick: () -> Unit
 ) {
 
-    ConstraintLayout (
+    ConstraintLayout(
         modifier = Modifier
             .width(width)
             .height(height)
             .background(Color(0xFFFAFAFA))
-            .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(10.dp))
+            .border(
+                width = if (isSelect) 3.dp else 1.dp, // 조건에 따라 테두리 두께 설정
+                color = if (isSelect) Color(0xFF1429A0) else Color(0xFF000000), // 조건에 따라 테두리 색상 설정
+                shape = RoundedCornerShape(10.dp) // 테두리 모양 설정
+            )
             .clickable(onClick = onClick)
     ) {
         val (titleText, subTitleText) = createRefs()
@@ -77,6 +82,6 @@ fun BoxCardPreview() {
 
     val baseViewModel = DummyBaseViewModel()
 
-    BoxCard(baseViewModel, 100.dp, 100.dp, "여유롭게", "20개",
+    BoxCard(baseViewModel, 100.dp, 100.dp, "여유롭게", "20개", true,
         { baseViewModel.goScreen(ScreenType.FINISH) })
 }

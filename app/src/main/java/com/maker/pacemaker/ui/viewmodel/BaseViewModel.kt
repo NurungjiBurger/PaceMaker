@@ -21,15 +21,15 @@ import kotlinx.coroutines.launch
 
 open class BaseViewModel : ViewModel() {
 
-//    // 전역 Context 접근
-//    private val context: Context by lazy { MyApplication.getContext() }
-//
-//    // SharedPreferences 접근
-//    protected val sharedPreferences: SharedPreferences
-//        get() = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-//
-//    // Editor 객체를 가져옵니다.
-//    protected val editor = sharedPreferences.edit()
+    // 전역 Context 접근
+    private val context: Context by lazy { MyApplication.getContext() }
+
+    // SharedPreferences 접근
+    protected val sharedPreferences: SharedPreferences
+        get() = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+
+    // Editor 객체를 가져옵니다.
+    protected val editor = sharedPreferences.edit()
 
     //private val networkStatusTracker = NetworkStatusTracker(application)
 
@@ -39,6 +39,7 @@ open class BaseViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
+
 //            networkStatusTracker.networkStatus.collect { status ->
 //                _networkStatus.value = !status
 //            }
@@ -69,14 +70,6 @@ open class BaseViewModel : ViewModel() {
 
     val previousActivity: ActivityType?
         get() = _previousActivity
-
-    init {
-        viewModelScope.launch {
-//            networkStatusTracker.networkStatus.collect { status ->
-//                _networkStatus.value = !status
-//            }
-        }
-    }
 
 
     // Activity로 이동

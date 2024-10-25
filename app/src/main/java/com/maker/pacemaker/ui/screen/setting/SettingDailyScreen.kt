@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -42,6 +44,8 @@ import com.maker.pacemaker.ui.viewmodel.setting.details.SettingDailyScreenViewMo
 fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBaseViewModel, viewModel: SettingDailyScreenViewModel) {
 
     val myDailyCount by viewModel.myDailyCount.collectAsState()
+
+    val dailySetting by viewModel.dailySetting.collectAsState()
 
     ConstraintLayout(
         modifier = Modifier
@@ -93,9 +97,9 @@ fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBa
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
-                BoxCard(baseViewModel, 100.dp, 100.dp, "여유롭게", "20개", onClick = { settingViewModel.setDailyCount(20) })
-                BoxCard(baseViewModel, 100.dp, 100.dp, "적당하게", "30개", onClick = { settingViewModel.setDailyCount(30) })
-                BoxCard(baseViewModel, 100.dp, 100.dp, "열심히", "50개", onClick = { settingViewModel.setDailyCount(50) })
+                BoxCard(baseViewModel, 100.dp, 100.dp, "여유롭게", "20개",  (dailySetting == "여유롭게"), onClick = { viewModel.selectDailySetting("여유롭게", 20) })
+                BoxCard(baseViewModel, 100.dp, 100.dp, "적당하게", "30개", (dailySetting == "적당하게"), onClick = { viewModel.selectDailySetting("적당하게", 30) })
+                BoxCard(baseViewModel, 100.dp, 100.dp, "열심히", "50개", (dailySetting == "열심히"), onClick = { viewModel.selectDailySetting("열심히", 50) })
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -106,15 +110,19 @@ fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBa
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                BoxCard(baseViewModel, 100.dp, 100.dp, "열정적으로", "100개", onClick = {settingViewModel.setDailyCount(100)})
+                BoxCard(baseViewModel, 100.dp, 100.dp, "열정적으로", "100개", (dailySetting == "열정적으로"), onClick = {viewModel.selectDailySetting("열정적으로", 100)})
 
                 ConstraintLayout (
                     modifier = Modifier
                         .width(225.dp)
                         .height(100.dp)
                         .background(Color(0xFFFAFAFA))
-                        .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(10.dp))
-                        .clickable(onClick = { settingViewModel.setDailyCount(0) })
+                        .border(
+                            width = if (dailySetting == "나만의 목표") 3.dp else 1.dp, // 조건에 따라 테두리 두께 설정
+                            color = if (dailySetting == "나만의 목표") Color(0xFF1429A0) else Color(0xFF000000), // 조건에 따라 테두리 색상 설정
+                            shape = RoundedCornerShape(10.dp) // 테두리 모양 설정
+                        )
+                        .clickable(onClick = { viewModel.selectDailySetting("나만의 목표", 30) })
                 ) {
                     val (titleText, plusButton, minusButton, subTitleText) = createRefs()
 
@@ -130,36 +138,69 @@ fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBa
                             }
                     )
 
-                    Text(
-                        text = "-",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .constrainAs(minusButton) {
-                                start.linkTo(parent.start)
-                                end.linkTo(titleText.start)
-                                top.linkTo(parent.top)
-                                bottom.linkTo(parent.bottom)
-                            }
-                            .clickable { viewModel.setMyDailyCount(myDailyCount - 5) }
-                    )
+                    if (dailySetting == "나만의 목표") {
+
+                        Box(
+                            modifier = Modifier
+                                .width(30.dp)
+                                .height(30.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
+                                .clickable {
+                                    viewModel.selectDailySetting(
+                                        "나만의 목표",
+                                        myDailyCount - 5
+                                    )
+                                }
+                                .constrainAs(minusButton) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(titleText.start)
+                                    top.linkTo(parent.top)
+                                    bottom.linkTo(parent.bottom)
+                                },
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = "-",
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .width(30.dp)
+                                .height(30.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
+                                .clickable {
+                                    viewModel.selectDailySetting(
+                                        "나만의 목표",
+                                        myDailyCount + 5
+                                    )
+                                }
+                                .constrainAs(plusButton) {
+                                    start.linkTo(titleText.end)
+                                    end.linkTo(parent.end)
+                                    top.linkTo(parent.top)
+                                    bottom.linkTo(parent.bottom)
+                                },
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = "+",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
 
                     Text(
-                        text = "+",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .constrainAs(plusButton) {
-                                start.linkTo(titleText.end)
-                                end.linkTo(parent.end)
-                                top.linkTo(parent.top)
-                                bottom.linkTo(parent.bottom)
-                            }
-                            .clickable { viewModel.setMyDailyCount(myDailyCount + 5) }
-                    )
-
-                    Text(
-                        text = "${myDailyCount}개",
+                        text = if (dailySetting == "나만의 목표") "${myDailyCount}개" else "",
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -191,8 +232,10 @@ fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBa
                 modifier = Modifier
                     .width(150.dp)
                     .height(50.dp)
+                    .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
                     .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
                     .clickable {
+                        viewModel.completeDailySetting(false)
                         baseViewModel.goScreen(ScreenType.MYPAGE)
                     },
                 contentAlignment = Alignment.Center
@@ -200,7 +243,8 @@ fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBa
                 Text(
                     text = "취소",
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
             }
 
@@ -209,17 +253,19 @@ fun SettingDailyScreen(baseViewModel: BaseViewModel, settingViewModel: SettingBa
                 modifier = Modifier
                     .width(150.dp)
                     .height(50.dp)
+                    .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
                     .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
                     .clickable {
-                        settingViewModel.setDailyCount(myDailyCount)
-                        baseViewModel.goActivity(ActivityType.SETTING)
+                        viewModel.completeDailySetting(true)
+                        baseViewModel.goScreen(ScreenType.MYPAGE)
                     },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "선택완료",
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
             }
         }
