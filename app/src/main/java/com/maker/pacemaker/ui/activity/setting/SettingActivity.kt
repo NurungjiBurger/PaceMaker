@@ -50,7 +50,7 @@ class SettingActivity : BaseActivity() {
     override fun navigateToScreen(screenType: ScreenType) {
 
         val route = when (screenType) {
-            ScreenType.MYPAGE -> "mypageScreen"
+            ScreenType.MYPAGE -> "myPageScreen"
             ScreenType.DAILY -> "dailyScreen"
             ScreenType.RATIO -> "ratioScreen"
             ScreenType.CATEGORY -> "categoryScreen"

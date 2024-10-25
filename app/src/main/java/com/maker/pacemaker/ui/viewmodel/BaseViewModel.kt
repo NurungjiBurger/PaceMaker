@@ -1,8 +1,11 @@
 package com.maker.pacemaker.ui.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
@@ -35,6 +38,17 @@ open class BaseViewModel @Inject constructor(
     // Editor 객체를 가져옵니다.
     val editor = sharedPreferences.edit()
 
+    // 휴대폰 진동
+    @SuppressLint("ServiceCast")
+    fun triggerVibration() {
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (vibrator.hasVibrator()) {
+            val vibrationEffect =
+                VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)
+            vibrator.vibrate(vibrationEffect)
+        }
+    }
+
     //private val networkStatusTracker = NetworkStatusTracker(application)
 
     // 네트워크 상태를 관리하는 StateFlow
@@ -55,7 +69,7 @@ open class BaseViewModel @Inject constructor(
     //    RetrofitClient.getRetrofitInstance(context).create(ApiService::class.java)
     //)
 
-   val _userName = MutableStateFlow<String>("상빈")
+    val _userName = MutableStateFlow<String>("상빈")
     val userName: MutableStateFlow<String> get() = _userName
 
     // Activity navigation을 위한 LiveData
@@ -81,7 +95,7 @@ open class BaseViewModel @Inject constructor(
 
         Log.d("BaseViewModel", "goActivity: $activity")
 
-        _previousActivity = activityNavigationTo.value?.activityType
+        _previousActivity = activityNavigationTo.value?.activityType?: ActivityType.MAIN
         _previousScreen = ScreenType.FINISH
         _activityNavigationTo.value = ActivityNavigationTo(activity)
     }
@@ -90,10 +104,13 @@ open class BaseViewModel @Inject constructor(
     fun goScreen(screen: ScreenType) {
 
         Log.d("BaseViewModel", "goScreen: $screen")
+        Log.d("BaseViewModel", "previous Screen: $_previousScreen")
 
-        _previousScreen = screenNavigationTo.value?.screenType
+        _previousScreen = screenNavigationTo.value?.screenType?: ScreenType.MAIN
         _previousActivity = ActivityType.FINISH
         _screenNavigationTo.value = ScreenNavigationTo(screen)
+
+        Log.d("BaseViewModel", "previous Screen: $_previousScreen")
     }
 
     fun floatingToastMessage(message: String) {

@@ -65,10 +65,10 @@ class MainActivity : BaseActivity() {
     override fun navigateToScreen(screenType: ScreenType) {
 
         val route = when (screenType) {
-            ScreenType.MAIN -> "mainscreen"
-            ScreenType.ALARM -> "alarmscreen"
-            ScreenType.MENU -> "menuscreen"
-            ScreenType.LEVELTEST -> "leveltestscreen"
+            ScreenType.MAIN -> "mainScreen"
+            ScreenType.ALARM -> "alarmScreen"
+            ScreenType.MENU -> "menuScreen"
+            ScreenType.LEVELTEST -> "levelTestScreen"
             else -> return
         }
 

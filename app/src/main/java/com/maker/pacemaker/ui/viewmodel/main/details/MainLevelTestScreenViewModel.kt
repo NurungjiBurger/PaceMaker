@@ -25,5 +25,24 @@ open class MainLevelTestScreenViewModel @Inject constructor(
         _userResponse.value = newValue
     }
 
+    fun onUserResponseSubmit() {
+        // 사용자 응답 제출
+        if (_userResponse.value.text.isNotEmpty()) {
+            // 사용자 응답이 비어 있지 않은 경우
+            // 사용자 응답을 서버로 전송
+            if (_userResponse.value.text == "SRP") {
+                // 정답인 경우
+                // 다음 문제로 이동
+                _nowProblem.value = "객체지향의 SOLID 중 “개방 폐쇄 원칙”은 무엇인가요?"
+                _userResponse.value = TextFieldValue()
+            } else {
+                // 오답인 경우
+                // 사용자에게 오답임을 알림
+                _userResponse.value = TextFieldValue()
+                baseViewModel.baseViewModel.triggerVibration()
+            }
+        }
+    }
+
 
 }
