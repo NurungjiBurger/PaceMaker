@@ -11,11 +11,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.activity.BaseActivity
+import com.maker.pacemaker.ui.screen.setting.SettingCategoryScreen
 import com.maker.pacemaker.ui.screen.setting.SettingDailyScreen
 import com.maker.pacemaker.ui.screen.setting.SettingMyPageScreen
 import com.maker.pacemaker.ui.screen.setting.SettingRatioScreen
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.SettingBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.setting.details.SettingCategoryScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingDailyScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingMyPageScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingRatioScreenViewModel
@@ -25,6 +27,7 @@ class SettingActivity : BaseActivity() {
     private val settingMyPageScreenViewModel: SettingMyPageScreenViewModel by viewModels()
     private val settingDailyScreenViewModel: SettingDailyScreenViewModel by viewModels()
     private val settingRatioScreenViewModel: SettingRatioScreenViewModel by viewModels()
+    private val settingCategoryScreenViewModel: SettingCategoryScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +40,7 @@ class SettingActivity : BaseActivity() {
                 composable("dailyScreen") { SettingDailyScreen(settingDailyScreenViewModel) }
                 composable("myPageScreen") { SettingMyPageScreen(settingMyPageScreenViewModel)}
                 composable("ratioScreen") { SettingRatioScreen(settingRatioScreenViewModel)}
+                composable("categoryScreen") { SettingCategoryScreen(settingCategoryScreenViewModel)}
             }
         }
     }
