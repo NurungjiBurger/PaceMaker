@@ -3,8 +3,6 @@ package com.maker.pacemaker.ui.activity.setting
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,8 +13,6 @@ import com.maker.pacemaker.ui.screen.setting.SettingCategoryScreen
 import com.maker.pacemaker.ui.screen.setting.SettingDailyScreen
 import com.maker.pacemaker.ui.screen.setting.SettingMyPageScreen
 import com.maker.pacemaker.ui.screen.setting.SettingRatioScreen
-import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
-import com.maker.pacemaker.ui.viewmodel.setting.SettingBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingCategoryScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingDailyScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingMyPageScreenViewModel
@@ -58,7 +54,6 @@ class SettingActivity : BaseActivity() {
             ScreenType.DAILY -> "dailyScreen"
             ScreenType.RATIO -> "ratioScreen"
             ScreenType.CATEGORY -> "categoryScreen"
-            ScreenType.LEVELTEST -> "levelTestScreen"
             else -> return
         }
 

@@ -12,10 +12,12 @@ import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.activity.BaseActivity
 import com.maker.pacemaker.ui.screen.main.MainAlarmScreen
+import com.maker.pacemaker.ui.screen.main.MainLevelTestScreen
 import com.maker.pacemaker.ui.screen.main.MainMenuScreen
 import com.maker.pacemaker.ui.screen.main.MainScreen
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.main.details.MainLevelTestScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainMenuScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +30,7 @@ class MainActivity : BaseActivity() {
     private val mainScreenViewModel: MainScreenViewModel by viewModels()
     private val mainAlarmScreenViewModel: MainAlarmScreenViewModel by viewModels()
     private val mainMenuScreenViewModel: MainMenuScreenViewModel by viewModels()
+    private val mainLevelTestScreenViewModel: MainLevelTestScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,7 @@ class MainActivity : BaseActivity() {
                 composable("mainScreen") { MainScreen(mainScreenViewModel) }
                 composable("alarmScreen") { MainAlarmScreen(mainAlarmScreenViewModel) }
                 composable("menuScreen") { MainMenuScreen(mainMenuScreenViewModel) }
+                composable("levelTestScreen") { MainLevelTestScreen(mainLevelTestScreenViewModel) }
             }
         }
     }
@@ -64,6 +68,7 @@ class MainActivity : BaseActivity() {
             ScreenType.MAIN -> "mainscreen"
             ScreenType.ALARM -> "alarmscreen"
             ScreenType.MENU -> "menuscreen"
+            ScreenType.LEVELTEST -> "leveltestscreen"
             else -> return
         }
 

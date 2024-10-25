@@ -107,6 +107,10 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
+                modifier = Modifier
+                    .clickable(onClick = {
+                        baseViewModel.goScreen(ScreenType.LEVELTEST)
+                    })
             )
 
             Spacer(modifier = Modifier.height(20.dp))
