@@ -58,10 +58,12 @@ fun MainAlarmScreen(viewModel: MainAlarmScreenViewModel) {
         )
         {
             if (baseViewModel.previousActivity != ActivityType.FINISH) baseViewModel.previousActivity?.let {
+                Log.d("MainAlarmScreen", "previousActivity: $it")
                 UpBar(baseViewModel, "새 소식", true,
                     it, ScreenType.FINISH)
             }
             else if (baseViewModel.previousScreen != ScreenType.FINISH) baseViewModel.previousScreen?.let {
+                Log.d("MainAlarmScreen", "previousScreen: $it")
                 UpBar(baseViewModel, "새 소식", false, ActivityType.FINISH,
                     it
                 )

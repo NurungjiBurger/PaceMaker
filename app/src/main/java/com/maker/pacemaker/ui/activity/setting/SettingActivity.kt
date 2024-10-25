@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,15 +13,18 @@ import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.activity.BaseActivity
 import com.maker.pacemaker.ui.screen.setting.SettingDailyScreen
 import com.maker.pacemaker.ui.screen.setting.SettingMyPageScreen
+import com.maker.pacemaker.ui.screen.setting.SettingRatioScreen
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.SettingBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingDailyScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingMyPageScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.setting.details.SettingRatioScreenViewModel
 
 class SettingActivity : BaseActivity() {
 
     private val settingMyPageScreenViewModel: SettingMyPageScreenViewModel by viewModels()
     private val settingDailyScreenViewModel: SettingDailyScreenViewModel by viewModels()
+    private val settingRatioScreenViewModel: SettingRatioScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +36,7 @@ class SettingActivity : BaseActivity() {
             NavHost(navController as NavHostController, startDestination = "myPageScreen") {
                 composable("dailyScreen") { SettingDailyScreen(settingDailyScreenViewModel) }
                 composable("myPageScreen") { SettingMyPageScreen(settingMyPageScreenViewModel)}
+                composable("ratioScreen") { SettingRatioScreen(settingRatioScreenViewModel)}
             }
         }
     }

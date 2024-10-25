@@ -3,11 +3,14 @@ package com.maker.pacemaker.ui.screen.Component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -26,12 +29,14 @@ fun BoxCard(
     width: Dp,
     height: Dp,
     text: String,
+    textSize: Int,
     subText: String,
+    subTextSize: Int,
     isSelect: Boolean,
     onClick: () -> Unit
 ) {
 
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .width(width)
             .height(height)
@@ -41,34 +46,26 @@ fun BoxCard(
                 color = if (isSelect) Color(0xFF1429A0) else Color(0xFF000000), // 조건에 따라 테두리 색상 설정
                 shape = RoundedCornerShape(10.dp) // 테두리 모양 설정
             )
-            .clickable(onClick = onClick)
-    ) {
-        val (titleText, subTitleText) = createRefs()
-
+            .clickable(onClick = onClick),
+        verticalArrangement = Arrangement.SpaceAround,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
         Text(
             text = text,
-            fontSize = 20.sp,
+            fontSize = textSize.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .constrainAs(titleText) {
-                    top.linkTo(parent.top, margin = 10.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
+
         )
 
         if (subText != "")
         {
             Text(
                 text = subText,
-                fontSize = 30.sp,
+                fontSize = subTextSize.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .constrainAs(subTitleText) {
-                        top.linkTo(titleText.bottom, margin = 10.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
+
             )
         }
 

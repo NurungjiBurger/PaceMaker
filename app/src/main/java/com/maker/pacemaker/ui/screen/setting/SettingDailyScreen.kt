@@ -96,9 +96,9 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
-                BoxCard(baseViewModel, 100.dp, 100.dp, "여유롭게", "20개",  (dailySetting == "여유롭게"), onClick = { viewModel.selectDailySetting("여유롭게", 20) })
-                BoxCard(baseViewModel, 100.dp, 100.dp, "적당하게", "30개", (dailySetting == "적당하게"), onClick = { viewModel.selectDailySetting("적당하게", 30) })
-                BoxCard(baseViewModel, 100.dp, 100.dp, "열심히", "50개", (dailySetting == "열심히"), onClick = { viewModel.selectDailySetting("열심히", 50) })
+                BoxCard(baseViewModel, 100.dp, 100.dp, "여유롭게", 20,"20개",  30, (dailySetting == "여유롭게"), onClick = { viewModel.selectDailySetting("여유롭게", 20) })
+                BoxCard(baseViewModel, 100.dp, 100.dp, "적당하게", 20,"30개", 30, (dailySetting == "적당하게"), onClick = { viewModel.selectDailySetting("적당하게", 30) })
+                BoxCard(baseViewModel, 100.dp, 100.dp, "열심히", 20,"50개", 30, (dailySetting == "열심히"), onClick = { viewModel.selectDailySetting("열심히", 50) })
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -109,7 +109,7 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                BoxCard(baseViewModel, 100.dp, 100.dp, "열정적으로", "100개", (dailySetting == "열정적으로"), onClick = {viewModel.selectDailySetting("열정적으로", 100)})
+                BoxCard(baseViewModel, 100.dp, 100.dp, "열정적으로", 20,"100개", 30, (dailySetting == "열정적으로"), onClick = {viewModel.selectDailySetting("열정적으로", 100)})
 
                 ConstraintLayout (
                     modifier = Modifier
