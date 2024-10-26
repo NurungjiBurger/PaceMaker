@@ -25,5 +25,6 @@ enum class ScreenType(val navigateTo: (NavController) -> Unit) {
     RATIO({ navController -> navController.navigate("ratioScreen") }),
     CATEGORY({ navController -> navController.navigate("categoryScreen") }),
     LEVELTEST({ navController -> navController.navigate("levelTestScreen") }),
+    PROBLEMSOLVE({ navController -> navController.navigate("problemSolveScreen") }),
 
 }

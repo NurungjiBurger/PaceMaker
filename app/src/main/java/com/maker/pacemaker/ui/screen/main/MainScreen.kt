@@ -154,7 +154,8 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                     modifier = Modifier
                         .size(150.dp)
                         .background(Color(0xFF1429A0), RoundedCornerShape(10.dp))
-                        .border(BorderStroke(2.dp, Color.Blue), shape = RoundedCornerShape(10.dp)),
+                        .border(BorderStroke(2.dp, Color.Blue), shape = RoundedCornerShape(10.dp))
+                        .clickable { baseViewModel.goScreen(ScreenType.PROBLEMSOLVE) },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

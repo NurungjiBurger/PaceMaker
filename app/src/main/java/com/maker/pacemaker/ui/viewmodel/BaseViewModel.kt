@@ -113,7 +113,7 @@ open class BaseViewModel @Inject constructor(
         Log.d("BaseViewModel", "previous Screen: $_previousScreen")
     }
 
-    fun floatingToastMessage(message: String) {
-    //    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    fun triggerToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }
