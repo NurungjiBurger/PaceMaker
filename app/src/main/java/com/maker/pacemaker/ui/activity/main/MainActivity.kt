@@ -52,11 +52,11 @@ class MainActivity : BaseActivity() {
                 composable("menuScreen") { MainMenuScreen(mainMenuScreenViewModel) }
                 composable("levelTestScreen") { MainLevelTestScreen(mainLevelTestScreenViewModel) }
                 composable("problemAddScreen") { MainProblemAddScreen(mainProblemAddScreenViewModel) }
-                composable("problemSearchScreen") { MainProblemSearchScreen(mainProblemSearchScreenViewModel)
-                composable("problemSolveScreen") { MainProblemSolveScreen(mainProblemSolveScreenViewModel) } } }
+                composable("problemSearchScreen") { MainProblemSearchScreen(mainProblemSearchScreenViewModel) }
+                composable("problemSolveScreen") { MainProblemSolveScreen(mainProblemSolveScreenViewModel) }
+                }
             }
         }
-
 
 
     // NavController 초기화 메서드 구현

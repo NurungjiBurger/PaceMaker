@@ -31,6 +31,9 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
     private val _wrongCnt = MutableStateFlow(0)
     val wrongCnt = _wrongCnt
 
+    private val _report = MutableStateFlow("")
+    val report = _report
+
     init {
         _todayProblems.value = listOf(
             Pair("단일 책임 원칙(SRP)", "객체 지향의 SOLID 원칙 중 \"클래스는 단 하나의 목적을 가져야 하며, 변화의 이유가 하나만 있어야 한다\"는 원칙은 무엇일까요?"),
@@ -57,6 +60,18 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
             "다형성(Polymorphism)" to listOf("동일한 메서드 이름이 다르게 동작할 수 있습니다.", "서브클래스에서 메서드를 재정의합니다.", "유연한 코드 작성을 가능하게 합니다."),
             "의존성 주입(Dependency Injection)" to listOf("의존성을 외부에서 주입받아 결합도를 낮춥니다.", "객체 간 관계를 동적으로 구성합니다.", "테스트 용이성이 향상됩니다.")
         ).toMap()
+    }
+
+    fun onAnswerChanged(answer: String) {
+        _answer.value = answer
+    }
+
+    fun onReportChanged(report: String) {
+        _report.value = report
+    }
+
+    fun onReport() {
+
     }
 
     fun onSubmit() {
