@@ -59,7 +59,7 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
                 modifier = Modifier
                     .size(40.dp)
                     .clickable {
-                        baseViewModel.floatingToastMessage("랭킹페이지입니다.")
+                        baseViewModel.triggerToast("랭킹페이지입니다.")
                     }
             )
 
@@ -81,7 +81,7 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
                 modifier = Modifier
                     .size(40.dp)
                     .clickable {
-                        baseViewModel.floatingToastMessage("실험실페이지입니다.")
+                        baseViewModel.triggerToast("실험실페이지입니다.")
                     }
             )
 
@@ -92,7 +92,7 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
                 modifier = Modifier
                     .size(40.dp)
                     .clickable {
-                        baseViewModel.floatingToastMessage("기타페이지입니다.")
+                        baseViewModel.triggerToast("기타페이지입니다.")
                     }
             )
 

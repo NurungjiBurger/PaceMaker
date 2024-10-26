@@ -16,6 +16,7 @@ import com.maker.pacemaker.ui.screen.main.MainLevelTestScreen
 import com.maker.pacemaker.ui.screen.main.MainMenuScreen
 import com.maker.pacemaker.ui.screen.main.MainProblemAddScreen
 import com.maker.pacemaker.ui.screen.main.MainProblemSearchScreen
+import com.maker.pacemaker.ui.screen.main.MainProblemSolveScreen
 import com.maker.pacemaker.ui.screen.main.MainScreen
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
@@ -23,6 +24,7 @@ import com.maker.pacemaker.ui.viewmodel.main.details.MainLevelTestScreenViewMode
 import com.maker.pacemaker.ui.viewmodel.main.details.MainMenuScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemAddScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSearchScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSolveScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,6 +37,7 @@ class MainActivity : BaseActivity() {
     private val mainLevelTestScreenViewModel: MainLevelTestScreenViewModel by viewModels()
     private val mainProblemAddScreenViewModel: MainProblemAddScreenViewModel by viewModels()
     private val mainProblemSearchScreenViewModel: MainProblemSearchScreenViewModel by viewModels()
+    private val mainProblemSolveScreenViewModel: MainProblemSolveScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +52,11 @@ class MainActivity : BaseActivity() {
                 composable("menuScreen") { MainMenuScreen(mainMenuScreenViewModel) }
                 composable("levelTestScreen") { MainLevelTestScreen(mainLevelTestScreenViewModel) }
                 composable("problemAddScreen") { MainProblemAddScreen(mainProblemAddScreenViewModel) }
-                composable("problemSearchScreen") { MainProblemSearchScreen(mainProblemSearchScreenViewModel) } }
+                composable("problemSearchScreen") { MainProblemSearchScreen(mainProblemSearchScreenViewModel)
+                composable("problemSolveScreen") { MainProblemSolveScreen(mainProblemSolveScreenViewModel) } } }
             }
         }
+
 
 
     // NavController 초기화 메서드 구현
@@ -77,6 +82,7 @@ class MainActivity : BaseActivity() {
             ScreenType.LEVELTEST -> "levelTestScreen"
             ScreenType.PROBLEMADD -> "problemAddScreen"
             ScreenType.PROBLEMSEARCH -> "problemSearchScreen"
+            ScreenType.PROBLEMSOLVE -> "problemSolveScreen"
             else -> return
         }
 
