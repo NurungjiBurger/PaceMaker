@@ -127,15 +127,18 @@ fun LogInScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseViewModel
                     .background(Color.White), // 배경색을 흰색으로 설정
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent, // TextField 배경을 투명으로 설정
-                    focusedIndicatorColor = Color.Transparent, // 포커스된 상태의 밑줄을 투명으로 설정
-                    unfocusedIndicatorColor = Color.Transparent // 비포커스 상태의 밑줄을 투명으로 설정
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
                 )
             )
         }
 
         // Sign In Button
         Button(
-            onClick = { /* Sign In action */ },
+            onClick = {
+                // 로그인
+                // 키보드 숨김
+            },
             modifier = Modifier
                 .constrainAs(authButton) {
                     start.linkTo(inputBox.start)
@@ -144,7 +147,7 @@ fun LogInScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseViewModel
                 }
                 .fillMaxWidth(0.8f)
                 .height(48.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A73E8))
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1429A0))
         ) {
             Text("Sign In", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
