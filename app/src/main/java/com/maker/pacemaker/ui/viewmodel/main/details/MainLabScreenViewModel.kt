@@ -10,4 +10,6 @@ open class MainLabScreenViewModel @Inject constructor(
     private val base: MainBaseViewModel
 ): ViewModel() {
 
+    val baseViewModel = base
+
 }
