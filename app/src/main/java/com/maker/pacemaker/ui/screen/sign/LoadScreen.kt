@@ -16,11 +16,15 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.test.DummyBaseViewModel
 import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
 import com.maker.pacemaker.data.model.test.DummyMainScreenViewModel
+import com.maker.pacemaker.data.model.test.DummySignBaseViewModel
+import com.maker.pacemaker.data.model.test.DummySignUpScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.sign.SignBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.sign.details.SignUpScreenViewModel
 
 @Composable
-fun LoadScreen(baseViewModel: BaseViewModel, mainViewModel: BaseViewModel, viewModel: MainScreenViewModel) {
+fun LoadScreen(baseViewModel: BaseViewModel, mainViewModel: SignBaseViewModel, viewModel: SignUpScreenViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -61,8 +65,8 @@ fun LoadScreen(baseViewModel: BaseViewModel, mainViewModel: BaseViewModel, viewM
 @Composable
 fun LoadScreenPreview() {
     val baseViewModel = DummyBaseViewModel()
-    val loadscreenViewModel = DummyMainScreenViewModel()
-    val loadViewModel = DummyMainBaseViewModel()
+    val loadScreenViewModel = DummySignUpScreenViewModel()
+    val loadViewModel = DummySignBaseViewModel()
 
-    LoadScreen(baseViewModel, loadViewModel, loadscreenViewModel)
+    LoadScreen(baseViewModel, loadViewModel, loadScreenViewModel)
 }

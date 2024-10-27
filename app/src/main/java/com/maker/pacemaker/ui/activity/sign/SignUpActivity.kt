@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.activity.BaseActivity
+import com.maker.pacemaker.ui.screen.sign.LoadScreen
 import com.maker.pacemaker.ui.screen.sign.SignAuthScreen
 import com.maker.pacemaker.ui.viewmodel.sign.SignBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.sign.details.SignUpScreenViewModel
@@ -31,8 +32,20 @@ class SignUpActivity : BaseActivity() {
             navController = rememberNavController()
 
             NavHost(navController as NavHostController, startDestination = "signupScreen") {
-                composable("signupScreen") { SignAuthScreen(baseViewModel, signViewModel, signUpScreenViewModel) }
-
+                composable("signupScreen") {
+                    SignAuthScreen(
+                        baseViewModel,
+                        signViewModel,
+                        signUpScreenViewModel
+                    )
+                }
+                composable("loadScreen") {
+                    LoadScreen(
+                        baseViewModel,
+                        signViewModel,
+                        signUpScreenViewModel
+                    )
+                }
             }
         }
     }

@@ -9,6 +9,8 @@ import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.sign.SignBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.sign.details.SignUpScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.signin.SignInBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.signin.details.SignInScreenViewModel
 
 class PreviewTest {
 }
@@ -40,5 +42,13 @@ class DummySignBaseViewModel() : SignBaseViewModel() {
 }
 
 class DummySignUpScreenViewModel : SignUpScreenViewModel(FirebaseAuth.getInstance()) {
+    // 필요한 상태나 메서드를 추가로 정의
+}
+
+class DummySignInBaseViewModel() : SignInBaseViewModel() {
+    // 필요한 상태나 메서드를 정의
+}
+
+class DummySignInScreenViewModel : SignInScreenViewModel() {
     // 필요한 상태나 메서드를 추가로 정의
 }

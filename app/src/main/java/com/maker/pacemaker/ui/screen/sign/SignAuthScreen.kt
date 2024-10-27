@@ -258,8 +258,7 @@ fun SignAuthScreen(baseViewModel: BaseViewModel, mainViewModel: SignBaseViewMode
 
 class EmailVisualTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
-        // 여기에 이메일 형식 변환 로직을 추가할 수 있습니다.
-        // 예: 이메일의 형식을 적절하게 변형하거나, 사용자 입력에 대한 피드백 제공
+        // 여기에 이메일 형식 변환 로직을 추가
         return TransformedText(text, OffsetMapping.Identity)
     }
 }
