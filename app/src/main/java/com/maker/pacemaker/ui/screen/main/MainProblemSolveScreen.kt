@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.content.MediaType.Companion.Text
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -95,7 +96,10 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                     color = Color.White,
                     modifier = Modifier
                         .background(Color(0xFF1429A0), shape = RoundedCornerShape(10.dp))
-                        .clickable {
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
                             // 신고 처리 로직 추가 (예: 서버에 신고 내용 전송)
                             viewModel.onReport()
                             showDialog = false // 다이얼로그 닫기
@@ -109,7 +113,10 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                     color = Color.White,
                     modifier = Modifier
                         .background(Color(0xFF1429A0), shape = RoundedCornerShape(10.dp))
-                        .clickable { showDialog = false }
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) { showDialog = false }
                         .padding(10.dp)
                 )
             }
@@ -198,7 +205,10 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                     .width(100.dp)
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(10.dp))
-                    .clickable { viewModel.onSubmit() }
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { viewModel.onSubmit() }
                     .constrainAs(submitButton) {
                         top.linkTo(answerPart.bottom, margin = 10.dp)
                         end.linkTo(parent.end)
@@ -239,7 +249,10 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
               .width(60.dp)
               .height(30.dp)
               .background(Color.Red, shape = RoundedCornerShape(40.dp))
-              .clickable{
+              .clickable(
+                  interactionSource = remember { MutableInteractionSource() },
+                  indication = null
+              ) {
                   selectedProblem = todayProblems[todaySolvedCount] // 클릭된 문제 설정
                   showDialog = true // 다이얼로그 열기
               }

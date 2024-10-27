@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -107,7 +109,10 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
                     .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
-                    .clickable {
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
                        // viewModel.completeDailySetting(false)
                         baseViewModel.goScreen(ScreenType.MYPAGE)
                     },
@@ -128,7 +133,10 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
                     .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
-                    .clickable {
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
                         //viewModel.completeDailySetting(true)
                         baseViewModel.goScreen(ScreenType.MYPAGE)
                     },

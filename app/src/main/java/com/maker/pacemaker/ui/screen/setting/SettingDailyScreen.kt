@@ -3,6 +3,7 @@ package com.maker.pacemaker.ui.screen.setting
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -121,7 +123,10 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                             color = if (dailySetting == "나만의 목표") Color(0xFF1429A0) else Color(0xFF000000), // 조건에 따라 테두리 색상 설정
                             shape = RoundedCornerShape(10.dp) // 테두리 모양 설정
                         )
-                        .clickable(onClick = { viewModel.selectDailySetting("나만의 목표", 30) })
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) { viewModel.selectDailySetting("나만의 목표", 30) }
                 ) {
                     val (titleText, plusButton, minusButton, subTitleText) = createRefs()
 
@@ -145,7 +150,10 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                                 .height(30.dp)
                                 .clip(CircleShape)
                                 .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
-                                .clickable {
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ) {
                                     viewModel.selectDailySetting(
                                         "나만의 목표",
                                         dailyCount - 5
@@ -174,7 +182,10 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                                 .height(30.dp)
                                 .clip(CircleShape)
                                 .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
-                                .clickable {
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ) {
                                     viewModel.selectDailySetting(
                                         "나만의 목표",
                                         dailyCount + 5
@@ -233,7 +244,10 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
                     .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
-                    .clickable {
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
                         viewModel.completeDailySetting(false)
                         baseViewModel.goScreen(ScreenType.MYPAGE)
                     },
@@ -254,7 +268,10 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
                     .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
-                    .clickable {
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
                         viewModel.completeDailySetting(true)
                         baseViewModel.goScreen(ScreenType.MYPAGE)
                     },
