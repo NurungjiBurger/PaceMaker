@@ -2,6 +2,8 @@ package com.maker.pacemaker.ui.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.graphics.Color
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -22,6 +24,10 @@ open class BaseActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+// 상태바 색상을 검정색으로 설정
+        window.statusBarColor = ContextCompat.getColor(this, android.R.color.black)
+
 
         // ViewModel의 activity 전환 처리
         baseViewModel.activityNavigationTo.observe(this) { activityType ->

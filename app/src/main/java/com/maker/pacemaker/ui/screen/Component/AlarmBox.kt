@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -52,10 +53,26 @@ fun AlarmBox(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Transparent),
-                contentAlignment = Alignment.CenterEnd
+                    .height(80.dp)
+                    .padding(start = 10.dp, end = 10.dp, top = 0.dp, bottom = 0.dp)
+                    .then(
+                        if (dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
+                            Modifier.background(Brush.horizontalGradient(colors = listOf(Color.Red, Color.Transparent), startX = 0f, endX = 800f))
+                        } else {
+                            Modifier.background(Color.Transparent)
+                        }
+                    ),
+                contentAlignment = Alignment.CenterEnd,
             ) {
-                Text("삭제", color = Color.White, modifier = Modifier.padding(16.dp))
+                if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
+                    Image(
+                        painter = painterResource(id = R.drawable.trashicon),
+                        contentDescription = "delete",
+                        modifier = Modifier
+                            .padding(end = 20.dp)
+                            .size(30.dp)
+                    )
+                }
             }
         },
         dismissContent = {
@@ -64,7 +81,7 @@ fun AlarmBox(
                     .fillMaxWidth()
                     .height(80.dp)
                     .padding(start = 10.dp, end = 10.dp, top = 0.dp, bottom = 0.dp)
-                    .background(Color.Transparent)
+                    .background(Color(0xFFFAFAFA))
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
 
