@@ -25,15 +25,15 @@ interface ApiService {
     ): ProblemHintResponse
 
     // 정답 확인
-    @POST("problems/users/{user_id}/problems/{problem_id}/solve")
+    @POST("solutions/")
     suspend fun solveProblem(
-        @Path("user_id") userId: Int,
-        @Path("problem_id") problemId: Int,
+        @Query("user_id") userId: Int,
+        @Query("problem_id") problemId: Int,
         @Body answer: AnswerRequest
     ): AnswerResponse
 
     // 문제 신고
-    @POST("problems/{problem_id}/reports")
+    @POST("reports/{problem_id}")
     suspend fun reportProblem(
         @Path("problem_id") problemId: Int,
         @Body report: reportRequest
