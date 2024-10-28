@@ -62,6 +62,7 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
                .background(Color.White, shape = RoundedCornerShape(15.dp))
                .width(boxWidth)
                .height(boxHeight)
+               .padding(start = 10.dp, end = 10.dp, top = 20.dp)
                .constrainAs(leftBar) {
                    start.linkTo(parent.start, margin = 20.dp)
                    top.linkTo(parent.top)

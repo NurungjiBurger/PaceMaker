@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,9 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
     val settingViewModel = viewModel.baseViewModel
 
     val settingCategories = settingViewModel.categoryList.collectAsState().value
+
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
 
     ConstraintLayout(
         modifier = Modifier

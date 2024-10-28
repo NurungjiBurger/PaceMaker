@@ -3,6 +3,7 @@ package com.maker.pacemaker.ui.activity.main
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -65,12 +66,6 @@ class MainActivity : BaseActivity() {
                 }
             }
         }
-
-
-    // NavController 초기화 메서드 구현
-    override fun initNavController(): NavHostController {
-        return navController as NavHostController
-    }
 
     override fun navigateToActivity(activityType: ActivityType) {
         val intent = activityType.intentCreator(this)

@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +45,9 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
 
     val baseViewModel = viewModel.baseViewModel.baseViewModel
     val settingViewModel = viewModel.baseViewModel
+
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
 
     val dailyCount by settingViewModel.dailyCount.collectAsState()
     val dailySetting by viewModel.dailySetting.collectAsState()

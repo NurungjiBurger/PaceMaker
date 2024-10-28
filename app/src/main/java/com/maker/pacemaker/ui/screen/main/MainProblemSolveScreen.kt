@@ -134,7 +134,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 40.dp, end = 40.dp, top = 10.dp)
+                .padding(start = 40.dp, end = 40.dp, top = 20.dp)
                 .constrainAs(topBar) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)

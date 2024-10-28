@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -115,19 +116,7 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
                     top.linkTo(parent.top, margin = 50.dp)
                 }
         ) {
-            val (searchIcon, searchField) = createRefs()
-
-            Image(
-                painter = painterResource(id = R.drawable.search),
-                contentDescription = "Search Icon",
-                modifier = Modifier
-                    .size(30.dp)
-                    .constrainAs(searchIcon) {
-                        start.linkTo(parent.start, margin = 10.dp)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                    }
-            )
+            val (searchButton, searchField) = createRefs()
 
             TextField(
                 value = words.value,
@@ -144,10 +133,9 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
                 ),
                 modifier = Modifier
                     .constrainAs(searchField) {
-                        start.linkTo(searchIcon.end, margin = 30.dp)
+                        start.linkTo(parent.start, margin = 10.dp)
                         top.linkTo(parent.top)
                         bottom.linkTo(parent.bottom)
-                        end.linkTo(parent.end, margin = 10.dp)
                     },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Next // 다음 필드로 이동
@@ -157,6 +145,22 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
                         keyboardController?.hide() // 키패드 숨기기
                     }
                 )
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.search),
+                contentDescription = "Search Icon",
+                modifier = Modifier
+                    .size(30.dp)
+                    .constrainAs(searchButton) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        end.linkTo(parent.end, margin = 10.dp)
+                    }
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { viewModel.onSearchButtonClicked() },
             )
         }
 

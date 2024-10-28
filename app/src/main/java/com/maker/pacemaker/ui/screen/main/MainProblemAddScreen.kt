@@ -54,20 +54,41 @@ fun MainProblemAddScreen(viewModel: MainProblemAddScreenViewModel) {
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
-        val (upBar, contentBox, enrollButton) = createRefs()
+        val (upBar, divider, contentBox, enrollButton) = createRefs()
 
         Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
+                .padding(start = 10.dp, end = 10.dp, top = 20.dp)
                 .fillMaxWidth()
-                .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                 .constrainAs(upBar) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     top.linkTo(parent.top)
                 }
-        ) {
-            UpBar(baseViewModel, "문제 추가", false, ActivityType.FINISH, ScreenType.MAIN)
+        )
+        {
+            Text(
+                text = "문제 추가",
+                fontSize = 30.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 10.dp)
+            )
         }
+
+        Box(
+            modifier = Modifier
+                .width(screenWidth - 60.dp)
+                .height(1.dp)
+                .background(Color.Gray)
+                .padding(start = 40.dp, end = 40.dp)
+                .constrainAs(divider) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(upBar.bottom, margin = 5.dp)
+                }
+        )
 
         Column(
             modifier = Modifier

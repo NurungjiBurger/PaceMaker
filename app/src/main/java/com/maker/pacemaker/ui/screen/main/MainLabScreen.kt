@@ -49,12 +49,13 @@ fun MainLabScreen(viewModel: MainLabScreenViewModel) {
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
-        val (upBar, listBox) = createRefs()
+        val (upBar, divider, listBox) = createRefs()
 
         Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
+                .padding(start = 10.dp, end = 10.dp, top = 20.dp)
                 .fillMaxWidth()
-                .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                 .constrainAs(upBar) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
@@ -62,22 +63,27 @@ fun MainLabScreen(viewModel: MainLabScreenViewModel) {
                 }
         )
         {
-            if (baseViewModel.previousActivity != ActivityType.FINISH) baseViewModel.previousActivity?.let {
-                Log.d("MainAlarmScreen", "previousActivity: $it")
-                UpBar(
-                    baseViewModel, "실험실", true,
-                    it, ScreenType.FINISH
-                )
-            }
-            else if (baseViewModel.previousScreen != ScreenType.FINISH) baseViewModel.previousScreen?.let {
-                Log.d("MainAlarmScreen", "previousScreen: $it")
-                UpBar(
-                    baseViewModel, "실험실", false, ActivityType.FINISH,
-                    it
-                )
-            }
+            Text(
+                text = "실험실",
+                fontSize = 30.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 10.dp)
+            )
         }
 
+        Box(
+            modifier = Modifier
+                .width(screenWidth - 60.dp)
+                .height(1.dp)
+                .background(Color.Gray)
+                .padding(start = 40.dp, end = 40.dp)
+                .constrainAs(divider) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(upBar.bottom, margin = 5.dp)
+                }
+        )
         Column(
            verticalArrangement = Arrangement.spacedBy(30.dp),
            horizontalAlignment = Alignment.CenterHorizontally,

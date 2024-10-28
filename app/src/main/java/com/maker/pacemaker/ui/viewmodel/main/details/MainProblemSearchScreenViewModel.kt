@@ -23,17 +23,24 @@ open class MainProblemSearchScreenViewModel @Inject constructor(
     val searchedProblems = _searchedProblems
 
     init {
-        hashTags.value = listOf("테스트1", "테스트2", "테스트3", "테스트4", "테스트5")
+
     }
 
-    fun onSearchWordsChanged(words: String) {
-        _words.value = words
-
-        if (words == "SRP") {
+    fun onSearchButtonClicked() {
+        if (_words.value == "SRP") {
             _searchedProblems.value = listOf(
                 Pair("단일 책임 원칙(SRP)", "객체 지향의 SOLID 중 \"클래스는 단 하나의 목적을 가져야 하며..."),
                 Pair("개방 폐쇄 원칙(OCP)", "객체 지향의 SOLID 중 \"소프트웨어 요소는 확장에는 열려 있으나 변경..."),
             )
+            hashTags.value = listOf("OOP", "SOLID")
         }
+        else {
+            _searchedProblems.value = emptyList()
+            hashTags.value = emptyList()
+        }
+    }
+
+    fun onSearchWordsChanged(words: String) {
+        _words.value = words
     }
 }

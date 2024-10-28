@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -49,6 +50,9 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
     val nowProblem = viewModel.nowProblem.collectAsState()
     val userResponse = viewModel.userResponse.collectAsState()
 
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
+
     // Create a mutable state to hold user input
     val textInput = remember { mutableStateOf("") }
 
@@ -59,10 +63,12 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
-        val (upBar, contentBox, submitButton) = createRefs()
+        val (upBar, divider, contentBox, submitButton) = createRefs()
 
         Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
+                .padding(start = 10.dp, end = 10.dp, top = 20.dp)
                 .fillMaxWidth()
                 .constrainAs(upBar) {
                     start.linkTo(parent.start)
@@ -71,18 +77,27 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
                 }
         )
         {
-            if (baseViewModel.previousActivity != ActivityType.FINISH) baseViewModel.previousActivity?.let {
-                Log.d("MainAlarmScreen", "previousActivity: $it")
-                UpBar(baseViewModel, "자가 진단", true,
-                    it, ScreenType.FINISH)
-            }
-            else if (baseViewModel.previousScreen != ScreenType.FINISH) baseViewModel.previousScreen?.let {
-                Log.d("MainAlarmScreen", "previousScreen: $it")
-                UpBar(baseViewModel, "자가 진단", false, ActivityType.FINISH,
-                    it
-                )
-            }
+            Text(
+                text = "자가 진단",
+                fontSize = 30.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 10.dp)
+            )
         }
+
+        Box(
+            modifier = Modifier
+                .width(screenWidth - 60.dp)
+                .height(1.dp)
+                .background(Color.Gray)
+                .padding(start = 40.dp, end = 40.dp)
+                .constrainAs(divider) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(upBar.bottom, margin = 5.dp)
+                }
+        )
 
         Column(
             modifier = Modifier
