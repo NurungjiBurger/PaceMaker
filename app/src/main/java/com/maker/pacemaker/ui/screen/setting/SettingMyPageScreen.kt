@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -31,6 +32,7 @@ import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,6 +48,9 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
     val baseViewModel = viewModel.baseViewModel.baseViewModel
     val settingViewModel = viewModel.baseViewModel
 
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
+
     val dailyCount by settingViewModel.dailyCount.collectAsState()
     val ratioMode by settingViewModel.ratioMode.collectAsState()
 
@@ -54,10 +59,12 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
-        val (upBar, profileBox, contentBox) = createRefs()
+        val (upBar, divider, profileBox, contentBox) = createRefs()
 
         Box(
-            modifier = androidx.compose.ui.Modifier
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(start = 10.dp, end = 10.dp, top = 20.dp)
                 .fillMaxWidth()
                 .constrainAs(upBar) {
                     start.linkTo(parent.start)
@@ -66,16 +73,27 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
                 }
         )
         {
-            if (baseViewModel.previousActivity != ActivityType.FINISH) baseViewModel.previousActivity?.let {
-                UpBar(baseViewModel, "내 정보", true,
-                    it, ScreenType.FINISH)
-            }
-            else if (baseViewModel.previousScreen != ScreenType.FINISH) baseViewModel.previousScreen?.let {
-                UpBar(baseViewModel, "내 정보", false, ActivityType.FINISH,
-                    it
-                )
-            }
+            Text(
+                text = "내 정보",
+                fontSize = 30.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 10.dp)
+            )
         }
+
+        Box(
+            modifier = Modifier
+                .width(screenWidth - 60.dp)
+                .height(1.dp)
+                .background(Color.Gray)
+                .padding(start = 40.dp, end = 40.dp)
+                .constrainAs(divider) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(upBar.bottom, margin = 5.dp)
+                }
+        )
 
         Row(
             modifier = androidx.compose.ui.Modifier

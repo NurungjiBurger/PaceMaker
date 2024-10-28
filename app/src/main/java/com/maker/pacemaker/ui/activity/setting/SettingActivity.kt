@@ -41,11 +41,11 @@ class SettingActivity : BaseActivity() {
         }
     }
 
-
-    // NavController 초기화 메서드 구현
-    override fun initNavController(): NavHostController {
-        return navController as NavHostController
+    override fun onResume() {
+        super.onResume()
+        baseViewModel.restate()
     }
+
 
     override fun navigateToScreen(screenType: ScreenType) {
 

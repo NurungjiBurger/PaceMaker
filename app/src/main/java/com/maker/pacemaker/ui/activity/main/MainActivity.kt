@@ -1,8 +1,10 @@
 package com.maker.pacemaker.ui.activity.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -58,21 +60,29 @@ class MainActivity : BaseActivity() {
                 composable("menuScreen") { MainMenuScreen(mainMenuScreenViewModel) }
                 composable("levelTestScreen") { MainLevelTestScreen(mainLevelTestScreenViewModel) }
                 composable("problemAddScreen") { MainProblemAddScreen(mainProblemAddScreenViewModel) }
-                composable("problemSearchScreen") { MainProblemSearchScreen(mainProblemSearchScreenViewModel) }
+                composable("problemSearchScreen") {
+                    mainProblemSearchScreenViewModel.restate()
+                    MainProblemSearchScreen(mainProblemSearchScreenViewModel)
+                }
                 composable("problemSolveScreen") { MainProblemSolveScreen(mainProblemSolveScreenViewModel) }
-                composable("rankingScreen") { MainRankingScreen(mainRankingScreenViewModel) }
+                composable("rankingScreen") {
+                    mainRankingScreenViewModel.restate()
+                    MainRankingScreen(mainRankingScreenViewModel)
+                }
                 composable("labScreen") { MainLabScreen(mainLabScreenViewModel) }
                 }
             }
         }
 
-
-    // NavController 초기화 메서드 구현
-    override fun initNavController(): NavHostController {
-        return navController as NavHostController
+    override fun onResume() {
+        super.onResume()
+        baseViewModel.restate()
     }
 
     override fun navigateToActivity(activityType: ActivityType) {
+
+        Log.d("MainActivity", "navigateToActivity: $activityType")
+
         val intent = activityType.intentCreator(this)
         if (activityType == ActivityType.FINISH) {
             finish() // 현재 Activity 종료

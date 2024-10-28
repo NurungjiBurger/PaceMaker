@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.ui.screen.Component.HintCard
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSearchScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSolveScreenViewModel
@@ -63,8 +64,9 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     val hintHeight = screenHeight / 8
 
     // 다이얼로그 상태 관리
-    var selectedProblem by remember { mutableStateOf<Pair<String, String>?>(null) }
+    var selectedProblem by remember { mutableStateOf<Problem?>(null) }
     var showDialog by remember { mutableStateOf(false) }
+
 
     // 다이얼로그 열기
     if (showDialog && selectedProblem != null) {
@@ -134,7 +136,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 40.dp, end = 40.dp, top = 10.dp)
+                .padding(start = 40.dp, end = 40.dp, top = 20.dp)
                 .constrainAs(topBar) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
@@ -168,16 +170,18 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
         ) {
             val (problemPart, answerPart, submitButton) = createRefs()
 
-            Text(
-                text = todayProblems[todaySolvedCount].second,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.constrainAs(problemPart) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-            )
+            if (!todayProblems.isEmpty()) {
+                Text(
+                    text = todayProblems[todaySolvedCount].description,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.constrainAs(problemPart) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                )
+            }
 
             TextField(
                 value = answer,
@@ -238,7 +242,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
         ) {
             // `wrongCnt`만큼의 힌트를 표시
             items(wrongCnt) { index ->
-                problemHints[todayProblems[0].first]?.getOrNull(index)?.let { hint ->
+                problemHints[todayProblems[todaySolvedCount].problem_id]?.getOrNull(index)?.let { hint ->
                     HintCard(baseViewModel, hintWidth, hintHeight, hint, 20, onClick = { baseViewModel.triggerVibration() })
                 }
             }

@@ -20,11 +20,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 
 @Composable
 fun ProblemCard(
-    problem: Pair<String, String>,
+    problem: Problem,
     onClick: () -> Unit)
 {
 
@@ -42,7 +43,7 @@ fun ProblemCard(
             ) // 클릭 이벤트 처리
     ) {
         Text(
-            text = problem.first, // 문제 제목 또는 내용
+            text = problem.word, // 문제 제목 또는 내용
             modifier = Modifier
                 .padding(16.dp),
             fontSize = 30.sp,
@@ -53,7 +54,7 @@ fun ProblemCard(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = problem.second,
+            text = problem.description,
             modifier = Modifier
                 .padding(16.dp),
             fontSize = 15.sp,
