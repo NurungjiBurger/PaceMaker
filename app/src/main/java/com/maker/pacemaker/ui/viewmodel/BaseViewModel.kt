@@ -18,6 +18,9 @@ import com.maker.pacemaker.data.model.ActivityNavigationTo
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenNavigationTo
 import com.maker.pacemaker.data.model.ScreenType
+import com.maker.pacemaker.data.model.remote.ApiService
+import com.maker.pacemaker.data.model.remote.RetrofitClient
+import com.maker.pacemaker.data.model.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -65,20 +68,20 @@ open class BaseViewModel @Inject constructor(
     }
 
     // 서버 통신 관련 repository 변수 선언
-    //protected val repository: UserRepository = UserRepository(
-    //    RetrofitClient.getRetrofitInstance(context).create(ApiService::class.java)
-    //)
+    val repository: UserRepository = UserRepository(
+        RetrofitClient.getRetrofitInstance(context).create(ApiService::class.java)
+    )
 
     val _userName = MutableStateFlow<String>("상빈")
     val userName: MutableStateFlow<String> get() = _userName
 
     // Activity navigation을 위한 LiveData
-    val _activityNavigationTo = MutableLiveData<ActivityNavigationTo>()
-    val activityNavigationTo: LiveData<ActivityNavigationTo> get() = _activityNavigationTo
+    val _activityNavigationTo = MutableLiveData<ActivityNavigationTo?>()
+    val activityNavigationTo: MutableLiveData<ActivityNavigationTo?> get() = _activityNavigationTo
 
     // Screen navigation을 위한 LiveData
-    val _screenNavigationTo = MutableLiveData<ScreenNavigationTo>()
-    val screenNavigationTo: LiveData<ScreenNavigationTo> get() = _screenNavigationTo
+    val _screenNavigationTo = MutableLiveData<ScreenNavigationTo?>()
+    val screenNavigationTo: MutableLiveData<ScreenNavigationTo?> get() = _screenNavigationTo
 
     var _previousScreen: ScreenType? = null
     var _previousActivity: ActivityType? = null

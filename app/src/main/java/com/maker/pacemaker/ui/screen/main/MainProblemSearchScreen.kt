@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -36,17 +37,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
+import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.ui.screen.Component.BoxCard
 import com.maker.pacemaker.ui.screen.Component.ProblemCard
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSearchScreenViewModel
@@ -71,7 +75,7 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     // 다이얼로그 상태 관리
-    var selectedProblem by remember { mutableStateOf<Pair<String, String>?>(null) }
+    var selectedProblem by remember { mutableStateOf<Problem?>(null) }
     var showDialog by remember { mutableStateOf(false) }
 
     // 다이얼로그 열기
@@ -79,8 +83,8 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
         AlertDialog(
             containerColor = Color.White,
             onDismissRequest = { showDialog = false },
-            title = { Text(text = selectedProblem!!.first) },
-            text = { Text(text = selectedProblem!!.second) }, // 상세 내용
+            title = { Text(text = selectedProblem!!.word) },
+            text = { Text(text = selectedProblem!!.description) }, // 상세 내용
             confirmButton = {
                 TextButton(
                     onClick = { showDialog = false },
@@ -102,7 +106,28 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
-        val (searchBox, hashTagBox, contentBox) = createRefs()
+        val (upBar, searchBox, hashTagBox, contentBox) = createRefs()
+
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(start = 10.dp, end = 10.dp, top = 20.dp)
+                .fillMaxWidth()
+                .constrainAs(upBar) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(parent.top)
+                }
+        )
+        {
+            Text(
+                text = "문제 검색",
+                fontSize = 30.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 10.dp)
+            )
+        }
 
         ConstraintLayout(
             modifier = Modifier
@@ -111,9 +136,9 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
                 .background(Color.White, shape = RoundedCornerShape(10.dp))
                 .border(1.dp, Color(0xFFD9D9D9), shape = RoundedCornerShape(10.dp))
                 .constrainAs(searchBox) {
+                    top.linkTo(upBar.bottom, margin = 30.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    top.linkTo(parent.top, margin = 50.dp)
                 }
         ) {
             val (searchButton, searchField) = createRefs()
@@ -189,16 +214,23 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
             }
         }
 
+        Log.d("MainProblemSearchScreen", "HashTagSize : ${hashTags.size}")
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 30.dp, end = 30.dp)
+                .padding(30.dp)
                 .constrainAs(contentBox) {
-                    top.linkTo(hashTagBox.bottom, margin = 20.dp)
+                    if (hashTags.isNotEmpty()) {
+                        top.linkTo(hashTagBox.bottom, margin = 20.dp) // 해시태그가 있을 경우
+                    } else {
+                        top.linkTo(searchBox.bottom, margin = 20.dp) // 해시태그가 없을 경우
+                    }
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom, margin = 20.dp)
                 }
+                .heightIn(max = screenHeight - (searchBoxHeight + 80.dp)),
         ) {
             items(searchedProblems.size) { index ->
                 val problem = searchedProblems[index]
