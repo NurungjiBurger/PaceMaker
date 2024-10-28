@@ -1,6 +1,7 @@
 package com.maker.pacemaker.ui.activity.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
@@ -73,7 +74,15 @@ class MainActivity : BaseActivity() {
             }
         }
 
+    override fun onResume() {
+        super.onResume()
+        baseViewModel.restate()
+    }
+
     override fun navigateToActivity(activityType: ActivityType) {
+
+        Log.d("MainActivity", "navigateToActivity: $activityType")
+
         val intent = activityType.intentCreator(this)
         if (activityType == ActivityType.FINISH) {
             finish() // 현재 Activity 종료

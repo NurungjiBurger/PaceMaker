@@ -89,6 +89,14 @@ open class BaseViewModel @Inject constructor(
     val previousActivity: ActivityType?
         get() = _previousActivity
 
+    fun restate() {
+        _previousScreen = null
+        _previousActivity = null
+
+        _activityNavigationTo.postValue(null)
+        _screenNavigationTo.postValue(null)
+    }
+
 
     // Activity로 이동
     fun goActivity(activity: ActivityType) {

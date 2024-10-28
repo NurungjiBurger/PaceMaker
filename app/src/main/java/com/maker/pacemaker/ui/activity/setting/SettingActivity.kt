@@ -41,6 +41,11 @@ class SettingActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        baseViewModel.restate()
+    }
+
 
     override fun navigateToScreen(screenType: ScreenType) {
 
