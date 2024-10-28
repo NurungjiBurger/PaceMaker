@@ -59,9 +59,15 @@ class MainActivity : BaseActivity() {
                 composable("menuScreen") { MainMenuScreen(mainMenuScreenViewModel) }
                 composable("levelTestScreen") { MainLevelTestScreen(mainLevelTestScreenViewModel) }
                 composable("problemAddScreen") { MainProblemAddScreen(mainProblemAddScreenViewModel) }
-                composable("problemSearchScreen") { MainProblemSearchScreen(mainProblemSearchScreenViewModel) }
+                composable("problemSearchScreen") {
+                    mainProblemSearchScreenViewModel.restate()
+                    MainProblemSearchScreen(mainProblemSearchScreenViewModel)
+                }
                 composable("problemSolveScreen") { MainProblemSolveScreen(mainProblemSolveScreenViewModel) }
-                composable("rankingScreen") { MainRankingScreen(mainRankingScreenViewModel) }
+                composable("rankingScreen") {
+                    mainRankingScreenViewModel.restate()
+                    MainRankingScreen(mainRankingScreenViewModel)
+                }
                 composable("labScreen") { MainLabScreen(mainLabScreenViewModel) }
                 }
             }

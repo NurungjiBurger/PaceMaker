@@ -199,6 +199,7 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
                 keyboardActions = KeyboardActions(
                     onNext = {
                         keyboardController?.hide() // 키패드 숨기기
+                        viewModel.onSearchButtonClicked()
                     }
                 )
             )

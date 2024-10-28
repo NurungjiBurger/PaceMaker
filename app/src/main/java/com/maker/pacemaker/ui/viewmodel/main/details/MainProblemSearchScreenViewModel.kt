@@ -23,7 +23,13 @@ open class MainProblemSearchScreenViewModel @Inject constructor(
     val searchedProblems = _searchedProblems
 
     init {
+        restate()
+    }
 
+    fun restate() {
+        _words.value = ""
+        _hashTags.value = emptyList()
+        _searchedProblems.value = emptyList()
     }
 
     fun onSearchButtonClicked() {

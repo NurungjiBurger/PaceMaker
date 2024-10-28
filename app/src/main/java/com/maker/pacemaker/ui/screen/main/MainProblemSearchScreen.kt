@@ -143,6 +143,7 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
                 keyboardActions = KeyboardActions(
                     onNext = {
                         keyboardController?.hide() // 키패드 숨기기
+                        viewModel.onSearchButtonClicked()
                     }
                 )
             )

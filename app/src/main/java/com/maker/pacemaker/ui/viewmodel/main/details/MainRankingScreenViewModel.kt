@@ -40,7 +40,12 @@ open class MainRankingScreenViewModel @Inject constructor(
     )
 
     init {
+        restate()
+    }
 
+    fun restate() {
+        _userList.value = emptyList()
+        _userName.value = ""
     }
 
     fun onSearchButtonClicked() {
