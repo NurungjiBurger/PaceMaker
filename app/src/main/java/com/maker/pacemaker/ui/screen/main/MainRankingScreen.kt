@@ -4,11 +4,8 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,8 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -43,20 +39,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.maker.pacemaker.R
-import com.maker.pacemaker.ui.screen.Component.BoxCard
-import com.maker.pacemaker.ui.screen.Component.ProblemCard
-import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSearchScreenViewModel
+import com.maker.pacemaker.data.model.ActivityType
+import com.maker.pacemaker.data.model.ScreenType
+import com.maker.pacemaker.data.model.User
+import com.maker.pacemaker.ui.screen.Component.AlarmBox
+import com.maker.pacemaker.ui.screen.Component.UpBar
+import com.maker.pacemaker.ui.screen.Component.UserCard
+import com.maker.pacemaker.ui.viewmodel.main.details.MainRankingScreenViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
+fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
 
-    val words = viewModel.words.collectAsState()
-    val hashTags = viewModel.hashTags.collectAsState().value
-    val searchedProblems = viewModel.searchedProblems.collectAsState().value
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val mainViewModel = viewModel.baseViewModel
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
@@ -64,44 +66,84 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
     val searchBoxHeight = 50.dp
     val searchBoxWidth = screenWidth - 40.dp
 
-    val contentBoxHeight = screenHeight / 6
-    val contentBoxWidth = screenWidth - 60.dp
+    val userCardWidth = screenWidth - 60.dp
+    val userCardHeight = screenHeight / 7
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val userName = viewModel.userName.collectAsState()
+    val userList = viewModel.userList.collectAsState().value
+
     // 다이얼로그 상태 관리
-    var selectedProblem by remember { mutableStateOf<Pair<String, String>?>(null) }
+    var selectedUser by remember { mutableStateOf<User?>(null) }
     var showDialog by remember { mutableStateOf(false) }
 
     // 다이얼로그 열기
-    if (showDialog && selectedProblem != null) {
+    if (showDialog && selectedUser != null) {
+        val isFolloing = selectedUser!!.isFollowing
         AlertDialog(
             containerColor = Color.White,
             onDismissRequest = { showDialog = false },
-            title = { Text(text = selectedProblem!!.first) },
-            text = { Text(text = selectedProblem!!.second) }, // 상세 내용
+            title = {
+                UserCard(
+                    baseViewModel = baseViewModel,
+                    width = userCardWidth,
+                    height = userCardHeight,
+                    user = selectedUser!!,
+                    onClick = { showDialog = false }, // 다이얼로그 내부에서는 클릭 이벤트 불필요
+                    followToggle = { viewModel.toggleFollow(selectedUser!!) }
+                )
+            },
             confirmButton = {
                 TextButton(
-                    onClick = { showDialog = false },
+                    onClick = {
+                        viewModel.toggleFollow(selectedUser!!)
+                        // updated user 정보를 selectedUser에 다시 설정하여 상태를 반영
+                        selectedUser = selectedUser!!.copy(isFollowing = !selectedUser!!.isFollowing)
+                    },
                     colors = ButtonDefaults.textButtonColors(
                         containerColor = Color.Transparent
                     ),
-                ) {
-                    Text(
-                        "닫기",
-                        color = Color.Black
-                    )
+                    ) {
+                        Text(
+                            text = if (selectedUser!!.isFollowing) "unfollow" else "follow",
+                            color = Color.Black
+                        )
+                    }
                 }
-            },
-        )
-    }
+            )
+        }
 
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
-        val (searchBox, hashTagBox, contentBox) = createRefs()
+        val (upBar, searchBox, userListBox) = createRefs()
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp, top = 10.dp)
+                .constrainAs(upBar) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(parent.top)
+                }
+        )
+        {
+            if (baseViewModel.previousActivity != ActivityType.FINISH) baseViewModel.previousActivity?.let {
+                Log.d("MainAlarmScreen", "previousActivity: $it")
+                UpBar(baseViewModel, "랭킹", true,
+                    it, ScreenType.FINISH)
+            }
+            else if (baseViewModel.previousScreen != ScreenType.FINISH) baseViewModel.previousScreen?.let {
+                Log.d("MainAlarmScreen", "previousScreen: $it")
+                UpBar(baseViewModel, "랭킹", false, ActivityType.FINISH,
+                    it
+                )
+            }
+        }
 
         ConstraintLayout(
             modifier = Modifier
@@ -112,7 +154,7 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
                 .constrainAs(searchBox) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    top.linkTo(parent.top, margin = 50.dp)
+                    top.linkTo(upBar.bottom, margin = 20.dp)
                 }
         ) {
             val (searchIcon, searchField) = createRefs()
@@ -130,8 +172,8 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
             )
 
             TextField(
-                value = words.value,
-                onValueChange = { viewModel.onSearchWordsChanged(it) },
+                value = userName.value,
+                onValueChange = { viewModel.onUserNameChanged(it) },
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
@@ -160,49 +202,35 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
             )
         }
 
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 80.dp), // 각 태그가 가로로 80dp 이상이면 줄바꿈
+        // 유저 리스트 표시 영역
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 30.dp, end = 30.dp)
-                .constrainAs(hashTagBox) {
-                    top.linkTo(searchBox.bottom, margin = 20.dp)
+                .constrainAs(userListBox) {
+                    top.linkTo(searchBox.bottom, margin = 10.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                    height = Dimension.fillToConstraints
                 }
-                .background(color = Color(0xFFFAFAFA)),
-            horizontalArrangement = Arrangement.spacedBy(3.dp),
-            verticalArrangement = Arrangement.spacedBy(3.dp)
+                .padding(30.dp)
         ) {
-            items(hashTags.size) { index ->
-                val hashTag = hashTags[index]
-                Text(
-                    text = "#${hashTag}",
-                    fontSize = 20.sp,
-                    color = Color(0xFFA5A5A5),
+            // itemsIndexed를 사용하여 각 아이템의 인덱스 접근
+            itemsIndexed(userList) { index, user ->
+                UserCard(
+                    baseViewModel,
+                    userCardWidth,
+                    userCardHeight,
+                    user,
+                    onClick = {
+                        selectedUser = user
+                        showDialog = true
+                    }
                 )
             }
         }
 
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 30.dp, end = 30.dp)
-                .constrainAs(contentBox) {
-                    top.linkTo(hashTagBox.bottom, margin = 20.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-        ) {
-            items(searchedProblems.size) { index ->
-                val problem = searchedProblems[index]
-                ProblemCard(problem) {
-                    selectedProblem = problem // 클릭된 문제 설정
-                    showDialog = true // 다이얼로그 열기
-                }
-            }
-        }
     }
 
 }

@@ -3,6 +3,7 @@ package com.maker.pacemaker.ui.screen.Component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import androidx.compose.material3.Text
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -42,7 +44,10 @@ fun NavCard(
             .height(boxHeight)
             .padding(10.dp)
             .background(color = Color(0xFFFAFAFA), shape = RoundedCornerShape(15.dp))
-            .clickable { onClick() }
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) { onClick() }
     ) {
         val (titleText, content, nav) = createRefs()
 

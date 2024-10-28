@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -83,7 +85,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                 .constrainAs(logo) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    top.linkTo(upBar.bottom, margin = 50.dp)
+                    top.linkTo(upBar.bottom, margin = 30.dp)
                 }
         ) {
             Logo(baseViewModel)
@@ -133,7 +135,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(360.dp)
-                .padding(start = 20.dp, end = 20.dp, bottom = 5.dp)
+                .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
                 .constrainAs(contentBox) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
@@ -155,7 +157,10 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                         .size(150.dp)
                         .background(Color(0xFF1429A0), RoundedCornerShape(10.dp))
                         .border(BorderStroke(2.dp, Color.Blue), shape = RoundedCornerShape(10.dp))
-                        .clickable { baseViewModel.goScreen(ScreenType.PROBLEMSOLVE) },
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) { baseViewModel.goScreen(ScreenType.PROBLEMSOLVE) },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -170,7 +175,11 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                     modifier = Modifier
                         .size(150.dp)
                         .background(Color(0xFF1429A0), RoundedCornerShape(10.dp))
-                        .border(BorderStroke(2.dp, Color.Blue), shape = RoundedCornerShape(10.dp)),
+                        .border(BorderStroke(2.dp, Color.Blue), shape = RoundedCornerShape(10.dp))
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) { baseViewModel.goScreen(ScreenType.LAB) },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -185,10 +194,13 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(70.dp)
+                    .height(50.dp)
                     .background(Color(0xFFFEFEFF).copy(alpha = 0.3f), RoundedCornerShape(10.dp))
                     .border(BorderStroke(2.dp, Color.Gray), shape = RoundedCornerShape(10.dp))
-                    .clickable { baseViewModel.goScreen(ScreenType.PROBLEMADD) }
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { baseViewModel.goScreen(ScreenType.LAB) }
                 ,
                 contentAlignment = Alignment.Center
             ) {
@@ -203,9 +215,13 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(70.dp)
+                    .height(50.dp)
                     .background(Color(0xFFFEFEFF).copy(alpha = 0.3f), RoundedCornerShape(10.dp))
-                    .border(BorderStroke(2.dp, Color.Gray), shape = RoundedCornerShape(10.dp)),
+                    .border(BorderStroke(2.dp, Color.Gray), shape = RoundedCornerShape(10.dp))
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { baseViewModel.goScreen(ScreenType.LAB) },
                 contentAlignment = Alignment.Center
             ) {
                 Text(

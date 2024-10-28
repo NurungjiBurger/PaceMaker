@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -76,9 +78,10 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
                     end.linkTo(parent.end, margin = 20.dp)
                     top.linkTo(parent.top, margin = 20.dp)
                 }
-                .clickable {
-                    baseViewModel.goScreen(ScreenType.MAIN)
-                }
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) { baseViewModel.goScreen(ScreenType.MAIN) }
         )
 
         Column(
@@ -95,9 +98,10 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 modifier = Modifier
-                    .clickable(onClick = {
-                        baseViewModel.goActivity(ActivityType.SETTING)
-                    })
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { baseViewModel.goActivity(ActivityType.SETTING) }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -108,9 +112,10 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 modifier = Modifier
-                    .clickable(onClick = {
-                        baseViewModel.goScreen(ScreenType.LEVELTEST)
-                    })
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ){ baseViewModel.goScreen(ScreenType.LEVELTEST) }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -121,9 +126,10 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 modifier = Modifier
-                    .clickable(onClick = {
-                        baseViewModel.goScreen(ScreenType.ALARM)
-                    })
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { baseViewModel.goScreen(ScreenType.ALARM) }
             )
         }
 
@@ -141,9 +147,10 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
                 contentDescription = "Setting",
                 modifier = Modifier
                     .size(30.dp)
-                    .clickable {
-                        Log.d("MainMenuScreen", "Setting Button Clicked")
-                    }
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { Log.d("MainMenuScreen", "Setting Button Clicked") }
             )
 
             Spacer(modifier = Modifier.width(10.dp))

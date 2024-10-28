@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -144,9 +145,10 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
                     top.linkTo(contentBox.bottom, margin = 10.dp)
                     end.linkTo(parent.end, margin = 30.dp)
                 }
-                .clickable {
-                    viewModel.onUserResponseSubmit()
-                },
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) { viewModel.onUserResponseSubmit() },
             contentAlignment = Alignment.Center
         ){
             Text(

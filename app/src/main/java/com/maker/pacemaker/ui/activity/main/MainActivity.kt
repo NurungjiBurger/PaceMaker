@@ -12,19 +12,23 @@ import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.activity.BaseActivity
 import com.maker.pacemaker.ui.screen.main.MainAlarmScreen
+import com.maker.pacemaker.ui.screen.main.MainLabScreen
 import com.maker.pacemaker.ui.screen.main.MainLevelTestScreen
 import com.maker.pacemaker.ui.screen.main.MainMenuScreen
 import com.maker.pacemaker.ui.screen.main.MainProblemAddScreen
 import com.maker.pacemaker.ui.screen.main.MainProblemSearchScreen
 import com.maker.pacemaker.ui.screen.main.MainProblemSolveScreen
+import com.maker.pacemaker.ui.screen.main.MainRankingScreen
 import com.maker.pacemaker.ui.screen.main.MainScreen
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.main.details.MainLabScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainLevelTestScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainMenuScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemAddScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSearchScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSolveScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.main.details.MainRankingScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,6 +42,8 @@ class MainActivity : BaseActivity() {
     private val mainProblemAddScreenViewModel: MainProblemAddScreenViewModel by viewModels()
     private val mainProblemSearchScreenViewModel: MainProblemSearchScreenViewModel by viewModels()
     private val mainProblemSolveScreenViewModel: MainProblemSolveScreenViewModel by viewModels()
+    private val mainRankingScreenViewModel: MainRankingScreenViewModel by viewModels()
+    private val mainLabScreenViewModel: MainLabScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +60,8 @@ class MainActivity : BaseActivity() {
                 composable("problemAddScreen") { MainProblemAddScreen(mainProblemAddScreenViewModel) }
                 composable("problemSearchScreen") { MainProblemSearchScreen(mainProblemSearchScreenViewModel) }
                 composable("problemSolveScreen") { MainProblemSolveScreen(mainProblemSolveScreenViewModel) }
+                composable("rankingScreen") { MainRankingScreen(mainRankingScreenViewModel) }
+                composable("labScreen") { MainLabScreen(mainLabScreenViewModel) }
                 }
             }
         }
@@ -83,6 +91,8 @@ class MainActivity : BaseActivity() {
             ScreenType.PROBLEMADD -> "problemAddScreen"
             ScreenType.PROBLEMSEARCH -> "problemSearchScreen"
             ScreenType.PROBLEMSOLVE -> "problemSolveScreen"
+            ScreenType.RANKING -> "rankingScreen"
+            ScreenType.LAB -> "labScreen"
             else -> return
         }
 
