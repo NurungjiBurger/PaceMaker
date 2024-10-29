@@ -2,9 +2,11 @@ package com.maker.pacemaker.ui.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel

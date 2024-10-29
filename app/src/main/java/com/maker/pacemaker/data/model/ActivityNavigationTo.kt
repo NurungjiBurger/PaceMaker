@@ -6,6 +6,7 @@ import com.maker.pacemaker.ui.activity.main.MainActivity
 import com.maker.pacemaker.ui.activity.signup.SignUpActivity
 import com.maker.pacemaker.ui.activity.signin.SignInActivity
 import com.maker.pacemaker.ui.activity.boot.BootActivity
+import com.maker.pacemaker.ui.activity.setting.SettingActivity
 
 data class ActivityNavigationTo(val activityType: ActivityType)
 
@@ -17,5 +18,4 @@ enum class ActivityType(val intentCreator: (Context) -> Intent?) {
     MAIN ({ context -> Intent(context, MainActivity::class.java) }),
     BOOT ({ context -> Intent(context, BootActivity::class.java) }),
     SIGNIN ({ context -> Intent(context, SignInActivity::class.java) }),
-
 }

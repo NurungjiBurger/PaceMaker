@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -15,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
-import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -53,10 +53,26 @@ fun AlarmBox(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Transparent),
-                contentAlignment = Alignment.CenterEnd
+                    .height(80.dp)
+                    .padding(start = 10.dp, end = 10.dp, top = 0.dp, bottom = 0.dp)
+                    .then(
+                        if (dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
+                            Modifier.background(Brush.horizontalGradient(colors = listOf(Color.Red, Color.Transparent), startX = 0f, endX = 800f))
+                        } else {
+                            Modifier.background(Color.Transparent)
+                        }
+                    ),
+                contentAlignment = Alignment.CenterEnd,
             ) {
-                Text("삭제", color = Color.White, modifier = Modifier.padding(16.dp))
+                if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
+                    Image(
+                        painter = painterResource(id = R.drawable.trashicon),
+                        contentDescription = "delete",
+                        modifier = Modifier
+                            .padding(end = 20.dp)
+                            .size(30.dp)
+                    )
+                }
             }
         },
         dismissContent = {
@@ -65,7 +81,7 @@ fun AlarmBox(
                     .fillMaxWidth()
                     .height(80.dp)
                     .padding(start = 10.dp, end = 10.dp, top = 0.dp, bottom = 0.dp)
-                    .background(Color.Transparent)
+                    .background(Color(0xFFFAFAFA))
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
 
@@ -136,16 +152,17 @@ fun AlarmBox(
 @Preview
 fun PreviewAlarmBox() {
     // Dummy ViewModel을 사용한 미리보기
-    val baseViewModel = DummyMainBaseViewModel()
-    AlarmBox(
-        baseViewModel = baseViewModel,
-        alarmId = 1L,
-        alarmType = "공지",
-        content = "새로운 공지가 있습니다.",
-        dateTime = "2024-10-24 12:00:00",
-        type = false,
-        onDismiss = { /* 삭제 처리 로직 */ }
-    )
+//    val baseViewModel = DummyMainBaseViewModel()
+//
+//    AlarmBox(
+//        baseViewModel = baseViewModel,
+//        alarmId = 1L,
+//        alarmType = "공지",
+//        content = "새로운 공지가 있습니다.",
+//        dateTime = "2024-10-24 12:00:00",
+//        type = false,
+//        onDismiss = { /* 삭제 처리 로직 */ }
+//    )
 }
 
 fun formatDateTime(dateTime: String): String {

@@ -1,18 +1,18 @@
 package com.maker.pacemaker.ui.viewmodel.main.details
 
 import android.app.Application
+import androidx.lifecycle.ViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
-open class MainScreenViewModel() : MainBaseViewModel() {
+@HiltViewModel
+open class MainScreenViewModel @Inject constructor(
+    private val base: MainBaseViewModel,
+) : ViewModel() {
 
-    // MutableStateFlow로 balance 값을 관리
-    private val _balance = MutableStateFlow(0L)
-    val balance: StateFlow<Long> = _balance
-
-    fun plusBalance() {
-        _balance.value = _balance.value + 1
-    }
+    val baseViewModel = base
 
 }

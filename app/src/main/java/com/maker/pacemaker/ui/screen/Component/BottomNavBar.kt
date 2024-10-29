@@ -3,6 +3,7 @@ package com.maker.pacemaker.ui.screen.Component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,9 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyMainScreenViewModel
+import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
@@ -60,9 +60,10 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
                 contentDescription = "Ranking",
                 modifier = Modifier
                     .size(40.dp)
-                    .clickable {
-                        baseViewModel.floatingToastMessage("랭킹페이지입니다.")
-                    }
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { baseViewModel.goScreen(ScreenType.RANKING) }
             )
 
             // 문제 검색
@@ -71,9 +72,10 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
                 contentDescription = "Search",
                 modifier = Modifier
                     .size(40.dp)
-                    .clickable {
-                        baseViewModel.floatingToastMessage("문제검색페이지입니다.")
-                    }
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { baseViewModel.goScreen(ScreenType.PROBLEMSEARCH) }
             )
 
             // 실험실
@@ -82,9 +84,10 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
                 contentDescription = "Lab",
                 modifier = Modifier
                     .size(40.dp)
-                    .clickable {
-                        baseViewModel.floatingToastMessage("실험실페이지입니다.")
-                    }
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { baseViewModel.goScreen(ScreenType.LAB) }
             )
 
             // etc...
@@ -93,9 +96,10 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
                 contentDescription = "Etc",
                 modifier = Modifier
                     .size(40.dp)
-                    .clickable {
-                        baseViewModel.floatingToastMessage("기타페이지입니다.")
-                    }
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { baseViewModel.triggerToast("기타페이지입니다.") }
             )
 
         }
@@ -107,8 +111,8 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
 @Composable
 fun BottomNavBarPreview() {
 
-    val baseViewModel = DummyBaseViewModel()
-
-    // 모든 더미 ViewModel을 전달하여 미리보기 실행
-    BottomNavBar(baseViewModel)
+//    val baseViewModel = DummyBaseViewModel()
+//
+//    // 모든 더미 ViewModel을 전달하여 미리보기 실행
+//    BottomNavBar(baseViewModel)
 }
