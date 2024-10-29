@@ -1,4 +1,4 @@
-package com.maker.pacemaker.ui.screen.sign
+package com.maker.pacemaker.ui.screen.signup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -35,16 +35,15 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummySignBaseViewModel
-import com.maker.pacemaker.data.model.test.DummySignUpScreenViewModel
 import com.maker.pacemaker.ui.screen.Component.UpBar
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
-import com.maker.pacemaker.ui.viewmodel.sign.SignBaseViewModel
-import com.maker.pacemaker.ui.viewmodel.sign.details.SignUpScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.signup.details.SignUpScreenViewModel
 
 @Composable
-fun SignUpScreen(baseViewModel: BaseViewModel, mainViewModel: SignBaseViewModel, viewModel: SignUpScreenViewModel) {
+fun SignUpScreen(viewModel: SignUpScreenViewModel) {
+
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val signUpBaseViewModel = viewModel.baseViewModel
 
     ConstraintLayout(
         modifier = Modifier
@@ -258,18 +257,4 @@ class EmailVisualTransformation : VisualTransformation {
         // 여기에 이메일 형식 변환 로직을 추가
         return TransformedText(text, OffsetMapping.Identity)
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SignUpScreenPreview() {
-    // Preview용 더미 ViewModel을 생성하여 직접 사용
-
-
-    val baseViewModel = DummyBaseViewModel()
-    val signupScreenViewModel = DummySignUpScreenViewModel()
-    val signViewModel = DummySignBaseViewModel()
-
-    // 모든 더미 ViewModel을 전달하여 미리보기 실행
-    SignUpScreen(baseViewModel, signViewModel, signupScreenViewModel)
 }

@@ -83,6 +83,8 @@ class MainActivity : BaseActivity() {
 
         Log.d("MainActivity", "navigateToActivity: $activityType")
 
+        if (baseViewModel.previousActivity != ActivityType.MAIN) return
+
         val intent = activityType.intentCreator(this)
         if (activityType == ActivityType.FINISH) {
             finish() // 현재 Activity 종료

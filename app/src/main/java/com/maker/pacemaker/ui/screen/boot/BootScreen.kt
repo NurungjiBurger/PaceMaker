@@ -1,5 +1,7 @@
 package com.maker.pacemaker.ui.screen.boot
 
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -40,15 +42,16 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyBootBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyBootScreenViewModel
 import com.maker.pacemaker.ui.screen.Component.UpBar
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.boot.BootBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.boot.details.BootScreenViewModel
 @Composable
-fun BootScreen(baseViewModel: BaseViewModel, mainViewModel: BootBaseViewModel, viewModel: BootScreenViewModel) {
+fun BootScreen(viewModel: BootScreenViewModel) {
+
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val bootViewModel = viewModel.baseViewModel
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -95,17 +98,9 @@ fun BootScreen(baseViewModel: BaseViewModel, mainViewModel: BootBaseViewModel, v
                     end.linkTo(parent.end)
                 }
         )
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            baseViewModel.goScreen(ScreenType.ENTRY)
+        }, 2000)
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun BootScreenPreview() {
-
-    val baseViewModel = DummyBaseViewModel()
-    val bootScreenViewModel = DummyBootScreenViewModel()
-    val bootViewModel = DummyBootBaseViewModel()
-
-    BootScreen(baseViewModel, bootViewModel, bootScreenViewModel)
 }

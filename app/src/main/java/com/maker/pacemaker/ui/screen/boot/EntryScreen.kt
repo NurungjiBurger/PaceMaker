@@ -22,15 +22,16 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyBootBaseViewModel
-import com.maker.pacemaker.data.model.test.DummyEntryScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.boot.BootBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.boot.details.EntryScreenViewModel
 
 @Composable
-fun EntryScreen(baseViewModel: BaseViewModel, mainViewModel: BootBaseViewModel, viewModel: EntryScreenViewModel) {
+fun EntryScreen(viewModel: EntryScreenViewModel) {
+
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val bootViewModel = viewModel.baseViewModel
+
     Box(modifier = Modifier.fillMaxSize()) {
         // 배경 이미지
         Image(
@@ -120,14 +121,4 @@ fun EntryScreen(baseViewModel: BaseViewModel, mainViewModel: BootBaseViewModel, 
 
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun EntryScreenPreview() {
-    val baseViewModel = DummyBaseViewModel()
-    val entryScreenViewModel = DummyEntryScreenViewModel()
-    val bootViewModel = DummyBootBaseViewModel()
-
-    EntryScreen(baseViewModel, bootViewModel, entryScreenViewModel)
 }

@@ -1,12 +1,10 @@
-package com.maker.pacemaker.ui.viewmodel.sign.details
+package com.maker.pacemaker.ui.viewmodel.signup.details
 
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.maker.pacemaker.data.model.db.AlarmDao
-import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
-import com.maker.pacemaker.ui.viewmodel.sign.SignBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.signup.SignUpBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 //import kotlin.coroutines.jvm.internal.CompletedContinuation.context
@@ -14,8 +12,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class SignUpScreenViewModel @Inject constructor(
+    private val base: SignUpBaseViewModel,
     private val auth: FirebaseAuth
-) : SignBaseViewModel() {
+) : ViewModel() {
+
+    val baseViewModel = base
 
     private val _registrationResult = MutableLiveData<String>()
     val registrationResult: LiveData<String> get() = _registrationResult

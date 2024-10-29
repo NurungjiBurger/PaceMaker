@@ -25,7 +25,7 @@ open class BaseActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-// 상태바 색상을 검정색으로 설정
+        // 상태바 색상을 검정색으로 설정
         window.statusBarColor = ContextCompat.getColor(this, android.R.color.black)
 
 

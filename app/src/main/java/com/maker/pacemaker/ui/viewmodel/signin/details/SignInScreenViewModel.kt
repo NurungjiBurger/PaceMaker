@@ -6,12 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maker.pacemaker.MyApplication
 import com.maker.pacemaker.ui.viewmodel.signin.SignInBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.signup.SignUpBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class SignInScreenViewModel @Inject constructor() : SignInBaseViewModel() {
+open class SignInScreenViewModel @Inject constructor(
+    val base: SignUpBaseViewModel
+) : ViewModel() {
+
+    val baseViewModel = base
 
     private var _errorMessage: String? = null
     val errorMessage: String?

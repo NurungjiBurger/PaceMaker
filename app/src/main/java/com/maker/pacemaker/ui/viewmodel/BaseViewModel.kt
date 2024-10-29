@@ -106,7 +106,7 @@ open class BaseViewModel @Inject constructor(
 
         Log.d("BaseViewModel", "goActivity: $activity")
 
-        _previousActivity = activityNavigationTo.value?.activityType?: ActivityType.MAIN
+        _previousActivity = activityNavigationTo.value?.activityType?: ActivityType.BOOT
         _previousScreen = ScreenType.FINISH
         _activityNavigationTo.value = ActivityNavigationTo(activity)
     }
