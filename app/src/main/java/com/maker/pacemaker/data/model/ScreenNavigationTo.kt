@@ -10,7 +10,11 @@ enum class ScreenType(val navigateTo: (NavController) -> Unit) {
 
     // 부트
     BOOT({ navController -> navController.navigate("bootScreen") }),
-    LOGIN({ navController -> navController.navigate("loginScreen") }),
+    ENTRY({ navController -> navController.navigate("entryScreen") }),
+
+    // 회원가입
+    SIGNUP({ navController -> navController.navigate("signUpScreen") }),
+    SIGNUPLOAD({ navController -> navController.navigate("signUpLoadScreen") }),
 
     // 메인
     MAIN({ navController -> navController.navigate("mainScreen") }),
@@ -20,6 +24,10 @@ enum class ScreenType(val navigateTo: (NavController) -> Unit) {
     PROBLEMSEARCH({ navController -> navController.navigate("problemSearchScreen") }),
     RANKING({ navController -> navController.navigate("rankingScreen") }),
     LAB({ navController -> navController.navigate("labScreen") }),
+
+    // 로그인
+    SIGNIN({ navController -> navController.navigate("signInScreen") }),
+    SIGNINLOAD({ navController -> navController.navigate("signInLoadScreen") }),
 
     // 세팅
     MYPAGE({ navController -> navController.navigate("mypageScreen") }),

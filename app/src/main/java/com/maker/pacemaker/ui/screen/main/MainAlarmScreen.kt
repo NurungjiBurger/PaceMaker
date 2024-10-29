@@ -62,7 +62,7 @@ fun MainAlarmScreen(viewModel: MainAlarmScreenViewModel) {
                 .padding(start = 10.dp, end = 10.dp, top = 20.dp)
                 .fillMaxWidth()
                 .constrainAs(upBar) {
-                    start.linkTo(parent.start)
+                    start. linkTo(parent.start)
                     end.linkTo(parent.end)
                     top.linkTo(parent.top)
                 }

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt") // Room annotation processor
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -62,6 +63,7 @@ dependencies {
 
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation(libs.firebase.storage.ktx)
     kapt("androidx.room:room-compiler:2.6.1") // annotationProcessor는 제거
     implementation("androidx.room:room-ktx:2.6.1")
 
@@ -88,13 +90,16 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     // firebase cloud messaging
-    implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.5.0"))
     implementation("com.google.firebase:firebase-messaging-ktx:24.0.1")
     implementation("com.google.firebase:firebase-crashlytics-buildtools:3.0.2")
     implementation("com.google.firebase:firebase-firestore-ktx:25.1.0")
 
     // firebase authentication
+    implementation ("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
 
     // 이미지 로딩
     implementation("com.github.bumptech.glide:glide:4.16.0")
@@ -126,3 +131,4 @@ dependencies {
 kapt {
     correctErrorTypes = true
 }
+
