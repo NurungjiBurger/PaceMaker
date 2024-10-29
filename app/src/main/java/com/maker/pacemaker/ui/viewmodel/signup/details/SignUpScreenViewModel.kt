@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.ui.viewmodel.signup.SignUpBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -28,6 +29,7 @@ open class SignUpScreenViewModel @Inject constructor(
     fun enrollUserToServer(nickName: String) {
         // 서버에 유저 등록하기
         // firebase의 uid와 닉네임을 등록해주면 된다.
+        baseViewModel.baseViewModel.goActivity(ActivityType.MAIN)
     }
 
     fun checkEmail(email: String) {

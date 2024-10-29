@@ -108,11 +108,14 @@ fun SignInScreen(viewModel: SignInScreenViewModel) {
                     bottom.linkTo(parent.bottom)
                 }
                 .fillMaxWidth(0.8f)
-                .padding(16.dp, bottom = 30.dp)
+                .padding(bottom = 30.dp)
         ) {
             TextField(
                 value = emailState.value,
-                onValueChange = { emailState.value = it },
+                onValueChange = {
+                    emailState.value = it
+                    viewModel.checkEmail(emailState.value.text)
+                                },
                 label = { Text("Email") },
                 singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
@@ -163,26 +166,37 @@ fun SignInScreen(viewModel: SignInScreenViewModel) {
                     }
                 )
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (viewModel.coreectEmail && PWState.value.text.length >= 6) {
+
+                // Sign In Button
+                Button(
+                    onClick = {
+                        keyboardController?.hide() // 키보드 숨기기
+                        viewModel.checkUser(emailState.value.text, PWState.value.text)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1429A0))
+                ) {
+                    Text("Sign In", color = Color.White)
+                }
+            }
         }
 
-        // Sign In Button
-        Button(
-            onClick = {
-                keyboardController?.hide() // 키보드 숨기기
-                viewModel.checkUser(emailState.value.text, PWState.value.text)
-            },
+        // Forgot Password Text
+        Text(
+            text = "Forgot password?",
+            color = Color.Gray,
             modifier = Modifier
-                .constrainAs(authButton) {
+                .constrainAs(forgotPassword) {
                     start.linkTo(inputBox.start)
-                    end.linkTo(inputBox.end)
-                    top.linkTo(inputBox.bottom, margin = 20.dp)
+                    top.linkTo(inputBox.bottom, margin = 3.dp)
                 }
-                .fillMaxWidth(0.8f)
-                .height(48.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1429A0))
-        ) {
-            Text("Sign In", color = Color.White)
-        }
+        )
 
         // 로그인 상태 변경 관찰
         LaunchedEffect(isLoggedInState.value) {
@@ -193,17 +207,5 @@ fun SignInScreen(viewModel: SignInScreenViewModel) {
                 (context as? Activity)?.finish() // 현재 액티비티 종료
             }
         }
-
-
-        // Forgot Password Text
-        Text(
-            text = "Forgot password?",
-            color = Color.Gray,
-            modifier = Modifier
-                .constrainAs(forgotPassword) {
-                    start.linkTo(authButton.start)
-                    top.linkTo(authButton.bottom, margin = 8.dp)
-                }
-        )
     }
 }
