@@ -4,10 +4,14 @@ import android.app.Application
 import com.google.firebase.auth.FirebaseAuth
 import com.maker.pacemaker.data.model.db.AlarmDao
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
+import com.maker.pacemaker.ui.viewmodel.boot.BootBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.boot.details.BootScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.boot.details.EntryScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.sign.SignBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.sign.details.LoadScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.sign.details.SignUpScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.signin.SignInBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.signin.details.SignInScreenViewModel
@@ -50,5 +54,21 @@ class DummySignInBaseViewModel() : SignInBaseViewModel() {
 }
 
 class DummySignInScreenViewModel : SignInScreenViewModel() {
+    // 필요한 상태나 메서드를 추가로 정의
+}
+
+class DummyBootBaseViewModel() : BootBaseViewModel() {
+    // 필요한 상태나 메서드를 정의
+}
+
+class DummyBootScreenViewModel : BootScreenViewModel() {
+    // 필요한 상태나 메서드를 추가로 정의
+}
+
+class DummyEntryScreenViewModel : EntryScreenViewModel() {
+    // 필요한 상태나 메서드를 추가로 정의
+}
+
+class DummyLoadScreenViewModel : LoadScreenViewModel() {
     // 필요한 상태나 메서드를 추가로 정의
 }

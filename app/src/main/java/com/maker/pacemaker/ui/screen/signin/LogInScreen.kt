@@ -103,9 +103,6 @@ fun LogInScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseViewModel
                 )
             )
 
-
-
-
             Text(
                 text = "Password",
                 color = Color.Black,
@@ -136,8 +133,8 @@ fun LogInScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseViewModel
         // Sign In Button
         Button(
             onClick = {
-                // 로그인
-                // 키보드 숨김
+                keyboardController?.hide() // 키보드 숨기기
+                viewModel.checkUser(emailState.value.text, PWState.value.text)
             },
             modifier = Modifier
                 .constrainAs(authButton) {
@@ -169,12 +166,10 @@ fun LogInScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseViewModel
 @Preview(showBackground = true)
 @Composable
 fun SignInScreenPreview() {
-    // Preview용 더미 ViewModel을 생성하여 직접 사용
 
     val baseViewModel = DummyBaseViewModel()
     val signinScreenViewModel = DummySignInScreenViewModel()
     val signinViewModel = DummySignInBaseViewModel()
 
-    // 모든 더미 ViewModel을 전달하여 미리보기 실행
     LogInScreen(baseViewModel, signinViewModel, signinScreenViewModel)
 }

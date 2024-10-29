@@ -16,7 +16,7 @@ import com.maker.pacemaker.ui.viewmodel.signin.SignInBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.signin.details.SignInScreenViewModel
 
 
-class SignUpActivity : BaseActivity() {
+class SignInActivity : BaseActivity() {
 
     private lateinit var signInViewModel : SignInBaseViewModel
 
@@ -25,7 +25,7 @@ class SignUpActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var signinViewModel = ViewModelProvider(this).get(SignInBaseViewModel::class.java)
+        var signInViewModel = ViewModelProvider(this).get(SignInBaseViewModel::class.java)
 
         setContent {
             // rememberNavController는 @Composable 함수이므로 여기서 호출해야 합니다.
