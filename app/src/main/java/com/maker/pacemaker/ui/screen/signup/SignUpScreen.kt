@@ -1,6 +1,7 @@
 package com.maker.pacemaker.ui.screen.signup
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,15 +14,19 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
@@ -42,56 +47,65 @@ import com.maker.pacemaker.ui.screen.Component.UpBar
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.signup.details.SignUpScreenViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(viewModel: SignUpScreenViewModel) {
 
     val baseViewModel = viewModel.baseViewModel.baseViewModel
     val signUpBaseViewModel = viewModel.baseViewModel
 
+    val emailState = remember { mutableStateOf(TextFieldValue("")) }
+    val PWState = remember { mutableStateOf(TextFieldValue("")) }
+    val nicknameState = remember { mutableStateOf(TextFieldValue("")) }
+    val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    val registrationResult by viewModel.registrationResult.observeAsState(null)
+
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color(0xFFF4F2EE))
     ) {
-        val (upBar,titleText,authButton,emailtitleText,emailField,pwtitleText,pwField,nicknameText,nicknameField,signinButton) = createRefs()
-        val emailState = remember { mutableStateOf(TextFieldValue("")) }
-        val PWState = remember { mutableStateOf(TextFieldValue("")) }
-        val nicknameState = remember { mutableStateOf(TextFieldValue("")) }
-        val context = LocalContext.current
-        val keyboardController = LocalSoftwareKeyboardController.current
-
-        val registrationResult by viewModel.registrationResult.observeAsState(null)
-
+        val (upBar, divider, titleText,authButton,emailtitleText,emailField,pwtitleText,pwField,nicknameText,nicknameField,signinButton) = createRefs()
 
         Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
+                .padding(start = 10.dp, end = 10.dp, top = 20.dp)
                 .fillMaxWidth()
                 .constrainAs(upBar) {
                     start. linkTo(parent.start)
                     end.linkTo(parent.end)
                     top.linkTo(parent.top)
                 }
-
         )
         {
-            //if (baseViewModel.previousScreenType == ScreenType.LOAD)
-            UpBar(baseViewModel, "", false, ActivityType.FINISH, ScreenType.SIGNUPLOAD)
+            Text(
+                text = "이메일 인증",
+                fontSize = 30.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 10.dp)
+            )
         }
 
-        Text(
-            text = "이메일 인증",
-            style = TextStyle(
-                fontSize = 30.sp, // 원하는 글씨 크기로 설정
-                fontWeight = FontWeight.ExtraBold // 선택적으로 글씨 두께를 설정
-            ),
+        Box(
             modifier = Modifier
-                .constrainAs(titleText) {
-                    top.linkTo(upBar.top, margin = 32.dp) // 부모의 상단에 연결
-                    start.linkTo(parent.start, margin = 25.dp) // 부모의 왼쪽에 연결
+                .width(screenWidth - 60.dp)
+                .height(1.dp)
+                .background(Color.Gray)
+                .padding(start = 40.dp, end = 40.dp)
+                .constrainAs(divider) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(upBar.bottom, margin = 5.dp)
                 }
-                .padding(top = 30.dp)
-                .padding(bottom = 70.dp) // 텍스트 아래에 여백 추가
         )
+
 
         Text(
             text = "이메일",
@@ -101,7 +115,7 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
             ),
             modifier = Modifier
                 .constrainAs(emailtitleText) {
-                    top.linkTo(titleText.bottom, margin = 32.dp) // 부모의 상단에 연결
+                    top.linkTo(upBar.bottom, margin = 32.dp) // 부모의 상단에 연결
                     start.linkTo(parent.start, margin = 25.dp) // 부모의 왼쪽에 연결
                 }
             //.padding(bottom = 10.dp) // 텍스트 아래에 여백 추가
@@ -114,7 +128,15 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
             },
             placeholder = { Text("이메일을 입력하세요") },
             visualTransformation = EmailVisualTransformation(), // 시각적 변환 추가
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent, // 비활성 상태에서 밑줄 색상 제거
+                cursorColor = Color.Black
+            ),
             modifier = Modifier
+                .border(0.5.dp, Color.Gray, shape = RoundedCornerShape(8.dp))
                 .constrainAs(emailField) {
                     top.linkTo(emailtitleText.bottom, margin = 0.dp)
                     start.linkTo(parent.start, margin = 16.dp)
@@ -154,7 +176,15 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
                 value = PWState.value,
                 onValueChange = { PWState.value = it },
                 placeholder = { Text("비밀번호를 입력하세요") },
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent, // 비활성 상태에서 밑줄 색상 제거
+                    cursorColor = Color.Black
+                ),
                 modifier = Modifier
+                    .border(0.5.dp, Color.Gray, shape = RoundedCornerShape(8.dp))
                     .constrainAs(pwField) {
                         top.linkTo(pwtitleText.bottom, margin = 0.dp)
                         start.linkTo(parent.start, margin = 16.dp)
@@ -227,7 +257,15 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
                         value = nicknameState.value,
                         onValueChange = { nicknameState.value = it },
                         placeholder = { Text("닉네임을 입력하세요") },
+                        colors = TextFieldDefaults.textFieldColors(
+                            containerColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent, // 비활성 상태에서 밑줄 색상 제거
+                            cursorColor = Color.Black
+                        ),
                         modifier = Modifier
+                            .border(0.5.dp, Color.Gray, shape = RoundedCornerShape(8.dp))
                             .constrainAs(nicknameField) {
                                 top.linkTo(nicknameText.bottom, margin = 0.dp)
                                 start.linkTo(parent.start, margin = 16.dp)
