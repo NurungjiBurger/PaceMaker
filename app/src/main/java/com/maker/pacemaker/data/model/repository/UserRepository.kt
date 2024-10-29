@@ -9,7 +9,6 @@ import com.maker.pacemaker.data.model.remote.CreateProblemRequest
 import com.maker.pacemaker.data.model.remote.CreateProblemResponse
 import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.data.model.remote.ProblemHintResponse
-import com.maker.pacemaker.data.model.remote.ProblemList
 import com.maker.pacemaker.data.model.remote.reportRequest
 import com.maker.pacemaker.data.model.remote.reportResponse
 
@@ -22,7 +21,7 @@ class UserRepository(private val apiService: ApiService) {
     }
 
     // 특정 데이터가 들어간 문제 조회
-    suspend fun getProblemsByKeyWord(keyword: String) : ProblemList {
+    suspend fun getProblemsByKeyWord(keyword: String) : List<Problem> {
         return apiService.getProblemsByKeyWord(keyword)
     }
 

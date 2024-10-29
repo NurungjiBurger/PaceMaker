@@ -16,7 +16,7 @@ interface ApiService {
     @GET("problems/")
     suspend fun getProblemsByKeyWord(
         @Query("keyword") keyword: String
-    ): ProblemList
+    ): List<Problem>
 
     // 문제 힌트 조회
     @GET("problems/{problem_id}/hints")
@@ -68,11 +68,6 @@ data class Problem(
     val category: String,
     val tried_cnt: Int,
     val creator_user_id: Int,
-)
-
-// 문제 조회 응답 (리스트)
-data class ProblemList(
-    val problems: List<Problem>
 )
 
 // 정답 확인 요청
