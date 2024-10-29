@@ -1,5 +1,6 @@
 package com.maker.pacemaker.ui.viewmodel.signup.details
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,10 +24,16 @@ open class SignUpScreenViewModel @Inject constructor(
 
     var passWordSettingEnabled = false
 
-    fun checkEmail(email: String): Boolean {
+    fun enrollUserToServer(nickName: String) {
+        // 서버에 유저 등록하기
+        // firebase의 uid와 닉네임을 등록해주면 된다.
+    }
+
+    fun checkEmail(email: String) {
         // 이메일 형식을 확인하는 정규 표현식
-        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
-        return email.matches(emailPattern.toRegex())
+        val emailPattern = "^[A-Za-z0-9.-]+@[A-Za-z.-]+.[A-Za-z]{2,}$"
+
+        passWordSettingEnabled = email.matches(emailPattern.toRegex())
     }
 
     fun checkUser(email: String, password: String) {
@@ -34,7 +41,7 @@ open class SignUpScreenViewModel @Inject constructor(
             // 회원가입 코드
             registerUser(email, password)
         } else {
-            //Toast.makeText(context, "이메일과 비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show()
+            baseViewModel.baseViewModel.triggerToast("이메일과 비밀번호를 입력하세요.")
         }
     }
 
@@ -45,12 +52,15 @@ open class SignUpScreenViewModel @Inject constructor(
                     auth.currentUser?.sendEmailVerification()
                         ?.addOnCompleteListener { sendTask ->
                             if (sendTask.isSuccessful) {
+                                baseViewModel.baseViewModel.triggerToast("회원가입에 성공하였습니다. 전송된 메일을 확인해 주세요.")
                                 _registrationResult.value = "회원가입에 성공하였습니다. 전송된 메일을 확인해 주세요."
                             } else {
+                                baseViewModel.baseViewModel.triggerToast("메일 전송 실패")
                                 _registrationResult.value = "메일 전송 실패"
                             }
                         }
                 } else {
+                    baseViewModel.baseViewModel.triggerToast("회원가입 실패")
                     _registrationResult.value = "회원가입 실패"
                 }
             }

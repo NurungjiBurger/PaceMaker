@@ -9,12 +9,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -56,6 +59,8 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
         val nicknameState = remember { mutableStateOf(TextFieldValue("")) }
         val context = LocalContext.current
         val keyboardController = LocalSoftwareKeyboardController.current
+
+        val registrationResult by viewModel.registrationResult.observeAsState(null)
 
 
         Box(
@@ -108,9 +113,6 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
                 viewModel.checkEmail(emailState.value.text)
             },
             placeholder = { Text("이메일을 입력하세요") },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done
-            ),
             visualTransformation = EmailVisualTransformation(), // 시각적 변환 추가
             modifier = Modifier
                 .constrainAs(emailField) {
@@ -122,6 +124,15 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
                 .background(Color(0xFFF5F5F5), shape = RoundedCornerShape(12.dp)) // 배경색과 모서리 둥글기 설정
                 .height(56.dp) // 텍스트 필드 높이 설정
                 .width(360.dp) // 텍스트 필드 너비 설정
+            ,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done// 다음 필드로 이동
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    keyboardController?.hide() // 키패드 숨기기
+                }
+            )
         )
 
         if (viewModel.passWordSettingEnabled) {
@@ -156,95 +167,119 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
                     ) // 배경색과 모서리 둥글기 설정
                     .height(56.dp) // 텍스트 필드 높이 설정
                     .width(360.dp) // 텍스트 필드 너비 설정
-            )
-            Button(
-                onClick = {
-                    //val context = LocalContext.current
-
-                    keyboardController?.hide() // 키보드 숨기기
-                    viewModel.checkUser(emailState.value.text, PWState.value.text)
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1429A0), // 버튼 배경색 설정
-                    contentColor = Color.White // 버튼 텍스트 색상 설정
+                ,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next // 다음 필드로 이동
                 ),
-                shape = RoundedCornerShape(8.dp), // 모서리 둥글기 설정
-                modifier = Modifier
-                    .constrainAs(authButton) {
-                        top.linkTo(pwField.bottom, margin = 16.dp) // 환영 메시지 아래에 배치
-                        end.linkTo(parent.end, margin = 16.dp) // 부모의 왼쪽에 배치
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        keyboardController?.hide() // 키패드 숨기기
                     }
-                    .size(width = 120.dp, height = 50.dp) // 버튼의 크기 설정
-            ) {
-                Text(
-                    text = "인증 요청",
-                    fontSize = 18.sp, // 텍스트 크기 설정
-                    color = Color.White, // 텍스트 색상 설정
-                    fontWeight = FontWeight.Bold // 텍스트 두께 설정
                 )
-            }
-
-
-
-            Text(
-                text = "닉네임",
-                style = TextStyle(
-                    fontSize = 15.sp, // 원하는 글씨 크기로 설정
-                    fontWeight = FontWeight.Light // 선택적으로 글씨 두께를 설정
-                ),
-                modifier = Modifier
-                    .constrainAs(nicknameText) {
-                        top.linkTo(authButton.bottom, margin = 32.dp) // 부모의 상단에 연결
-                        start.linkTo(parent.start, margin = 25.dp) // 부모의 왼쪽에 연결
-                    }
-                //.padding(bottom = 10.dp) // 텍스트 아래에 여백 추가
             )
 
-            TextField(
-                value = nicknameState.value,
-                onValueChange = { nicknameState.value = it },
-                placeholder = { Text("닉네임을 입력하세요") },
-                modifier = Modifier
-                    .constrainAs(nicknameField) {
-                        top.linkTo(nicknameText.bottom, margin = 0.dp)
-                        start.linkTo(parent.start, margin = 16.dp)
-                        end.linkTo(parent.end, margin = 16.dp)
-                    }
-                    .padding(3.dp) // 내부 여백 설정
-                    .background(
-                        Color(0xFFF5F5F5),
-                        shape = RoundedCornerShape(12.dp)
-                    ) // 배경색과 모서리 둥글기 설정
-                    .height(56.dp) // 텍스트 필드 높이 설정
-                    .width(360.dp) // 텍스트 필드 너비 설정
-            )
+            if (PWState.value.text.length >= 6) {
 
-            Button(
-                onClick = {
-                    // 이메일 인증 요청
-                    // 이메일 주소를 가져와서 인증 메일을 보내는 기능을 구현
-                    // 이메일 주소는 emailState.value.text로 가져올 수 있음
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1429A0), // 버튼 배경색 설정
-                    contentColor = Color.White // 버튼 텍스트 색상 설정
-                ),
-                shape = RoundedCornerShape(8.dp), // 모서리 둥글기 설정
-                modifier = Modifier
-                    .constrainAs(signinButton) {
+                Button(
+                    onClick = {
+                        //val context = LocalContext.current
 
-                        bottom.linkTo(parent.bottom, margin = 16.dp) // 환영 메시지 아래에 배치
-                        start.linkTo(parent.start, margin = 16.dp)
-                        end.linkTo(parent.end, margin = 16.dp) // 부모의 왼쪽에 배치
+                        keyboardController?.hide() // 키보드 숨기기
+                        viewModel.checkUser(emailState.value.text, PWState.value.text)
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF1429A0), // 버튼 배경색 설정
+                        contentColor = Color.White // 버튼 텍스트 색상 설정
+                    ),
+                    shape = RoundedCornerShape(8.dp), // 모서리 둥글기 설정
+                    modifier = Modifier
+                        .constrainAs(authButton) {
+                            top.linkTo(pwField.bottom, margin = 16.dp) // 환영 메시지 아래에 배치
+                            end.linkTo(parent.end, margin = 16.dp) // 부모의 왼쪽에 배치
+                        }
+                        .size(width = 120.dp, height = 50.dp) // 버튼의 크기 설정
+                ) {
+                    Text(
+                        text = "인증 요청",
+                        fontSize = 18.sp, // 텍스트 크기 설정
+                        color = Color.White, // 텍스트 색상 설정
+                        fontWeight = FontWeight.Bold // 텍스트 두께 설정
+                    )
+                }
+
+                if (registrationResult?.contains("성공") == true) {
+
+                    Text(
+                        text = "닉네임",
+                        style = TextStyle(
+                            fontSize = 15.sp, // 원하는 글씨 크기로 설정
+                            fontWeight = FontWeight.Light // 선택적으로 글씨 두께를 설정
+                        ),
+                        modifier = Modifier
+                            .constrainAs(nicknameText) {
+                                top.linkTo(authButton.bottom, margin = 32.dp) // 부모의 상단에 연결
+                                start.linkTo(parent.start, margin = 25.dp) // 부모의 왼쪽에 연결
+                            }
+                        //.padding(bottom = 10.dp) // 텍스트 아래에 여백 추가
+                    )
+
+                    TextField(
+                        value = nicknameState.value,
+                        onValueChange = { nicknameState.value = it },
+                        placeholder = { Text("닉네임을 입력하세요") },
+                        modifier = Modifier
+                            .constrainAs(nicknameField) {
+                                top.linkTo(nicknameText.bottom, margin = 0.dp)
+                                start.linkTo(parent.start, margin = 16.dp)
+                                end.linkTo(parent.end, margin = 16.dp)
+                            }
+                            .padding(3.dp) // 내부 여백 설정
+                            .background(
+                                Color(0xFFF5F5F5),
+                                shape = RoundedCornerShape(12.dp)
+                            ) // 배경색과 모서리 둥글기 설정
+                            .height(56.dp) // 텍스트 필드 높이 설정
+                            .width(360.dp) // 텍스트 필드 너비 설정
+                        ,
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Next // 다음 필드로 이동
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = {
+                                keyboardController?.hide() // 키패드 숨기기
+                            }
+                        )
+                    )
+
+                    if (nicknameState.value.text.length >= 2 && nicknameState.value.text.length <= 6) {
+
+                        Button(
+                            onClick = {
+                                viewModel.enrollUserToServer(nicknameState.value.text)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF1429A0), // 버튼 배경색 설정
+                                contentColor = Color.White // 버튼 텍스트 색상 설정
+                            ),
+                            shape = RoundedCornerShape(8.dp), // 모서리 둥글기 설정
+                            modifier = Modifier
+                                .constrainAs(signinButton) {
+
+                                    bottom.linkTo(parent.bottom, margin = 16.dp) // 환영 메시지 아래에 배치
+                                    start.linkTo(parent.start, margin = 16.dp)
+                                    end.linkTo(parent.end, margin = 16.dp) // 부모의 왼쪽에 배치
+                                }
+                                .size(width = 360.dp, height = 50.dp) // 버튼의 크기 설정
+                        ) {
+                            Text(
+                                text = "로그인 / 회원가입",
+                                fontSize = 18.sp, // 텍스트 크기 설정
+                                color = Color.White, // 텍스트 색상 설정
+                                fontWeight = FontWeight.Bold // 텍스트 두께 설정
+                            )
+                        }
                     }
-                    .size(width = 360.dp, height = 50.dp) // 버튼의 크기 설정
-            ) {
-                Text(
-                    text = "로그인 / 회원가입",
-                    fontSize = 18.sp, // 텍스트 크기 설정
-                    color = Color.White, // 텍스트 색상 설정
-                    fontWeight = FontWeight.Bold // 텍스트 두께 설정
-                )
+                }
             }
         }
 

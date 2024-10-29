@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -86,8 +87,15 @@ fun SignInScreen(viewModel: SignInScreenViewModel) {
                 onValueChange = { emailState.value = it },
                 label = { Text("Email") },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done // 다음 필드로 이동
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        keyboardController?.hide() // 키패드 숨기기
+                    }
+                )
             )
 
             TextField(
@@ -95,8 +103,15 @@ fun SignInScreen(viewModel: SignInScreenViewModel) {
                 onValueChange = { PWState.value = it },
                 label = { Text("Password") },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done // 다음 필드로 이동
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        keyboardController?.hide() // 키패드 숨기기
+                    }
+                )
             )
         }
 
@@ -117,20 +132,6 @@ fun SignInScreen(viewModel: SignInScreenViewModel) {
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1429A0))
         ) {
             Text("Sign In", color = Color.White)
-        }
-
-        // Error Message
-        viewModel.errorMessage?.let { errorMessage ->
-            Text(
-                text = errorMessage,
-                color = Color.Red,
-                modifier = Modifier
-                    .constrainAs(errorMessageText) {
-                        start.linkTo(authButton.start)
-                        top.linkTo(authButton.bottom, margin = 8.dp)
-                    }
-                    .padding(16.dp)
-            )
         }
 
         // 로그인 상태 변경 관찰
