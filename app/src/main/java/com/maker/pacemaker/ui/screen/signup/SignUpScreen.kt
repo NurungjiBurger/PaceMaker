@@ -104,8 +104,8 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
 
         TextField(
             value = emailState.value,
-            onValueChange = { newValue ->
-                emailState.value = newValue
+            onValueChange = { newValue -> emailState.value = newValue
+                viewModel.checkEmail(emailState.value.text)
             },
             placeholder = { Text("이메일을 입력하세요") },
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -124,7 +124,7 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
                 .width(360.dp) // 텍스트 필드 너비 설정
         )
 
-        if (emailState.value.text.length >= 10) {
+        if (viewModel.passWordSettingEnabled) {
             Text(
                 text = "비밀번호",
                 style = TextStyle(
@@ -218,33 +218,34 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
                     .height(56.dp) // 텍스트 필드 높이 설정
                     .width(360.dp) // 텍스트 필드 너비 설정
             )
-        }
-        Button(
-            onClick = {
-                // 이메일 인증 요청
-                // 이메일 주소를 가져와서 인증 메일을 보내는 기능을 구현
-                // 이메일 주소는 emailState.value.text로 가져올 수 있음
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF1429A0), // 버튼 배경색 설정
-                contentColor = Color.White // 버튼 텍스트 색상 설정
-            ),
-            shape = RoundedCornerShape(8.dp), // 모서리 둥글기 설정
-            modifier = Modifier
-                .constrainAs(signinButton) {
 
-                    bottom.linkTo(parent.bottom, margin = 16.dp) // 환영 메시지 아래에 배치
-                    start.linkTo(parent.start, margin = 16.dp)
-                    end.linkTo(parent.end, margin = 16.dp) // 부모의 왼쪽에 배치
-                }
-                .size(width = 360.dp, height = 50.dp) // 버튼의 크기 설정
-        ) {
-            Text(
-                text = "로그인 / 회원가입",
-                fontSize = 18.sp, // 텍스트 크기 설정
-                color = Color.White, // 텍스트 색상 설정
-                fontWeight = FontWeight.Bold // 텍스트 두께 설정
-            )
+            Button(
+                onClick = {
+                    // 이메일 인증 요청
+                    // 이메일 주소를 가져와서 인증 메일을 보내는 기능을 구현
+                    // 이메일 주소는 emailState.value.text로 가져올 수 있음
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF1429A0), // 버튼 배경색 설정
+                    contentColor = Color.White // 버튼 텍스트 색상 설정
+                ),
+                shape = RoundedCornerShape(8.dp), // 모서리 둥글기 설정
+                modifier = Modifier
+                    .constrainAs(signinButton) {
+
+                        bottom.linkTo(parent.bottom, margin = 16.dp) // 환영 메시지 아래에 배치
+                        start.linkTo(parent.start, margin = 16.dp)
+                        end.linkTo(parent.end, margin = 16.dp) // 부모의 왼쪽에 배치
+                    }
+                    .size(width = 360.dp, height = 50.dp) // 버튼의 크기 설정
+            ) {
+                Text(
+                    text = "로그인 / 회원가입",
+                    fontSize = 18.sp, // 텍스트 크기 설정
+                    color = Color.White, // 텍스트 색상 설정
+                    fontWeight = FontWeight.Bold // 텍스트 두께 설정
+                )
+            }
         }
 
 
