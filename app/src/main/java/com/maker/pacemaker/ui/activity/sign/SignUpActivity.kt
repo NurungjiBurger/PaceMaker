@@ -14,6 +14,7 @@ import com.maker.pacemaker.ui.activity.BaseActivity
 import com.maker.pacemaker.ui.screen.sign.LoadScreen
 import com.maker.pacemaker.ui.screen.sign.SignAuthScreen
 import com.maker.pacemaker.ui.viewmodel.sign.SignBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.sign.details.LoadScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.sign.details.SignUpScreenViewModel
 
 class SignUpActivity : BaseActivity() {
@@ -21,6 +22,7 @@ class SignUpActivity : BaseActivity() {
     private lateinit var signViewModel : SignBaseViewModel
 
     private val signUpScreenViewModel : SignUpScreenViewModel by viewModels()
+    private val loadScreenViewModel : LoadScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +45,7 @@ class SignUpActivity : BaseActivity() {
                     LoadScreen(
                         baseViewModel,
                         signViewModel,
-                        signUpScreenViewModel
+                        loadScreenViewModel
                     )
                 }
             }

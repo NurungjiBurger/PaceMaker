@@ -1,5 +1,7 @@
 package com.maker.pacemaker.ui.viewmodel.signin.details
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maker.pacemaker.MyApplication
@@ -15,6 +17,9 @@ open class SignInScreenViewModel @Inject constructor() : SignInBaseViewModel() {
     val errorMessage: String?
         get() = _errorMessage
 
+    private val _isLoggedIn = MutableLiveData<Boolean>() // 로그인 상태 LiveData
+    val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
+
     fun checkUser(email: String, password: String) {
         if (email.isNotEmpty() && password.length >= 6) {
             loginUser(email, password)
@@ -24,13 +29,12 @@ open class SignInScreenViewModel @Inject constructor() : SignInBaseViewModel() {
     }
 
     private fun loginUser(email: String, password: String) {
-        // Coroutine을 사용하여 비동기 작업 수행
         viewModelScope.launch {
             MyApplication.auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         MyApplication.email = email
-                        // 로그인 성공 시 필요한 동작 수행
+                        _isLoggedIn.value = true // 로그인 성공 시 이벤트 발생
                     } else {
                         _errorMessage = "로그인 실패: ${task.exception?.message}"
                     }
