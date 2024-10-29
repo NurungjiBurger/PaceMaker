@@ -12,4 +12,5 @@ open class BootScreenViewModel @Inject constructor(
 ): ViewModel() {
 
     val baseViewModel = base
+
 }
