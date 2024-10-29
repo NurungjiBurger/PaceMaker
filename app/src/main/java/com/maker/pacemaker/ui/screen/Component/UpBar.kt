@@ -73,12 +73,3 @@ fun UpBar(baseViewModel: BaseViewModel, titleName: String, type: Boolean, activi
         }
     }
 }
-
-@Composable
-@Preview
-fun PreviewUpBar() {
-
-//    val baseViewModel = DummyMainBaseViewModel()
-//
-//    UpBar(baseViewModel, "새 소식", false, ActivityType.FINISH, ScreenType.MAIN)
-}

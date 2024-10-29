@@ -14,6 +14,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.maker.pacemaker.MyApplication
 import com.maker.pacemaker.data.model.ActivityNavigationTo
 import com.maker.pacemaker.data.model.ActivityType
@@ -30,6 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class BaseViewModel @Inject constructor(
+    val auth: FirebaseAuth
 ) : ViewModel() {
 
     // 전역 Context 접근
@@ -92,7 +94,6 @@ open class BaseViewModel @Inject constructor(
         _screenNavigationTo.postValue(null)
     }
 
-
     // Activity로 이동
     fun goActivity(activity: ActivityType) {
         _activityNavigationTo.value = ActivityNavigationTo(activity)
@@ -105,5 +106,20 @@ open class BaseViewModel @Inject constructor(
 
     fun triggerToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    fun setFireBaseUID() {
+        val user = FirebaseAuth.getInstance().currentUser
+        val uid = user?.uid
+
+        if (uid != null) {
+            // UID를 성공적으로 가져왔을 때 처리
+            Log.d("FirebaseUID", "User UID: $uid")
+            editor.putString("fireBaseUID", uid)
+            editor.apply()
+        } else {
+            // UID를 가져오지 못한 경우 (예: 로그아웃 상태)
+            Log.d("FirebaseUID", "User is not logged in.")
+        }
     }
 }

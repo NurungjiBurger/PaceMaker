@@ -102,12 +102,3 @@ fun Rating(baseViewModel: BaseViewModel) {
         }
     }
 }
-
-@Composable
-@Preview
-fun PreviewRating() {
-
-    val baseViewModel = BaseViewModel()
-
-    Rating(baseViewModel)
-}

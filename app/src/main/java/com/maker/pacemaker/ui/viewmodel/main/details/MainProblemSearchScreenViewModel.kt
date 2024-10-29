@@ -47,8 +47,8 @@ open class MainProblemSearchScreenViewModel @Inject constructor(
             val result = repository.getProblemsByKeyWord(searchKeyword)
 
             // 검색 결과가 비어 있지 않으면 _searchedProblems와 _hashTags를 업데이트합니다.
-            if (result.problems.isNotEmpty()) {
-                _searchedProblems.value = result.problems
+            if (result.isNotEmpty()) {
+                _searchedProblems.value = result
 
                 // 해시태그를 생성하는 로직 (예: 문제 설명에서 해시태그 추출)
 //                val extractedHashTags = result.flatMap { it.second.split(" ") } // 예시: 문제 설명에서 단어를 추출하여 해시태그로 사용

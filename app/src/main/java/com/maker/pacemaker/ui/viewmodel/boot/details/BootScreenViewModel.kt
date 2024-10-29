@@ -12,4 +12,6 @@ open class BootScreenViewModel @Inject constructor(
 ): ViewModel() {
 
     val baseViewModel = base
+
+    val fireBaseUID = baseViewModel.baseViewModel.sharedPreferences.getString("fireBaseUID", "")
 }
