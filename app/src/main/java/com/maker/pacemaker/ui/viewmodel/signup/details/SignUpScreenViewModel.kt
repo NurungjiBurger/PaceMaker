@@ -14,10 +14,11 @@ import javax.inject.Inject
 @HiltViewModel
 open class SignUpScreenViewModel @Inject constructor(
     private val base: SignUpBaseViewModel,
-    private val auth: FirebaseAuth
 ) : ViewModel() {
 
     val baseViewModel = base
+
+    val auth = baseViewModel.baseViewModel.auth
 
     private val _registrationResult = MutableLiveData<String>()
     val registrationResult: LiveData<String> get() = _registrationResult
@@ -53,6 +54,7 @@ open class SignUpScreenViewModel @Inject constructor(
                         ?.addOnCompleteListener { sendTask ->
                             if (sendTask.isSuccessful) {
                                 baseViewModel.baseViewModel.triggerToast("회원가입에 성공하였습니다. 전송된 메일을 확인해 주세요.")
+                                baseViewModel.baseViewModel.setFireBaseUID()
                                 _registrationResult.value = "회원가입에 성공하였습니다. 전송된 메일을 확인해 주세요."
                             } else {
                                 baseViewModel.baseViewModel.triggerToast("메일 전송 실패")

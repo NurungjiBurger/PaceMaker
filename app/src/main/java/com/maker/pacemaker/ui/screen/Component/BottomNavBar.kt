@@ -106,13 +106,3 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
 
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun BottomNavBarPreview() {
-
-//    val baseViewModel = DummyBaseViewModel()
-//
-//    // 모든 더미 ViewModel을 전달하여 미리보기 실행
-//    BottomNavBar(baseViewModel)
-}

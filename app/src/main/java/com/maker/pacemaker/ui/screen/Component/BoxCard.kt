@@ -77,13 +77,3 @@ fun BoxCard(
 
     }
 }
-
-@Composable
-@Preview
-fun BoxCardPreview() {
-
-//    val baseViewModel = DummyBaseViewModel()
-//
-//    BoxCard(baseViewModel, 100.dp, 100.dp, "여유롭게", "20개", true,
-//        { baseViewModel.goScreen(ScreenType.FINISH) })
-}

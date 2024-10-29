@@ -33,6 +33,8 @@ open class SignInScreenViewModel @Inject constructor(
         }
     }
 
+
+
     private fun loginUser(email: String, password: String) {
         viewModelScope.launch {
             MyApplication.auth.signInWithEmailAndPassword(email, password)
@@ -40,6 +42,7 @@ open class SignInScreenViewModel @Inject constructor(
                     if (task.isSuccessful) {
                         MyApplication.email = email
                         _isLoggedIn.value = true // 로그인 성공 시 이벤트 발생
+                        baseViewModel.baseViewModel.setFireBaseUID()
                     } else {
                         _errorMessage = "로그인 실패: ${task.exception?.message}"
                     }

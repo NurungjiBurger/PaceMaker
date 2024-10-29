@@ -61,10 +61,10 @@ fun BootScreen(viewModel: BootScreenViewModel) {
 
         // 스타 이미지
         Image(
-            painter = painterResource(id = R.drawable.templogo), // 리소스 확인
+            painter = painterResource(id = R.drawable.logo), // 리소스 확인
             contentDescription = null,
             modifier = Modifier
-                .size(100.dp) // 크기 조정
+                .size(150.dp) // 크기 조정
                 .constrainAs(starImage) {
                     top.linkTo(parent.top, margin = 200.dp) // 부모 상단에 위치
                     start.linkTo(parent.start)
@@ -100,7 +100,11 @@ fun BootScreen(viewModel: BootScreenViewModel) {
         )
 
         Handler(Looper.getMainLooper()).postDelayed({
-            baseViewModel.goScreen(ScreenType.ENTRY)
+            if (viewModel.fireBaseUID != "") {
+                baseViewModel.goActivity(ActivityType.MAIN)
+            } else {
+                baseViewModel.goScreen(ScreenType.ENTRY)
+            }
         }, 2000)
     }
 }
