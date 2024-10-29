@@ -1,4 +1,4 @@
-package com.maker.pacemaker.ui.screen.sign
+package com.maker.pacemaker.ui.screen.signup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,15 +13,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummySignUpLoadScreenViewModel
-import com.maker.pacemaker.data.model.test.DummySignBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
-import com.maker.pacemaker.ui.viewmodel.sign.SignBaseViewModel
-import com.maker.pacemaker.ui.viewmodel.sign.details.SignUpLoadScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.signup.SignUpBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.signup.details.SignUpLoadScreenViewModel
 
 @Composable
-fun SignUpLoadScreen(baseViewModel: BaseViewModel, mainViewModel: SignBaseViewModel, viewModel: SignUpLoadScreenViewModel) {
+fun SignUpLoadScreen(viewModel: SignUpLoadScreenViewModel) {
+
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val signUpBaseViewModel = viewModel.baseViewModel
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -56,14 +57,4 @@ fun SignUpLoadScreen(baseViewModel: BaseViewModel, mainViewModel: SignBaseViewMo
                 .height(4.dp) // 높이 설정
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun signUpLoadScreenPreview() {
-    val baseViewModel = DummyBaseViewModel()
-    val loadScreenViewModel = DummySignUpLoadScreenViewModel()
-    val signViewModel = DummySignBaseViewModel()
-
-    SignUpLoadScreen(baseViewModel, signViewModel, loadScreenViewModel)
 }

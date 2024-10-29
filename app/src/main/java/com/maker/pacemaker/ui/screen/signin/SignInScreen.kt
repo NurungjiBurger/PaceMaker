@@ -28,9 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummySignInBaseViewModel
-import com.maker.pacemaker.data.model.test.DummySignInScreenViewModel
 import com.maker.pacemaker.ui.activity.main.MainActivity
 import com.maker.pacemaker.ui.screen.Component.UpBar
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
@@ -39,7 +36,11 @@ import com.maker.pacemaker.ui.viewmodel.signin.details.SignInScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseViewModel, viewModel: SignInScreenViewModel) {
+fun SignInScreen(viewModel: SignInScreenViewModel) {
+
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val signInBaseViewModel = viewModel.baseViewModel
+
     val context = LocalContext.current // 현재 컨텍스트를 가져옵니다.
     val isLoggedInState = viewModel.isLoggedIn.observeAsState(initial = false) // LiveData를 관찰하여 상태를 가져옵니다.
 
@@ -154,15 +155,4 @@ fun SignInScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseViewMode
                 }
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SignInScreenPreview() {
-
-    val baseViewModel = DummyBaseViewModel()
-    val signinScreenViewModel = DummySignInScreenViewModel()
-    val signinViewModel = DummySignInBaseViewModel()
-
-    SignInScreen(baseViewModel, signinViewModel, signinScreenViewModel)
 }

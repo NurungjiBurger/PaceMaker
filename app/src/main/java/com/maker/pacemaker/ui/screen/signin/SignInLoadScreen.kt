@@ -1,5 +1,6 @@
 package com.maker.pacemaker.ui.screen.signin
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LinearProgressIndicator
@@ -13,15 +14,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.maker.pacemaker.data.model.test.DummyBaseViewModel
-import com.maker.pacemaker.data.model.test.DummySignInBaseViewModel
-import com.maker.pacemaker.data.model.test.DummySignInLoadScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.signin.SignInBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.signin.details.SignInScreenViewModel
 
 @Composable
-fun SignInLoadScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseViewModel, viewModel: SignInScreenViewModel) {
+fun SignInLoadScreen(viewModel: SignInScreenViewModel) {
+
+    val baseViewModel = viewModel.baseViewModel.baseViewModel
+    val signInBaseViewModel = viewModel.baseViewModel
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -29,8 +31,10 @@ fun SignInLoadScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseView
     ) {
         val (loadText, progressBar) = createRefs()
 
+        Log.d("SignInLoadScreen", "SignInLoadScreen: loading")
+
         Text(
-            text = "사용자 정보 등록하는 중...",
+            text = "사용자 정보 불러오는 중...",
             style = TextStyle(
                 fontSize = 23.sp,
                 fontWeight = FontWeight.Bold
@@ -56,14 +60,4 @@ fun SignInLoadScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseView
                 .height(4.dp) // 높이 설정
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun signInLoadScreenPreview() {
-    val baseViewModel = DummyBaseViewModel()
-    val signInLoadScreenViewModel = DummySignInLoadScreenViewModel()
-    val signInViewModel = DummySignInBaseViewModel()
-
-    SignInLoadScreen(baseViewModel, signInViewModel, signInLoadScreenViewModel)
 }

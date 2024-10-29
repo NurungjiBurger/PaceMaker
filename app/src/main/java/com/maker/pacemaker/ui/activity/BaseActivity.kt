@@ -25,7 +25,7 @@ open class BaseActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-// 상태바 색상을 검정색으로 설정
+        // 상태바 색상을 검정색으로 설정
         window.statusBarColor = ContextCompat.getColor(this, android.R.color.black)
 
 
@@ -33,13 +33,15 @@ open class BaseActivity : ComponentActivity() {
         baseViewModel.activityNavigationTo.observe(this) { activityType ->
             activityType?.let {
                 navigateToActivity(activityType.activityType)
+                baseViewModel.activityNavigationTo.value = null // 이벤트 초기화
             }
         }
 
-        // ViewModel의 화면 전환 요청 처리
+// ViewModel의 화면 전환 요청 처리
         baseViewModel.screenNavigationTo.observe(this) { navigationTo ->
             navigationTo?.screenType?.let { screenType ->
                 navigateToScreen(screenType)
+                baseViewModel.screenNavigationTo.value = null // 이벤트 초기화
             }
         }
     }

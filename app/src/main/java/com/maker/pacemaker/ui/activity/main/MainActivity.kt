@@ -80,9 +80,6 @@ class MainActivity : BaseActivity() {
     }
 
     override fun navigateToActivity(activityType: ActivityType) {
-
-        Log.d("MainActivity", "navigateToActivity: $activityType")
-
         val intent = activityType.intentCreator(this)
         if (activityType == ActivityType.FINISH) {
             finish() // 현재 Activity 종료
