@@ -28,7 +28,7 @@ open class MainRankingScreenViewModel @Inject constructor(
         User(name = "이영희", level = 4, followers = 2500, isFollowing = false),
         User(name = "박지수", level = 1, followers = 120, isFollowing = true),
         User(name = "최민준", level = 3, followers = 8800, isFollowing = false),
-        User(name = "정다은", level = 6, followers = 40, isFollowing = true),
+        User(name = "정다은", level = 6, followers = 40000, isFollowing = true),
         User(name = "김철수", level = 2, followers = 500, isFollowing = true),
         User(name = "이영희", level = 4, followers = 2500, isFollowing = false),
         User(name = "박지수", level = 1, followers = 120, isFollowing = true),
@@ -44,7 +44,7 @@ open class MainRankingScreenViewModel @Inject constructor(
     }
 
     fun restate() {
-        _userList.value = emptyList()
+        _userList.value = initialUserList.sortedByDescending { it.level }
         _userName.value = ""
     }
 
