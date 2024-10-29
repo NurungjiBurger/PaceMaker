@@ -1,6 +1,5 @@
 package com.maker.pacemaker.ui.screen.sign
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,8 +15,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -47,7 +44,7 @@ import com.maker.pacemaker.ui.viewmodel.sign.SignBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.sign.details.SignUpScreenViewModel
 
 @Composable
-fun SignAuthScreen(baseViewModel: BaseViewModel, mainViewModel: SignBaseViewModel, viewModel: SignUpScreenViewModel) {
+fun SignUpScreen(baseViewModel: BaseViewModel, mainViewModel: SignBaseViewModel, viewModel: SignUpScreenViewModel) {
 
     ConstraintLayout(
         modifier = Modifier
@@ -74,7 +71,7 @@ fun SignAuthScreen(baseViewModel: BaseViewModel, mainViewModel: SignBaseViewMode
         )
         {
             //if (baseViewModel.previousScreenType == ScreenType.LOAD)
-            UpBar(baseViewModel, "", false, ActivityType.FINISH, ScreenType.LOAD)
+            UpBar(baseViewModel, "", false, ActivityType.FINISH, ScreenType.SIGNUPLOAD)
         }
 
         Text(
@@ -265,7 +262,7 @@ class EmailVisualTransformation : VisualTransformation {
 
 @Preview(showBackground = true)
 @Composable
-fun SignScreenPreview() {
+fun SignUpScreenPreview() {
     // Preview용 더미 ViewModel을 생성하여 직접 사용
 
 
@@ -274,5 +271,5 @@ fun SignScreenPreview() {
     val signViewModel = DummySignBaseViewModel()
 
     // 모든 더미 ViewModel을 전달하여 미리보기 실행
-    SignAuthScreen(baseViewModel, signViewModel, signupScreenViewModel)
+    SignUpScreen(baseViewModel, signViewModel, signupScreenViewModel)
 }

@@ -12,24 +12,19 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
@@ -44,7 +39,7 @@ import com.maker.pacemaker.ui.viewmodel.signin.details.SignInScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LogInScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseViewModel, viewModel: SignInScreenViewModel) {
+fun SignInScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseViewModel, viewModel: SignInScreenViewModel) {
     val context = LocalContext.current // 현재 컨텍스트를 가져옵니다.
     val isLoggedInState = viewModel.isLoggedIn.observeAsState(initial = false) // LiveData를 관찰하여 상태를 가져옵니다.
 
@@ -69,7 +64,7 @@ fun LogInScreen(baseViewModel: BaseViewModel, mainViewModel: SignInBaseViewModel
                     top.linkTo(parent.top)
                 }
         ) {
-            UpBar(baseViewModel, "LOGIN", false, ActivityType.FINISH, ScreenType.LOAD)
+            UpBar(baseViewModel, "LOGIN", false, ActivityType.FINISH, ScreenType.SIGNINLOAD)
         }
 
         // Email and Password Fields
@@ -169,5 +164,5 @@ fun SignInScreenPreview() {
     val signinScreenViewModel = DummySignInScreenViewModel()
     val signinViewModel = DummySignInBaseViewModel()
 
-    LogInScreen(baseViewModel, signinViewModel, signinScreenViewModel)
+    SignInScreen(baseViewModel, signinViewModel, signinScreenViewModel)
 }

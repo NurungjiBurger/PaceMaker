@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
+import com.maker.pacemaker.data.model.ActivityType
+import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.data.model.test.DummyBaseViewModel
 import com.maker.pacemaker.data.model.test.DummyBootBaseViewModel
 import com.maker.pacemaker.data.model.test.DummyEntryScreenViewModel
@@ -56,14 +58,16 @@ fun EntryScreen(baseViewModel: BaseViewModel, mainViewModel: BootBaseViewModel, 
                     .constrainAs(titleText) {
                         top.linkTo(parent.top, margin = 100.dp)
                         start.linkTo(parent.start) // 왼쪽 마진 제거
-                        end.linkTo(parent.end, margin = 0.dp) // 오른쪽 마진을 0으로 설정
+                        end.linkTo(parent.end) // 오른쪽 마진을 0으로 설정
                     }
             )
 
 
 
             Button(
-                onClick = { /* TODO: 신규 회원가입 동작 */ },
+                onClick = {
+                    baseViewModel.goActivity(ActivityType.SIGNUP)
+                    },
                 modifier = Modifier
                     .constrainAs(signUpButton) {
                         bottom.linkTo(loginButton.top, margin = 16.dp) // 기존 유저 로그인 버튼 위에 위치
@@ -88,7 +92,9 @@ fun EntryScreen(baseViewModel: BaseViewModel, mainViewModel: BootBaseViewModel, 
 
 // 기존 유저 로그인 버튼
             Button(
-                onClick = { /* TODO: 기존 유저 로그인 동작 */ },
+                onClick = {
+                    baseViewModel.goActivity(ActivityType.SIGNIN)
+                },
                 modifier = Modifier
                     .constrainAs(loginButton) {
                         bottom.linkTo(parent.bottom, margin = 32.dp) // 화면 하단에서 32dp 위에 위치

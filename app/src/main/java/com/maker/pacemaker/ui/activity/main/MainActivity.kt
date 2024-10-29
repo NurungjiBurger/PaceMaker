@@ -57,10 +57,6 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    // NavController 초기화 메서드 구현
-    override fun initNavController(): NavHostController {
-        return navController as NavHostController
-    }
 
     override fun navigateToScreen(screenType: ScreenType) {
         val route = when (screenType) {

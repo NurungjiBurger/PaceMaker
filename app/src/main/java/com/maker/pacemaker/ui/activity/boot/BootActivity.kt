@@ -43,20 +43,15 @@ class BootActivity : BaseActivity() {
                         bootScreenViewModel
                     ) // BaseViewModel 전달
                 }
-//                composable("entryScreen") {
-//                    EntryScreen(
-//                        baseViewModel,
-//                        bootViewModel,
-//                        entryScreenViewModel
-//                    ) // BaseViewModel 전달
-//                }
+                composable("entryScreen") {
+                    EntryScreen(
+                        baseViewModel,
+                        bootViewModel,
+                        entryScreenViewModel
+                    ) // BaseViewModel 전달
+                }
             }
         }
-    }
-
-    // NavController 초기화 메서드 구현
-    override fun initNavController(): NavHostController {
-        return navController as NavHostController
     }
 
     override fun navigateToScreen(screenType: ScreenType) {

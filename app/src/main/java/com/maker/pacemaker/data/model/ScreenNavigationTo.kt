@@ -13,8 +13,8 @@ enum class ScreenType(val navigateTo: (NavController) -> Unit) {
     ENTRY({ navController -> navController.navigate("entryScreen") }),
 
     // 회원가입
-    SIGNUP({ navController -> navController.navigate("authScreen") }),
-    LOAD({ navController -> navController.navigate("loadScreen") }),
+    SIGNUP({ navController -> navController.navigate("signUpScreen") }),
+    SIGNUPLOAD({ navController -> navController.navigate("signUpLoadScreen") }),
 
     // 메인
     MAIN({ navController -> navController.navigate("mainScreen") }),
@@ -23,8 +23,8 @@ enum class ScreenType(val navigateTo: (NavController) -> Unit) {
     MYPAGE({ navController -> navController.navigate("mypageScreen") }),
 
     // 로그인
-    SIGNIN({ navController -> navController.navigate("signinScreen") }),
-    LOADIN({ navController -> navController.navigate("loadinScreen") }),
+    SIGNIN({ navController -> navController.navigate("signInScreen") }),
+    SIGNINLOAD({ navController -> navController.navigate("signInLoadScreen") }),
 
 
 }

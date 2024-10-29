@@ -11,9 +11,10 @@ import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.sign.SignBaseViewModel
-import com.maker.pacemaker.ui.viewmodel.sign.details.LoadScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.sign.details.SignUpLoadScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.sign.details.SignUpScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.signin.SignInBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.signin.details.SignInLoadScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.signin.details.SignInScreenViewModel
 
 class PreviewTest {
@@ -69,6 +70,10 @@ class DummyEntryScreenViewModel : EntryScreenViewModel() {
     // 필요한 상태나 메서드를 추가로 정의
 }
 
-class DummyLoadScreenViewModel : LoadScreenViewModel() {
+class DummySignInLoadScreenViewModel : SignInLoadScreenViewModel() {
+    // 필요한 상태나 메서드를 추가로 정의
+}
+
+class DummySignUpLoadScreenViewModel : SignUpLoadScreenViewModel() {
     // 필요한 상태나 메서드를 추가로 정의
 }
