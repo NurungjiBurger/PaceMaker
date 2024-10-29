@@ -29,9 +29,6 @@ class BootActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-
-            baseViewModel._previousActivity = ActivityType.BOOT
-
             // rememberNavController는 @Composable 함수이므로 여기서 호출해야 합니다.
             navController = rememberNavController()
 
@@ -43,11 +40,6 @@ class BootActivity : BaseActivity() {
     }
 
     override fun navigateToActivity(activityType: ActivityType) {
-
-        Log.d("MainActivity", "navigateToActivity: $activityType")
-
-        if (baseViewModel.previousActivity != ActivityType.BOOT) return
-
         val intent = activityType.intentCreator(this)
         if (activityType == ActivityType.FINISH) {
             finish() // 현재 Activity 종료

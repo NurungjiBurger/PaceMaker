@@ -40,11 +40,6 @@ class SignInActivity : BaseActivity() {
     }
 
     override fun navigateToActivity(activityType: ActivityType) {
-
-        Log.d("MainActivity", "navigateToActivity: $activityType")
-
-        if (baseViewModel.previousActivity != ActivityType.SIGNIN) return
-
         val intent = activityType.intentCreator(this)
         if (activityType == ActivityType.FINISH) {
             finish() // 현재 Activity 종료

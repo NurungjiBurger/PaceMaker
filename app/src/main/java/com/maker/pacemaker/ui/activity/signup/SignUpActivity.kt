@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.activity.BaseActivity
 
@@ -31,6 +32,15 @@ class SignUpActivity : BaseActivity() {
                 composable("signUpScreen") { SignUpScreen(signUpScreenViewModel) }
                 composable("signUpLoadScreen") { SignUpLoadScreen(signUpLoadScreenViewModel) }
             }
+        }
+    }
+
+    override fun navigateToActivity(activityType: ActivityType) {
+        val intent = activityType.intentCreator(this)
+        if (activityType == ActivityType.FINISH) {
+            finish() // 현재 Activity 종료
+        } else if (intent != null) {
+            startActivity(intent) // Intent가 null이 아닐 때만 Activity 시작
         }
     }
 

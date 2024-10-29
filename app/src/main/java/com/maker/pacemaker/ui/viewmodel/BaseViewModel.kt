@@ -1,6 +1,7 @@
 package com.maker.pacemaker.ui.viewmodel
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -83,18 +84,9 @@ open class BaseViewModel @Inject constructor(
     val _screenNavigationTo = MutableLiveData<ScreenNavigationTo?>()
     val screenNavigationTo: MutableLiveData<ScreenNavigationTo?> get() = _screenNavigationTo
 
-    var _previousScreen: ScreenType? = null
-    var _previousActivity: ActivityType? = null
-
-    val previousScreen: ScreenType?
-        get() = _previousScreen
-
-    val previousActivity: ActivityType?
-        get() = _previousActivity
+    var activityChange: Boolean = false
 
     fun restate() {
-        _previousScreen = null
-        _previousActivity = null
 
         _activityNavigationTo.postValue(null)
         _screenNavigationTo.postValue(null)
@@ -103,25 +95,12 @@ open class BaseViewModel @Inject constructor(
 
     // Activity로 이동
     fun goActivity(activity: ActivityType) {
-
-        Log.d("BaseViewModel", "goActivity: $activity")
-
-        _previousActivity = activityNavigationTo.value?.activityType?: ActivityType.BOOT
-        _previousScreen = ScreenType.FINISH
         _activityNavigationTo.value = ActivityNavigationTo(activity)
     }
 
     // Screen으로 이동
     fun goScreen(screen: ScreenType) {
-
-        Log.d("BaseViewModel", "goScreen: $screen")
-        Log.d("BaseViewModel", "previous Screen: $_previousScreen")
-
-        _previousScreen = screenNavigationTo.value?.screenType?: ScreenType.MAIN
-        _previousActivity = ActivityType.FINISH
         _screenNavigationTo.value = ScreenNavigationTo(screen)
-
-        Log.d("BaseViewModel", "previous Screen: $_previousScreen")
     }
 
     fun triggerToast(message: String) {

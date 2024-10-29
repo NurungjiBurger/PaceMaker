@@ -33,13 +33,15 @@ open class BaseActivity : ComponentActivity() {
         baseViewModel.activityNavigationTo.observe(this) { activityType ->
             activityType?.let {
                 navigateToActivity(activityType.activityType)
+                baseViewModel.activityNavigationTo.value = null // 이벤트 초기화
             }
         }
 
-        // ViewModel의 화면 전환 요청 처리
+// ViewModel의 화면 전환 요청 처리
         baseViewModel.screenNavigationTo.observe(this) { navigationTo ->
             navigationTo?.screenType?.let { screenType ->
                 navigateToScreen(screenType)
+                baseViewModel.screenNavigationTo.value = null // 이벤트 초기화
             }
         }
     }
