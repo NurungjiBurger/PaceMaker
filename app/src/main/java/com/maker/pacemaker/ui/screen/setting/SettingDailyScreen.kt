@@ -35,7 +35,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.screen.Component.BoxCard
-import com.maker.pacemaker.ui.screen.Component.BoxCardPreview
+
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.SettingBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingDailyScreenViewModel

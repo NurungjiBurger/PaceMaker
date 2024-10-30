@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,15 +57,22 @@ fun BootScreen(viewModel: BootScreenViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color(0xFF1429A0))
+            .clickable(onClick = {
+                if (viewModel.fireBaseUID != "") {
+                    baseViewModel.goActivity(ActivityType.MAIN)
+                } else {
+                    baseViewModel.goScreen(ScreenType.ENTRY)
+                }
+            })
     ) {
         val (starImage, paceText, makerText) = createRefs()
 
         // 스타 이미지
         Image(
-            painter = painterResource(id = R.drawable.templogo), // 리소스 확인
+            painter = painterResource(id = R.drawable.logo), // 리소스 확인
             contentDescription = null,
             modifier = Modifier
-                .size(100.dp) // 크기 조정
+                .size(150.dp) // 크기 조정
                 .constrainAs(starImage) {
                     top.linkTo(parent.top, margin = 200.dp) // 부모 상단에 위치
                     start.linkTo(parent.start)
@@ -100,7 +108,11 @@ fun BootScreen(viewModel: BootScreenViewModel) {
         )
 
         Handler(Looper.getMainLooper()).postDelayed({
-            baseViewModel.goScreen(ScreenType.ENTRY)
+            if (viewModel.fireBaseUID != "") {
+                baseViewModel.goActivity(ActivityType.MAIN)
+            } else {
+                baseViewModel.goScreen(ScreenType.ENTRY)
+            }
         }, 2000)
     }
 }

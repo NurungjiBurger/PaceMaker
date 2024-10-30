@@ -1,5 +1,6 @@
 package com.maker.pacemaker.di
 
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -19,8 +20,8 @@ class AppModule { // abstract를 제거하고 비추상 클래스
 
     @Provides
     @Singleton
-    fun provideBaseViewModel(): BaseViewModel {
-        return BaseViewModel() // BaseViewModel 생성
+    fun provideBaseViewModel(auth: FirebaseAuth): BaseViewModel {
+        return BaseViewModel(auth) // BaseViewModel 생성
     }
 
     @Provides

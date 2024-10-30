@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.ui.viewmodel.signup.SignUpBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,17 +16,29 @@ import javax.inject.Inject
 @HiltViewModel
 open class SignUpScreenViewModel @Inject constructor(
     private val base: SignUpBaseViewModel,
-    private val auth: FirebaseAuth
 ) : ViewModel() {
 
     val baseViewModel = base
     var passWordSettingEnabled = false
 
+    val auth = baseViewModel.baseViewModel.auth
+
     private val _registrationResult = MutableLiveData<String>()
     val registrationResult: LiveData<String> get() = _registrationResult
 
+
+    var passWordSettingEnabled = false
+
+    fun enrollUserToServer(nickName: String) {
+        // 서버에 유저 등록하기
+        // firebase의 uid와 닉네임을 등록해주면 된다.
+        baseViewModel.baseViewModel.goActivity(ActivityType.MAIN)
+    }
+
     fun checkEmail(email: String) {
+        // 이메일 형식을 확인하는 정규 표현식
         val emailPattern = "^[A-Za-z0-9.-]+@[A-Za-z.-]+.[A-Za-z]{2,}$"
+
         passWordSettingEnabled = email.matches(emailPattern.toRegex())
     }
 
@@ -45,6 +58,9 @@ open class SignUpScreenViewModel @Inject constructor(
                         ?.addOnCompleteListener { sendTask ->
                             if (sendTask.isSuccessful) {
                                 baseViewModel.baseViewModel.triggerToast("회원가입에 성공하였습니다. 전송된 메일을 확인해 주세요.")
+
+                                baseViewModel.baseViewModel.setFireBaseUID()
+
                                 _registrationResult.value = "회원가입에 성공하였습니다. 전송된 메일을 확인해 주세요."
                                 // 이메일 인증 확인 절차 시작
                                 checkIfEmailVerifiedPeriodically()

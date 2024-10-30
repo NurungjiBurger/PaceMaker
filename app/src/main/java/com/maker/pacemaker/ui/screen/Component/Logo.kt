@@ -46,12 +46,3 @@ fun Logo(baseViewModel: BaseViewModel) {
         }
     }
 }
-
-@Composable
-@Preview
-fun PreviewLogo() {
-//
-//    val baseViewModel = DummyBaseViewModel()
-//
-//    Logo(baseViewModel)
-}

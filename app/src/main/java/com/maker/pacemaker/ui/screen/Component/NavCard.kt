@@ -89,12 +89,3 @@ fun NavCard(
     }
 
 }
-
-@Composable
-@Preview
-fun NavCardPreview() {
-
-    val baseViewModel = BaseViewModel()
-
-    NavCard(baseViewModel, "복습 단어 비율", "일반모드")
-}
