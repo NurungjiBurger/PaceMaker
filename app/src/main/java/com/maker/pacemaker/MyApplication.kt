@@ -2,11 +2,13 @@ package com.maker.pacemaker
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.HiltAndroidApp
@@ -24,20 +26,6 @@ class MyApplication : Application() {
         fun getContext(): Context {
             return instance
         }
-
-        fun checkAuth(): Boolean {
-            val currentUser = auth.currentUser
-            return currentUser?.let {
-                email = currentUser.email
-                if (currentUser.isEmailVerified) {
-                    true
-                } else {
-                    false
-                }
-            } ?: let {
-                false
-            }
-        }
     }
 
     override fun onCreate() {
@@ -48,5 +36,15 @@ class MyApplication : Application() {
         db = FirebaseFirestore.getInstance()
         storage = Firebase.storage
 
+
+        // FCM 토큰 가져오기
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                Log.d("FCM", "FCM 토큰: $token")
+            } else {
+                Log.e("FCM", "FCM 토큰 가져오기 실패: ${task.exception}")
+            }
+        }
     }
 }

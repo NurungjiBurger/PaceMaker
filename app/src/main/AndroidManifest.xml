@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
 
     <application
@@ -32,6 +33,18 @@
         <activity android:name=".ui.activity.signup.SignUpActivity" />
         <activity android:name=".ui.activity.main.MainActivity" />
         <activity android:name=".ui.activity.setting.SettingActivity"/>
+
+        <service
+            android:name=".data.network.PaceMakerFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="FCM_CHANNEL_ID"
+            android:value="FCM NOTICE" />
 
     </application>
 
