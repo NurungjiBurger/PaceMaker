@@ -1,5 +1,6 @@
 package com.maker.pacemaker.data.model.repository
 
+import android.util.Log
 import com.maker.pacemaker.data.model.remote.AnswerRequest
 import com.maker.pacemaker.data.model.remote.AnswerResponse
 import com.maker.pacemaker.data.model.remote.ApiService
@@ -9,11 +10,29 @@ import com.maker.pacemaker.data.model.remote.CreateProblemRequest
 import com.maker.pacemaker.data.model.remote.CreateProblemResponse
 import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.data.model.remote.ProblemHintResponse
+import com.maker.pacemaker.data.model.remote.infoRequest
+import com.maker.pacemaker.data.model.remote.infoResponse
+import com.maker.pacemaker.data.model.remote.loginRequest
+import com.maker.pacemaker.data.model.remote.loginResponse
+//import com.maker.pacemaker.data.model.remote.ServerRequest
+//import com.maker.pacemaker.data.model.remote.ServerResponse
 import com.maker.pacemaker.data.model.remote.reportRequest
 import com.maker.pacemaker.data.model.remote.reportResponse
 
 
 class UserRepository(private val apiService: ApiService) {
+
+    suspend fun sendUserInfo(UID: String, nickname: String): infoResponse {
+        return apiService.sendUserInfo(infoRequest(UID, nickname))
+    }
+    // idToken 서버로 전송
+    suspend fun sendIdToken(idToken: String, UID: String): loginResponse {
+        Log.d("FirebaseIDToken", "ID Token: $idToken")
+        Log.d("FirebaseUID", "UID: $UID")
+
+        return apiService.sendIdToken(loginRequest(idToken, UID))
+    }
+
 
     // 문제 조회
     suspend fun getProblemById(problemId: Int) : Problem {

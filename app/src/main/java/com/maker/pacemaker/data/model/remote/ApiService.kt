@@ -8,6 +8,19 @@ import retrofit2.http.Query
 
 interface ApiService {
 
+     //회원가입시 서버로 전송
+    @POST("/api/verifyToken") // 서버의 엔드포인트 URL에 맞춰 수정
+    fun sendUserInfo(
+        @Body info: infoRequest
+    ): infoResponse
+
+    // 로그인 시 서버로 전송
+    @POST("users/") // 서버의 엔드포인트 URL에 맞춰 수정
+    suspend fun sendIdToken(
+        @Body server: loginRequest
+    ): loginResponse
+
+
     // 문제 조회
     @GET("problems/{problem_id}")
     suspend fun getProblemById(@Path("problem_id") problemId: Int): Problem
@@ -58,6 +71,27 @@ interface ApiService {
         @Path("problem_id") problemId: Int
     ): List<CommentResponse>
 }
+
+data class infoRequest(
+    val UID: String,
+    val nickname: String
+)
+
+data class infoResponse(
+    val success: Boolean
+)
+
+// idToken 서버로 전송 요청
+data class loginRequest(
+    val idToken: String,
+    val UID: String
+)
+
+// 서버 응답 데이터 클래스
+data class loginResponse(
+    val success: Boolean,
+    val user_id: Int
+)
 
 // 문제 조회 응답
 data class Problem(

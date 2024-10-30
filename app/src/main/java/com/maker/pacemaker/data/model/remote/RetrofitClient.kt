@@ -6,6 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
+
 object RetrofitClient {
     private const val BASE_URL = "http://k11a406.p.ssafy.io/"
 
