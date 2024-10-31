@@ -10,7 +10,7 @@ interface ApiService {
 
      //회원가입시 서버로 전송
     @POST("/api/verifyToken") // 서버의 엔드포인트 URL에 맞춰 수정
-    fun sendUserInfo(
+    suspend fun sendUserInfo(
         @Body info: infoRequest
     ): infoResponse
 
@@ -90,7 +90,7 @@ data class loginRequest(
 // 서버 응답 데이터 클래스
 data class loginResponse(
     val success: Boolean,
-    val user_id: Int
+    val user_id: Int // 유저 인덱스
 )
 
 // 문제 조회 응답

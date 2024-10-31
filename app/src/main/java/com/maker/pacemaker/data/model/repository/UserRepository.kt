@@ -22,17 +22,13 @@ import com.maker.pacemaker.data.model.remote.reportResponse
 
 class UserRepository(private val apiService: ApiService) {
 
-    suspend fun sendUserInfo(UID: String, nickname: String): infoResponse {
-        return apiService.sendUserInfo(infoRequest(UID, nickname))
+    suspend fun sendUserInfo(userInfo : infoRequest): infoResponse {
+        return apiService.sendUserInfo(userInfo)
     }
     // idToken 서버로 전송
-    suspend fun sendIdToken(idToken: String, UID: String): loginResponse {
-        Log.d("FirebaseIDToken", "ID Token: $idToken")
-        Log.d("FirebaseUID", "UID: $UID")
-
-        return apiService.sendIdToken(loginRequest(idToken, UID))
+    suspend fun sendIdToken(usertoken : loginRequest): loginResponse {
+        return apiService.sendIdToken(usertoken)
     }
-
 
     // 문제 조회
     suspend fun getProblemById(problemId: Int) : Problem {

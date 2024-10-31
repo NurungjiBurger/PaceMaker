@@ -53,6 +53,7 @@ import com.maker.pacemaker.ui.screen.Component.TopNavBar
 fun MainScreen(viewModel: MainScreenViewModel) {
 
     LaunchedEffect(Unit) {
+        Log.e("identifyUserByToken", "들어왔어요.")
         viewModel.identifyUserByToken()
     }
 
