@@ -2,6 +2,7 @@ package com.maker.pacemaker.ui.viewmodel.boot.details
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.maker.pacemaker.ui.viewmodel.boot.BootBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
@@ -21,10 +22,18 @@ open class BootScreenViewModel @Inject constructor(
     private val _isPermissionGranted = MutableStateFlow(false)
     val isPermissionGranted = _isPermissionGranted
 
+    init {
+        Log.d("FCM", "FireBase UID: $fireBaseUID")
+
+
+    }
+
 
     fun updatePermissionGranted(granted: Boolean) {
         baseViewModel.baseViewModel.editor.putBoolean("permissionGranted", granted)
         baseViewModel.baseViewModel.editor.apply()
+
+        _isPermissionGranted.value = granted
     }
 
 }

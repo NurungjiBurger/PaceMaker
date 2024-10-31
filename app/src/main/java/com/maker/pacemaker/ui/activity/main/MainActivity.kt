@@ -1,11 +1,16 @@
 package com.maker.pacemaker.ui.activity.main
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -46,6 +51,23 @@ class MainActivity : BaseActivity() {
     private val mainProblemSolveScreenViewModel: MainProblemSolveScreenViewModel by viewModels()
     private val mainRankingScreenViewModel: MainRankingScreenViewModel by viewModels()
     private val mainLabScreenViewModel: MainLabScreenViewModel by viewModels()
+
+    private val alarmUpdateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            mainAlarmScreenViewModel.reloadAlarms() // 알람 갱신
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(alarmUpdateReceiver, IntentFilter("com.maker.pacemaker.ALARM_UPDATED"))
+    }
+
+    override fun onStop() {
+        super.onStop()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(alarmUpdateReceiver)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

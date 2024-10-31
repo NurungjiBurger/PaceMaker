@@ -2,6 +2,7 @@ package com.maker.pacemaker.ui.screen.boot
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -118,12 +119,15 @@ fun BootScreen(viewModel: BootScreenViewModel) {
             if (isPermissionGranted) {
                 if (viewModel.fireBaseUID != "") {
                     baseViewModel.goActivity(ActivityType.MAIN)
+                    Log.d("FCM", "UID Exitst: ${viewModel.fireBaseUID}")
                 } else {
                     baseViewModel.goScreen(ScreenType.ENTRY)
+                    Log.d("FCM", "UID Not Exitst")
                 }
             } else {
                 // 권한이 거부된 경우 처리 (여기서도 ENTRY 스크린으로 전환 가능)
                 baseViewModel.goScreen(ScreenType.ENTRY)
+                Log.d("FCM", "Permission Denied")
             }
         }
     }

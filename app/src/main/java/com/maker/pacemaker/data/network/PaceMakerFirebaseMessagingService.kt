@@ -13,6 +13,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.viewModelScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -48,9 +49,6 @@ class PaceMakerFirebaseMessagingService : FirebaseMessagingService {
         remoteMessage.notification?.let {
             Log.d("FCM", "알림 메시지: ${it.title}, ${it.body}")
             sendNotification(it.title, it.body)
-
-            // 알람 저장 (예: 타이틀과 내용 저장)
-            saveAlarm(it.title ?: "알림", it.body ?: "메시지가 도착했습니다.")
         }
     }
 
@@ -83,13 +81,20 @@ class PaceMakerFirebaseMessagingService : FirebaseMessagingService {
         }
 
         notificationManager.notify(0, notificationBuilder.build())
+
+        // 알람 저장 (예: 타이틀과 내용 저장)
+        saveAlarm(title!!, messageBody!!)
     }
 
     private fun saveAlarm(title: String, message: String) {
         CoroutineScope(Dispatchers.Main).launch {
             // 데이터베이스에 알람 저장
-            val newAlarm = AlarmEntity(alarmType = "FCM", content = message, dateTime = System.currentTimeMillis())
+            val newAlarm = AlarmEntity(alarmType = title, content = message, dateTime = System.currentTimeMillis())
             alarmDao.insertAlarm(newAlarm)
+
+            Log.d("FCM", "알람 저장 완료: $newAlarm")
+            val intent = Intent("com.maker.pacemaker.ALARM_UPDATED")
+            LocalBroadcastManager.getInstance(this@PaceMakerFirebaseMessagingService).sendBroadcast(intent)
         }
     }
 
