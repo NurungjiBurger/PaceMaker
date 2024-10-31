@@ -28,7 +28,7 @@ open class MainScreenViewModel @Inject constructor(
             return
         }
 
-        user.getIdToken(true).addOnCompleteListener { task ->
+        user.getIdToken(false).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val idToken = task.result?.token
                 val UID = user.uid
