@@ -2,6 +2,9 @@ package com.maker.pacemaker.ui.screen.boot
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,10 +22,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -52,6 +57,8 @@ fun BootScreen(viewModel: BootScreenViewModel) {
 
     val baseViewModel = viewModel.baseViewModel.baseViewModel
     val bootViewModel = viewModel.baseViewModel
+
+    val isPermissionGranted by viewModel.isPermissionGranted.collectAsState()
 
     ConstraintLayout(
         modifier = Modifier
@@ -107,12 +114,21 @@ fun BootScreen(viewModel: BootScreenViewModel) {
                 }
         )
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (viewModel.fireBaseUID != "") {
-                baseViewModel.goActivity(ActivityType.MAIN)
+        // 권한 결과에 따라 화면 전환
+        LaunchedEffect(isPermissionGranted) {
+            if (isPermissionGranted) {
+                if (viewModel.fireBaseUID != "") {
+                    baseViewModel.goActivity(ActivityType.MAIN)
+                    Log.d("FCM", "UID Exitst: ${viewModel.fireBaseUID}")
+                } else {
+                    baseViewModel.goScreen(ScreenType.ENTRY)
+                    Log.d("FCM", "UID Not Exitst")
+                }
             } else {
+                // 권한이 거부된 경우 처리 (여기서도 ENTRY 스크린으로 전환 가능)
                 baseViewModel.goScreen(ScreenType.ENTRY)
+                Log.d("FCM", "Permission Denied")
             }
-        }, 2000)
+        }
     }
 }

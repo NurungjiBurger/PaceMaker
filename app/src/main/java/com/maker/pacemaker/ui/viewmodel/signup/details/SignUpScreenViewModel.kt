@@ -26,9 +26,6 @@ open class SignUpScreenViewModel @Inject constructor(
     private val _registrationResult = MutableLiveData<String>()
     val registrationResult: LiveData<String> get() = _registrationResult
 
-
-    var passWordSettingEnabled = false
-
     fun enrollUserToServer(nickName: String) {
         // 서버에 유저 등록하기
         // firebase의 uid와 닉네임을 등록해주면 된다.
