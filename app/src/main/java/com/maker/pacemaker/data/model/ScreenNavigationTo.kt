@@ -23,6 +23,7 @@ enum class ScreenType(val navigateTo: (NavController) -> Unit) {
     PROBLEMADD({ navController -> navController.navigate("problemAddScreen") }),
     PROBLEMSEARCH({ navController -> navController.navigate("problemSearchScreen") }),
     RANKING({ navController -> navController.navigate("rankingScreen") }),
+    CSMANTLE({ navController -> navController.navigate("csMantleScreen") }),
     LAB({ navController -> navController.navigate("labScreen") }),
 
     // 로그인
