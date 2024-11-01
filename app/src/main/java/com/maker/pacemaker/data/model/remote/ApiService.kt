@@ -10,6 +10,19 @@ import java.util.logging.Level
 
 interface ApiService {
 
+     //회원가입시 서버로 전송, create_user
+     @POST("users/me")
+     suspend fun createUser(
+         @Query("nickname") nickname: String
+     ): userResponse
+
+    // 로그인 시 서버로 전송
+    @POST("users/") // 서버의 엔드포인트 URL에 맞춰 수정
+    suspend fun sendIdToken(
+        @Body server: loginRequest
+    ): loginResponse
+
+
     // 문제 조회
     @GET("problems/{problem_id}")
     suspend fun getProblemById(@Path("problem_id") problemId: Int): Problem
@@ -99,18 +112,45 @@ interface ApiService {
     ): User
 }
 
+data class userRequest(
+    val nickname: String
+)
 
-// 유저 정보
+data class userResponse(
+    val uid: String,
+    val nickname: String,
+    val exp: Int,
+    val level: Int,
+    val daily_cnt: Int,
+    val message: String
+)
+
+
 data class User(
     val uid: String,
     val nickname: String,
     val exp: Int,
     val level: Int,
     val daily_cnt: Int,
+    val message: String,
     val preferred_categories: List<String>,
     val followers_count: Int
 )
 
+
+// idToken 서버로 전송 요청
+data class loginRequest(
+    val idToken: String,
+    val UID: String
+)
+
+// 서버 응답 데이터 클래스
+data class loginResponse(
+    val success: Boolean,
+    val user_id: Int // 유저 인덱스
+)
+
+    
 // 유저 검색
 data class SearchUserRequest(
     val keyword: String

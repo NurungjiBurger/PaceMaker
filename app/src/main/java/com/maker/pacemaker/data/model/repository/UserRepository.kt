@@ -1,5 +1,6 @@
 package com.maker.pacemaker.data.model.repository
 
+import android.util.Log
 import com.maker.pacemaker.data.model.remote.AnswerRequest
 import com.maker.pacemaker.data.model.remote.AnswerResponse
 import com.maker.pacemaker.data.model.remote.ApiService
@@ -13,13 +14,27 @@ import com.maker.pacemaker.data.model.remote.LevelResponse
 import com.maker.pacemaker.data.model.remote.NicknameResponse
 import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.data.model.remote.ProblemHintResponse
+import com.maker.pacemaker.data.model.remote.loginRequest
+import com.maker.pacemaker.data.model.remote.loginResponse
+//import com.maker.pacemaker.data.model.remote.ServerRequest
+//import com.maker.pacemaker.data.model.remote.ServerResponse
 import com.maker.pacemaker.data.model.remote.SearchUserResponse
 import com.maker.pacemaker.data.model.remote.User
 import com.maker.pacemaker.data.model.remote.reportRequest
 import com.maker.pacemaker.data.model.remote.reportResponse
+import com.maker.pacemaker.data.model.remote.userRequest
+import com.maker.pacemaker.data.model.remote.userResponse
 
 
 class UserRepository(private val apiService: ApiService) {
+
+    suspend fun createUser(nickname: String): userResponse {
+        return apiService.createUser(nickname)
+    }
+    // idToken 서버로 전송
+//    suspend fun sendIdToken(usertoken : loginRequest): loginResponse {
+//        return apiService.sendIdToken(usertoken)
+//    }
 
     // 문제 조회
     suspend fun getProblemById(problemId: Int) : Problem {

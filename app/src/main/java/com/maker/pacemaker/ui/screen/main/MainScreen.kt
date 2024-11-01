@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -51,11 +52,13 @@ import com.maker.pacemaker.ui.screen.Component.TopNavBar
 @Composable
 fun MainScreen(viewModel: MainScreenViewModel) {
 
+
     val baseViewModel = viewModel.baseViewModel.baseViewModel
     val mainViewModel = viewModel.baseViewModel
 
     val user by baseViewModel.userInfo.collectAsState()
     val userName by baseViewModel.userName.collectAsState()
+
 
     ConstraintLayout(
         modifier = Modifier

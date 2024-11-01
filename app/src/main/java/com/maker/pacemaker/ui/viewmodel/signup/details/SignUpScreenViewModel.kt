@@ -4,11 +4,16 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.maker.pacemaker.MyApplication
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.ui.viewmodel.signup.SignUpBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 //import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
@@ -20,18 +25,42 @@ open class SignUpScreenViewModel @Inject constructor(
 
     val baseViewModel = base
     var passWordSettingEnabled = false
+    val repository = baseViewModel.baseViewModel.repository
 
     val auth = baseViewModel.baseViewModel.auth
 
     private val _registrationResult = MutableLiveData<String>()
+    private val _isLoggedIn = MutableLiveData<Boolean>() // 로그인 상태 LiveData
     val registrationResult: LiveData<String> get() = _registrationResult
 
-    fun enrollUserToServer(nickName: String) {
+    fun enrollUserToServer(email : String, password: String, nickName: String) {
         // 서버에 유저 등록하기
         // firebase의 uid와 닉네임을 등록해주면 된다.
+        CoroutineScope(Dispatchers.IO).launch {
+            loginUser(email, password)
+            val createuserResponse = repository.createUser(nickName)
+            Log.d("SignUpScreenViewModel", "createUserResponse: $createuserResponse")
+
+        }
         baseViewModel.baseViewModel.goActivity(ActivityType.MAIN)
     }
 
+    private fun loginUser(email: String, password: String) {
+        viewModelScope.launch {
+            MyApplication.auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        MyApplication.email = email
+                        _isLoggedIn.value = true // 로그인 성공 시 이벤트 발생
+                        baseViewModel.baseViewModel.setFireBaseUID()
+                        baseViewModel.baseViewModel.triggerToast("로그인에 성공하였습니다.")
+                    } else {
+                        baseViewModel.baseViewModel.triggerVibration()
+                        baseViewModel.baseViewModel.triggerToast("이메일 또는 비밀번호가 일치하지 않습니다.")
+                    }
+                }
+        }
+    }
     fun checkEmail(email: String) {
         // 이메일 형식을 확인하는 정규 표현식
         val emailPattern = "^[A-Za-z0-9.-]+@[A-Za-z.-]+.[A-Za-z]{2,}$"

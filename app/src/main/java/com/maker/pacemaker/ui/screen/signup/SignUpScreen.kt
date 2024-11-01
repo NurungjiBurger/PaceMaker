@@ -293,7 +293,8 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
 
                         Button(
                             onClick = {
-                                viewModel.enrollUserToServer(nicknameState.value.text)
+
+                                viewModel.enrollUserToServer(emailState.value.text, PWState.value.text, nicknameState.value.text)
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF1429A0), // 버튼 배경색 설정
