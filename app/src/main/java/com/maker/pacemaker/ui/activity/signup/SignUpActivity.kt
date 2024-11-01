@@ -40,6 +40,7 @@ class SignUpActivity : BaseActivity() {
         if (activityType == ActivityType.FINISH) {
             finish() // 현재 Activity 종료
         } else if (intent != null) {
+            finish()
             startActivity(intent) // Intent가 null이 아닐 때만 Activity 시작
         }
     }

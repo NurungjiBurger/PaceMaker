@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 //import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
@@ -33,16 +34,23 @@ open class SignUpScreenViewModel @Inject constructor(
     private val _isLoggedIn = MutableLiveData<Boolean>() // 로그인 상태 LiveData
     val registrationResult: LiveData<String> get() = _registrationResult
 
-    fun enrollUserToServer(email : String, password: String, nickName: String) {
+    fun enrollUserToServer(email: String, password: String, nickName: String) {
         // 서버에 유저 등록하기
         // firebase의 uid와 닉네임을 등록해주면 된다.
         CoroutineScope(Dispatchers.IO).launch {
+            // 로그인 처리
             loginUser(email, password)
+
+            // 사용자 생성 요청
             val createuserResponse = repository.createUser(nickName)
             Log.d("SignUpScreenViewModel", "createUserResponse: $createuserResponse")
 
+            // UI 업데이트는 메인 스레드에서 해야 하므로 withContext를 사용
+            withContext(Dispatchers.Main) {
+                // 유저 등록 후 메인 화면으로 이동
+                baseViewModel.baseViewModel.goActivity(ActivityType.MAIN)
+            }
         }
-        baseViewModel.baseViewModel.goActivity(ActivityType.MAIN)
     }
 
     private fun loginUser(email: String, password: String) {

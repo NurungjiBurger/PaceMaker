@@ -11,7 +11,7 @@ import java.util.logging.Level
 interface ApiService {
 
      //회원가입시 서버로 전송, create_user
-     @POST("users/me")
+     @POST("users/")
      suspend fun createUser(
          @Query("nickname") nickname: String
      ): userResponse
@@ -132,7 +132,6 @@ data class User(
     val exp: Int,
     val level: Int,
     val daily_cnt: Int,
-    val message: String,
     val preferred_categories: List<String>,
     val followers_count: Int
 )
