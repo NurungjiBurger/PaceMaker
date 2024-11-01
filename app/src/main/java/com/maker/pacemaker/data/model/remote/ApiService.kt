@@ -112,6 +112,10 @@ data class User(
 )
 
 // 유저 검색
+data class SearchUserRequest(
+    val keyword: String
+)
+
 data class SearchUserResponse(
     val users: List<SearchUser>
 )

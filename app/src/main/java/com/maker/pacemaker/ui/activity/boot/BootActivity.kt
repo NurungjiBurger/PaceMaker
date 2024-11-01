@@ -55,6 +55,8 @@ class BootActivity : BaseActivity() {
         if (activityType == ActivityType.FINISH) {
             finish() // 현재 Activity 종료
         } else if (intent != null) {
+            // boot activity는 다시 실행될 일 없음.
+            finish()
             startActivity(intent) // Intent가 null이 아닐 때만 Activity 시작
         }
     }
