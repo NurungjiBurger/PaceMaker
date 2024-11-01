@@ -2,9 +2,11 @@ package com.maker.pacemaker.data.model.remote
 
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.util.logging.Level
 
 interface ApiService {
 
@@ -57,7 +59,100 @@ interface ApiService {
     suspend fun getComments(
         @Path("problem_id") problemId: Int
     ): List<CommentResponse>
+
+    ///////////////////////////////////////////////////
+
+    // 내 정보 가져오기
+    @GET("users/me")
+    suspend fun getMyUserInfo(
+
+    ): User
+
+    // 데일리 문제 수 설정
+    @PATCH("users/me/daily")
+    suspend fun updateDailyCnt(
+        @Body request: DailyCntRequest
+    ): DailyCntResponse
+
+    // 유저 레벨 설정
+    @PATCH("users/me/level")
+    suspend fun updateLevel(
+        @Body levelResult: Int
+    ): LevelResponse
+
+    // 유저 닉네임 설정
+    @PATCH("users/me/nickname")
+    suspend fun updateNickname(
+        @Body nickname: String
+    ): NicknameResponse
+
+    // 유저 검색
+    @GET("users/")
+    suspend fun searchUser(
+        @Query("keyword") keyword: String
+    ): SearchUserResponse
+
+    // 유저 uid로 검색
+    @GET("users/{uid}")
+    suspend fun searchUserByUid(
+        @Path("uid") uid: String
+    ): User
 }
+
+
+// 유저 정보
+data class User(
+    val uid: String,
+    val nickname: String,
+    val exp: Int,
+    val level: Int,
+    val daily_cnt: Int,
+    val preferred_categories: List<String>,
+    val followers_count: Int
+)
+
+// 유저 검색
+data class SearchUserResponse(
+    val users: List<SearchUser>
+)
+
+// 검색된 유저 정보
+data class SearchUser(
+    val uid: String,
+    val nickname: String,
+    val level: Int,
+    val exp: Int
+)
+
+// 데일리 문제 설정 요청
+data class DailyCntRequest(
+    val daily_cnt: Int
+)
+
+// 데일리 문제 수 설정 응답
+data class DailyCntResponse(
+    val message: String,
+    val uid: String,
+    val daily_cnt: Int,
+    val level: Int,
+    val exp: Int
+)
+
+// 유저 레벨 설정 응답
+data class LevelResponse(
+    val message: String,
+    val user_id: String,
+    val new_level: Int
+)
+
+// 유저 닉네임 설정 응답
+data class NicknameResponse(
+    val message: String,
+    val uid: String,
+    val nickname: String
+)
+
+///////////////////////////////////////////////
 
 // 문제 조회 응답
 data class Problem(

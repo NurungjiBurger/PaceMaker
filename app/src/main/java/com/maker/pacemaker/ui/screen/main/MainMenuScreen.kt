@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +51,8 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
     val boxHeight = screenHeight - (40.dp) // 위아래 20.dp씩 빼기
     val boxWidth = ( screenWidth / 3 ) * 2
+
+    val user by baseViewModel.userInfo.collectAsState()
 
     ConstraintLayout (
         modifier = Modifier

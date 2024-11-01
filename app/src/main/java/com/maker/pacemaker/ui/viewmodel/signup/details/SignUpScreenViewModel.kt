@@ -54,11 +54,11 @@ open class SignUpScreenViewModel @Inject constructor(
                     auth.currentUser?.sendEmailVerification()
                         ?.addOnCompleteListener { sendTask ->
                             if (sendTask.isSuccessful) {
-                                baseViewModel.baseViewModel.triggerToast("회원가입에 성공하였습니다. 전송된 메일을 확인해 주세요.")
+                                baseViewModel.baseViewModel.triggerToast("전송된 메일을 확인해 주세요.")
 
                                 baseViewModel.baseViewModel.setFireBaseUID()
 
-                                _registrationResult.value = "회원가입에 성공하였습니다. 전송된 메일을 확인해 주세요."
+                                _registrationResult.value = "전송된 메일을 확인해 주세요."
                                 // 이메일 인증 확인 절차 시작
                                 checkIfEmailVerifiedPeriodically()
                             } else {
@@ -85,8 +85,8 @@ open class SignUpScreenViewModel @Inject constructor(
                     if (task.isSuccessful && user.isEmailVerified) {
                         // 이메일 인증이 완료된 경우 Firebase에 최종 사용자 데이터 저장
                         saveUserDataToDatabase()
-                        baseViewModel.baseViewModel.triggerToast("이메일 인증이 완료되었습니다. 회원가입이 최종적으로 완료되었습니다.")
-                        _registrationResult.value = "회원가입 완료"
+                        baseViewModel.baseViewModel.triggerToast("이메일 인증 완료. 회원가입에 성공하였습니다.")
+                        _registrationResult.value = "이메일 인증 완료."
                         handler.removeCallbacks(this) // 반복 중지
                     } else {
                         // 이메일 인증이 완료되지 않은 경우 일정 시간 후 다시 확인

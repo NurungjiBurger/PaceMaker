@@ -7,8 +7,14 @@ import com.maker.pacemaker.data.model.remote.CommentRequest
 import com.maker.pacemaker.data.model.remote.CommentResponse
 import com.maker.pacemaker.data.model.remote.CreateProblemRequest
 import com.maker.pacemaker.data.model.remote.CreateProblemResponse
+import com.maker.pacemaker.data.model.remote.DailyCntRequest
+import com.maker.pacemaker.data.model.remote.DailyCntResponse
+import com.maker.pacemaker.data.model.remote.LevelResponse
+import com.maker.pacemaker.data.model.remote.NicknameResponse
 import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.data.model.remote.ProblemHintResponse
+import com.maker.pacemaker.data.model.remote.SearchUserResponse
+import com.maker.pacemaker.data.model.remote.User
 import com.maker.pacemaker.data.model.remote.reportRequest
 import com.maker.pacemaker.data.model.remote.reportResponse
 
@@ -53,6 +59,38 @@ class UserRepository(private val apiService: ApiService) {
     // 문제 댓글 조회
     suspend fun getComments(problemId: Int) : List<CommentResponse> {
         return apiService.getComments(problemId)
+    }
+
+    //////////////////////////////////////////////////////////////
+
+    // 내 정보 조회
+    suspend fun getMyUserInfo() : User {
+        return apiService.getMyUserInfo()
+    }
+
+    // 데일리 문제 갯수 설정
+    suspend fun updateDailyCnt(request: DailyCntRequest): DailyCntResponse {
+        return apiService.updateDailyCnt(request)
+    }
+
+    // 내 유저 레벨 설정
+    suspend fun updateLevel(level: Int): LevelResponse {
+        return apiService.updateLevel(level)
+    }
+
+    // 유저 닉네임 설정
+    suspend fun updateNickname(nickname: String): NicknameResponse {
+        return apiService.updateNickname(nickname)
+    }
+
+    // 유저 검색
+    suspend fun searchUser(nickname: String): SearchUserResponse {
+        return apiService.searchUser(nickname)
+    }
+
+    // 유저 UID로 검색
+    suspend fun searchUserByUid(uid: String): User {
+        return apiService.searchUserByUid(uid)
     }
 
 }
