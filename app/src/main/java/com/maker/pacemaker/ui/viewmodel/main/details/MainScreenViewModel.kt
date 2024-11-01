@@ -29,8 +29,10 @@ open class MainScreenViewModel @Inject constructor(
                         val idToken = task.result?.token
                         baseViewModel.baseViewModel.editor.putString("idToken", idToken).apply()
 
-                        Log.d("idtoken", "사용자의 토큰: $idToken")              
+                        Log.d("idtoken", "사용자의 토큰: $idToken")
+                        //baseViewModel.baseViewModel.setLoading(true)
                         baseViewModel.baseViewModel.getUserInfo()
+                        //baseViewModel.baseViewModel.setLoading(false)
 
                     } else {
                         Log.e("identifyUserByToken", "토큰 가져오기 실패: ${task.exception}")

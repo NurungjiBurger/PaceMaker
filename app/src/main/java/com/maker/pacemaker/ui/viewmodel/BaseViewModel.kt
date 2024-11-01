@@ -62,6 +62,9 @@ open class BaseViewModel @Inject constructor(
     //private val _networkStatus = MutableStateFlow(networkStatusTracker.networkStatus.value)
     //val networkStatus = _networkStatus.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: MutableStateFlow<Boolean> get() = _isLoading
+
     init {
         viewModelScope.launch {
 
@@ -92,16 +95,22 @@ open class BaseViewModel @Inject constructor(
     private val _userInfo = MutableStateFlow<User>(User("","",0,0,0,emptyList(),0))
     val userInfo: StateFlow<User> get() = _userInfo
 
+    fun setLoading(isLoading: Boolean) {
+        Log.d("isLoading", _isLoading.value.toString())
+        _isLoading.value = isLoading
+        Log.d("isLoading", _isLoading.value.toString())
+    }
+
     fun getUserInfo() {
+        //setLoading(true)
         viewModelScope.launch {
             _userInfo.value = repository.getMyUserInfo()
-
             Log.d("UserInfo", userInfo.toString())
+            //setLoading(false)
         }
     }
 
     fun restate() {
-
         _activityNavigationTo.postValue(null)
         _screenNavigationTo.postValue(null)
     }

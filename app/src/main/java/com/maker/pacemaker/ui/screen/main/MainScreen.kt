@@ -44,6 +44,7 @@ import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
 import com.maker.pacemaker.ui.screen.Component.BottomNavBar
+import com.maker.pacemaker.ui.screen.Component.Loading
 import com.maker.pacemaker.ui.screen.Component.Logo
 import com.maker.pacemaker.ui.screen.Component.Rating
 import com.maker.pacemaker.ui.screen.Component.TopNavBar
@@ -58,6 +59,8 @@ fun MainScreen(viewModel: MainScreenViewModel) {
 
     val user by baseViewModel.userInfo.collectAsState()
     val userName by baseViewModel.userName.collectAsState()
+
+    val isLoading by baseViewModel.isLoading.collectAsState()
 
 
     ConstraintLayout(
@@ -252,16 +255,8 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             BottomNavBar(baseViewModel)
         }
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun MainScreenPreview() {
-
-    // MockApplication 대신 Application 컨텍스트를 직접 전달합니다.
-
-
-    // 모든 더미 ViewModel을 전달하여 미리보기 실행
-   // MainScreen(dummyBaseViewModel, dummyMainBaseViewModel, dummyMainScreenViewModel)
+    // 로딩 다이얼로그
+    isLoading?.let { Loading("로딩 중...", isLoading = it, onDismiss = { /* Dismiss Logic */ }) }
 }
 
