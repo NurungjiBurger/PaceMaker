@@ -235,3 +235,11 @@ data class ProblemHintResponse(
     val problem_id: Int,
     val hints: List<String>
 )
+
+
+
+data class SimilarityWord(
+    val word: String,
+    val similarity: Double,
+    val similarityRank: Int,
+)

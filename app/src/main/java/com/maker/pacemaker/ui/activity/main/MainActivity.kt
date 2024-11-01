@@ -19,6 +19,7 @@ import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.activity.BaseActivity
 import com.maker.pacemaker.ui.screen.main.MainAlarmScreen
+import com.maker.pacemaker.ui.screen.main.MainCSMantleScreen
 import com.maker.pacemaker.ui.screen.main.MainLabScreen
 import com.maker.pacemaker.ui.screen.main.MainLevelTestScreen
 import com.maker.pacemaker.ui.screen.main.MainMenuScreen
@@ -29,6 +30,7 @@ import com.maker.pacemaker.ui.screen.main.MainRankingScreen
 import com.maker.pacemaker.ui.screen.main.MainScreen
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.main.details.MainCSMantleScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainLabScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainLevelTestScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainMenuScreenViewModel
@@ -51,6 +53,7 @@ class MainActivity : BaseActivity() {
     private val mainProblemSolveScreenViewModel: MainProblemSolveScreenViewModel by viewModels()
     private val mainRankingScreenViewModel: MainRankingScreenViewModel by viewModels()
     private val mainLabScreenViewModel: MainLabScreenViewModel by viewModels()
+    private val mainCSMantleScreenViewModel: MainCSMantleScreenViewModel by viewModels()
 
     private val alarmUpdateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -92,6 +95,7 @@ class MainActivity : BaseActivity() {
                     MainRankingScreen(mainRankingScreenViewModel)
                 }
                 composable("labScreen") { MainLabScreen(mainLabScreenViewModel) }
+                composable("csMantleScreen") { MainCSMantleScreen(mainCSMantleScreenViewModel) }
                 }
             }
         }
@@ -122,6 +126,7 @@ class MainActivity : BaseActivity() {
             ScreenType.PROBLEMSOLVE -> "problemSolveScreen"
             ScreenType.RANKING -> "rankingScreen"
             ScreenType.LAB -> "labScreen"
+            ScreenType.CSMANTLE -> "csMantleScreen"
             else -> return
         }
 
