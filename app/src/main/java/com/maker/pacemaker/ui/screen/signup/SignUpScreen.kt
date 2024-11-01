@@ -175,7 +175,7 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
             TextField(
                 value = PWState.value,
                 onValueChange = { PWState.value = it },
-                placeholder = { Text("비밀번호를 입력하세요") },
+                placeholder = { Text("6자리 이상 비밀번호를 입력하세요") },
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
@@ -237,7 +237,7 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
                     )
                 }
 
-                if (registrationResult?.contains("성공") == true) {
+                if (registrationResult?.contains("인증 완료") == true) {
 
                     Text(
                         text = "닉네임",
@@ -256,7 +256,7 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
                     TextField(
                         value = nicknameState.value,
                         onValueChange = { nicknameState.value = it },
-                        placeholder = { Text("닉네임을 입력하세요") },
+                        placeholder = { Text("2 ~ 6글자 닉네임을 입력하세요") },
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color.Transparent,
                             focusedIndicatorColor = Color.Transparent,
@@ -293,7 +293,8 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
 
                         Button(
                             onClick = {
-                                viewModel.enrollUserToServer(nicknameState.value.text)
+
+                                viewModel.enrollUserToServer(emailState.value.text, PWState.value.text, nicknameState.value.text)
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF1429A0), // 버튼 배경색 설정

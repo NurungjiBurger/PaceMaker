@@ -52,10 +52,6 @@ import com.maker.pacemaker.ui.screen.Component.TopNavBar
 @Composable
 fun MainScreen(viewModel: MainScreenViewModel) {
 
-    LaunchedEffect(Unit) {
-        Log.e("identifyUserByToken", "들어왔어요.")
-        viewModel.identifyUserByToken()
-    }
 
     val baseViewModel = viewModel.baseViewModel.baseViewModel
     val mainViewModel = viewModel.baseViewModel

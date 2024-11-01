@@ -16,6 +16,8 @@ class AuthInterceptor(context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var idToken = sharedPreferences.getString("idToken", null)
 
+        Log.e("AuthInterceptor", "들어왔어염.")
+
         // 기존 토큰을 사용하여 요청 빌드
         val requestBuilder = chain.request().newBuilder()
         if (idToken != null) {
@@ -42,6 +44,13 @@ class AuthInterceptor(context: Context) : Interceptor {
             } else {
                 Log.e("AuthInterceptor", "토큰 갱신 실패: 새로운 토큰을 가져오지 못했습니다.")
             }
+        }
+
+        // 서버에 요청이 성공적으로 전송되었을 때 로그 출력
+        if (response.isSuccessful) {
+            Log.d("AuthInterceptor", "서버에 요청을 성공적으로 전송했습니다. 응답 코드: ${response.code}")
+        } else {
+            Log.e("AuthInterceptor", "서버 응답 오류: ${response.code}")
         }
 
         return response
