@@ -35,7 +35,10 @@ class SettingActivity : BaseActivity() {
 
             NavHost(navController as NavHostController, startDestination = "myPageScreen") {
                 composable("dailyScreen") { SettingDailyScreen(settingDailyScreenViewModel) }
-                composable("myPageScreen") { SettingMyPageScreen(settingMyPageScreenViewModel)}
+                composable("myPageScreen") {
+                    settingMyPageScreenViewModel.dataRefresh()
+                    SettingMyPageScreen(settingMyPageScreenViewModel)
+                }
                 composable("ratioScreen") { SettingRatioScreen(settingRatioScreenViewModel)}
                 composable("categoryScreen") { SettingCategoryScreen(settingCategoryScreenViewModel)}
             }

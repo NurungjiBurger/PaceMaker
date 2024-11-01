@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.User
+import com.maker.pacemaker.data.model.remote.SearchUser
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 
 @Composable
@@ -39,7 +40,7 @@ fun UserCard(
     baseViewModel: BaseViewModel,
     width: Dp,
     height: Dp,
-    user: User,
+    user: SearchUser,
     onClick: () -> Unit,
     followToggle: (() -> Unit)? = null
 ) {
@@ -78,15 +79,15 @@ fun UserCard(
                 }
         ){
             Text(
-                text = user.name,
+                text = user.nickname,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(10.dp)
             )
-
+//"${user.followers} followers",
             Text(
-                text = "${user.followers} followers",
+                text = "followers",
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Normal,
                 color = Color.Gray,

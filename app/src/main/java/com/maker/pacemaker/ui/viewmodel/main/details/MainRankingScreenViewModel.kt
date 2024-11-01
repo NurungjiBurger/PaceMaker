@@ -2,9 +2,13 @@ package com.maker.pacemaker.ui.viewmodel.main.details
 
 import androidx.lifecycle.ViewModel
 import com.maker.pacemaker.data.model.User
+import com.maker.pacemaker.data.model.remote.SearchUser
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,7 +23,7 @@ open class MainRankingScreenViewModel @Inject constructor(
     val userName = _userName
 
     // 검색된 유저들
-    private val _userList = MutableStateFlow<List<User>>(emptyList())
+    private val _userList =  MutableStateFlow<List<SearchUser>>(emptyList()) // MutableStateFlow<List<User>>(emptyList())
     val userList = _userList
 
     // 전체 유저 리스트 (초기 상태로 유지)
@@ -44,16 +48,18 @@ open class MainRankingScreenViewModel @Inject constructor(
     }
 
     fun restate() {
-        _userList.value = initialUserList.sortedByDescending { it.level }
+        _userList.value = emptyList() //initialUserList.sortedByDescending { it.level }
         _userName.value = ""
     }
 
     fun onSearchButtonClicked() {
         // userName에 저장된 검색어로 필터링
-        _userList.value = if (_userName.value.isNotBlank()) {
-            initialUserList.filter { it.name.contains(_userName.value) }
-        } else {
-            initialUserList // 검색어가 없을 때는 전체 리스트 표시
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = baseViewModel.baseViewModel.repository.searchUser(_userName.value)
+
+            if (response.users.isNotEmpty()) {
+                _userList.value = response.users
+            }
         }
     }
 
@@ -62,11 +68,11 @@ open class MainRankingScreenViewModel @Inject constructor(
     }
 
     fun toggleFollow(user: User) {
-        _userList.value = _userList.value.map {
-            if (it.name == user.name) it.copy(isFollowing = !it.isFollowing) else it
-        }
-        // 업데이트된 팔로우 상태에 따라 토스트 메시지 표시
-        baseViewModel.baseViewModel.triggerToast("${user.name} is now ${if (user.isFollowing) "followed" else "unfollowed"}")
+//        _userList.value = _userList.value.map {
+//            if (it.name == user.name) it.copy(isFollowing = !it.isFollowing) else it
+//        }
+//        // 업데이트된 팔로우 상태에 따라 토스트 메시지 표시
+//        baseViewModel.baseViewModel.triggerToast("${user.name} is now ${if (user.isFollowing) "followed" else "unfollowed"}")
     }
 
 }

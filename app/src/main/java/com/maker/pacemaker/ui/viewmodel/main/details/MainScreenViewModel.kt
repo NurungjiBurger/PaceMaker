@@ -1,7 +1,9 @@
 package com.maker.pacemaker.ui.viewmodel.main.details
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,5 +16,26 @@ open class MainScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
     val baseViewModel = base
+
+    init {
+        val user = baseViewModel.baseViewModel.auth.currentUser
+
+        if (user == null) {
+            Log.e("identifyUserByToken", "사용자가 로그인되지 않았습니다.")
+        } else {
+            user.getIdToken(true)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val accessToken = task.result?.token
+                        baseViewModel.baseViewModel.editor.putString("accessToken", accessToken).apply()
+                        Log.d("FCM", "사용자의 토큰: $accessToken")
+                        baseViewModel.baseViewModel.getUserInfo()
+                    } else {
+                        Log.e("identifyUserByToken", "토큰 가져오기 실패: ${task.exception}")
+                    }
+                }
+        }
+    }
+
 
 }

@@ -54,6 +54,8 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
     val dailyCount by settingViewModel.dailyCount.collectAsState()
     val ratioMode by settingViewModel.ratioMode.collectAsState()
 
+    val user by baseViewModel.userInfo.collectAsState()
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -96,7 +98,7 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
         )
 
         Row(
-            modifier = androidx.compose.ui.Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp)
                 .constrainAs(profileBox) {
@@ -131,7 +133,7 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 Text(
-                    text = "안녕하세요\n호준님:)",
+                    text = "안녕하세요\n${user.nickname}님:)",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -146,7 +148,7 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "100XP",
+                        text = "${user.exp}XP",
                         fontSize = 15.sp,
                         color = Color(0xFF1429A0)
                     )
@@ -166,7 +168,7 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
         ){
-            NavCard(baseViewModel, "1일 학습 목표", dailyCount.toString(), { baseViewModel.goScreen(ScreenType.DAILY) })
+            NavCard(baseViewModel, "1일 학습 목표", user.daily_cnt.toString(), { baseViewModel.goScreen(ScreenType.DAILY) })
             NavCard(baseViewModel, "퀴즈 카테고리", "", { baseViewModel.goScreen(ScreenType.CATEGORY) })
             NavCard(baseViewModel, "복습 단어 비율", ratioMode, { baseViewModel.goScreen(ScreenType.RATIO) })
         }

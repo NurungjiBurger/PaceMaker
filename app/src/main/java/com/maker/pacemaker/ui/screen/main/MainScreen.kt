@@ -54,6 +54,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
     val baseViewModel = viewModel.baseViewModel.baseViewModel
     val mainViewModel = viewModel.baseViewModel
 
+    val user by baseViewModel.userInfo.collectAsState()
     val userName by baseViewModel.userName.collectAsState()
 
     ConstraintLayout(
@@ -109,7 +110,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                 )
 
                 Text(
-                    text = "${userName}님",
+                    text = "${user.nickname}님",
                     fontSize = 40.sp,
 
                 )

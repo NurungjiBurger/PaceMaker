@@ -50,6 +50,7 @@ import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.data.model.User
+import com.maker.pacemaker.data.model.remote.SearchUser
 import com.maker.pacemaker.ui.screen.Component.AlarmBox
 import com.maker.pacemaker.ui.screen.Component.UpBar
 import com.maker.pacemaker.ui.screen.Component.UserCard
@@ -80,12 +81,12 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
     val userList = viewModel.userList.collectAsState().value
 
     // 다이얼로그 상태 관리
-    var selectedUser by remember { mutableStateOf<User?>(null) }
+    var selectedUser by remember { mutableStateOf<SearchUser?>(null) }
     var showDialog by remember { mutableStateOf(false) }
 
     // 다이얼로그 열기
     if (showDialog && selectedUser != null) {
-        val isFolloing = selectedUser!!.isFollowing
+        //val isFolloing = selectedUser!!.isFollowing
         AlertDialog(
             containerColor = Color.White,
             onDismissRequest = { showDialog = false },
@@ -96,22 +97,23 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
                     height = userCardHeight,
                     user = selectedUser!!,
                     onClick = { showDialog = false }, // 다이얼로그 내부에서는 클릭 이벤트 불필요
-                    followToggle = { viewModel.toggleFollow(selectedUser!!) }
+                    followToggle = { }//viewModel.toggleFollow(selectedUser!!) }
                 )
             },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        viewModel.toggleFollow(selectedUser!!)
+                       // viewModel.toggleFollow(selectedUser!!)
                         // updated user 정보를 selectedUser에 다시 설정하여 상태를 반영
-                        selectedUser = selectedUser!!.copy(isFollowing = !selectedUser!!.isFollowing)
+                        //selectedUser = selectedUser!!.copy(isFollowing = !selectedUser!!.isFollowing)
                     },
                     colors = ButtonDefaults.textButtonColors(
                         containerColor = Color.Transparent
                     ),
                     ) {
+                    //if (selectedUser!!.isFollowing) "unfollow" else "follow",
                         Text(
-                            text = if (selectedUser!!.isFollowing) "unfollow" else "follow",
+                            text = "follow",
                             color = Color.Black
                         )
                     }
