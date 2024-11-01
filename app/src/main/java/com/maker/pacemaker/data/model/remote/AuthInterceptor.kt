@@ -18,6 +18,7 @@ class AuthInterceptor(context: Context) : Interceptor {
 
         Log.e("AuthInterceptor", "들어왔어염.")
 
+
         // 기존 토큰을 사용하여 요청 빌드
         val requestBuilder = chain.request().newBuilder()
         if (idToken != null) {

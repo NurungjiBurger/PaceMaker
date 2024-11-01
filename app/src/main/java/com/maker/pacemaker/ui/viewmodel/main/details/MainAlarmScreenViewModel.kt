@@ -30,6 +30,10 @@ open class MainAlarmScreenViewModel @Inject constructor(
         loadAlarms() // 초기 알람 로드
     }
 
+    fun reloadAlarms() {
+        loadAlarms()
+    }
+
     private fun loadAlarms() {
         _alarms.value = emptyList() // 초기화
         viewModelScope.launch {
@@ -38,15 +42,6 @@ open class MainAlarmScreenViewModel @Inject constructor(
                 Log.d("MainAlarmScreenViewModel", "Alarms loaded: $alarmList") // 로드된 알람 출력
             }
         }
-    }
-
-
-    fun addAlarm(alarmType: String, content: String, dateTime: Long) {
-        viewModelScope.launch {
-            val newAlarm = AlarmEntity(alarmType = alarmType, content = content, dateTime = dateTime)
-            alarmRepository.insertAlarm(newAlarm) // 새 알람을 데이터베이스에 추가
-        }
-        loadAlarms()
     }
 
     fun deleteAlarm(alarmId: Long) {

@@ -90,15 +90,15 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     // firebase cloud messaging
-    implementation(platform("com.google.firebase:firebase-bom:33.5.0"))
-    implementation("com.google.firebase:firebase-messaging-ktx:24.0.1")
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.google.firebase:firebase-messaging-ktx:24.0.3")
     implementation("com.google.firebase:firebase-crashlytics-buildtools:3.0.2")
-    implementation("com.google.firebase:firebase-firestore-ktx:25.1.0")
+    implementation("com.google.firebase:firebase-firestore-ktx:25.1.1")
 
     // firebase authentication
     implementation ("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
 
 
     // 이미지 로딩
@@ -119,6 +119,8 @@ dependencies {
     // Coroutine for background processing
     implementation(libs.kotlinx.coroutines.core.v160)
     implementation(libs.kotlinx.coroutines.android.v160)
+    implementation(libs.kotlinx.coroutines.android)
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

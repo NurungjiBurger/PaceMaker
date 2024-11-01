@@ -22,6 +22,7 @@ import com.maker.pacemaker.data.model.ScreenNavigationTo
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.data.model.remote.ApiService
 import com.maker.pacemaker.data.model.remote.RetrofitClient
+import com.maker.pacemaker.data.model.remote.User
 import com.maker.pacemaker.data.model.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -87,6 +88,17 @@ open class BaseViewModel @Inject constructor(
     val screenNavigationTo: MutableLiveData<ScreenNavigationTo?> get() = _screenNavigationTo
 
     var activityChange: Boolean = false
+
+    private val _userInfo = MutableStateFlow<User>(User("","",0,0,0,emptyList(),0))
+    val userInfo: StateFlow<User> get() = _userInfo
+
+    fun getUserInfo() {
+        viewModelScope.launch {
+            _userInfo.value = repository.getMyUserInfo()
+
+            Log.d("UserInfo", userInfo.toString())
+        }
+    }
 
     fun restate() {
 

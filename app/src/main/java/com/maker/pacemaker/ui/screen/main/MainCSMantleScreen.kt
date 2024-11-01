@@ -1,6 +1,5 @@
 package com.maker.pacemaker.ui.screen.main
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,6 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,53 +16,39 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import com.maker.pacemaker.R
-import com.maker.pacemaker.data.model.ActivityType
-import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.data.model.User
-import com.maker.pacemaker.data.model.remote.SearchUser
-import com.maker.pacemaker.ui.screen.Component.AlarmBox
-import com.maker.pacemaker.ui.screen.Component.UpBar
-import com.maker.pacemaker.ui.screen.Component.UserCard
-import com.maker.pacemaker.ui.viewmodel.main.details.MainRankingScreenViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.maker.pacemaker.ui.viewmodel.main.details.MainCSMantleScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
+fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
 
     val baseViewModel = viewModel.baseViewModel.baseViewModel
     val mainViewModel = viewModel.baseViewModel
@@ -72,61 +59,20 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
     val searchBoxHeight = 50.dp
     val searchBoxWidth = screenWidth - 40.dp
 
-    val userCardWidth = screenWidth - 60.dp
-    val userCardHeight = screenHeight / 7
-
+    val words = viewModel.words.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val userName = viewModel.userName.collectAsState()
-    val userList = viewModel.userList.collectAsState().value
+    val submitedWords by viewModel.submitedWords.collectAsState()
 
-    // 다이얼로그 상태 관리
-    var selectedUser by remember { mutableStateOf<SearchUser?>(null) }
-    var showDialog by remember { mutableStateOf(false) }
-
-    // 다이얼로그 열기
-    if (showDialog && selectedUser != null) {
-        //val isFolloing = selectedUser!!.isFollowing
-        AlertDialog(
-            containerColor = Color.White,
-            onDismissRequest = { showDialog = false },
-            title = {
-                UserCard(
-                    baseViewModel = baseViewModel,
-                    width = userCardWidth,
-                    height = userCardHeight,
-                    user = selectedUser!!,
-                    onClick = { showDialog = false }, // 다이얼로그 내부에서는 클릭 이벤트 불필요
-                    followToggle = { }//viewModel.toggleFollow(selectedUser!!) }
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                       // viewModel.toggleFollow(selectedUser!!)
-                        // updated user 정보를 selectedUser에 다시 설정하여 상태를 반영
-                        //selectedUser = selectedUser!!.copy(isFollowing = !selectedUser!!.isFollowing)
-                    },
-                    colors = ButtonDefaults.textButtonColors(
-                        containerColor = Color.Transparent
-                    ),
-                    ) {
-                    //if (selectedUser!!.isFollowing) "unfollow" else "follow",
-                        Text(
-                            text = "follow",
-                            color = Color.Black
-                        )
-                    }
-                }
-            )
-        }
+    // 유사도
+    val similarity = 55.55
 
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
-        val (upBar, divider, searchBox, userListBox) = createRefs()
+        val (upBar, divider, description, searchBox, contentDescription, contentBoxBorder, contentBox) = createRefs()
 
         Box(
             contentAlignment = Alignment.Center,
@@ -141,7 +87,7 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
         )
         {
             Text(
-                text = "랭킹",
+                text = "싸맨틀",
                 fontSize = 30.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
@@ -162,6 +108,40 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
                 }
         )
 
+        Text(
+            text = buildAnnotatedString {
+                append("정답 단어와 가장 유사한 단어의\n유사도는 ")
+                withStyle(
+                    style = SpanStyle(
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                ) {
+                    append(similarity.toString())
+                }
+                append(" 입니다.\n")
+                withStyle(
+                    style = SpanStyle(
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                ) {
+                    append("CS 단어")
+                }
+                append("만 입력해주세요.")
+            },
+            textAlign = TextAlign.Center,
+            fontSize = 20.sp,
+            modifier = Modifier
+                .constrainAs(description) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(divider.bottom, margin = 30.dp)
+                }
+        )
+
         ConstraintLayout(
             modifier = Modifier
                 .width(searchBoxWidth)
@@ -169,16 +149,16 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
                 .background(Color.White, shape = RoundedCornerShape(10.dp))
                 .border(1.dp, Color(0xFFD9D9D9), shape = RoundedCornerShape(10.dp))
                 .constrainAs(searchBox) {
+                    top.linkTo(description.bottom, margin = 30.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    top.linkTo(upBar.bottom, margin = 20.dp)
                 }
         ) {
             val (searchButton, searchField) = createRefs()
 
             TextField(
-                value = userName.value,
-                onValueChange = { viewModel.onUserNameChanged(it) },
+                value = words.value,
+                onValueChange = { viewModel.onSearchWordsChanged(it) },
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
@@ -200,7 +180,7 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
                 ),
                 keyboardActions = KeyboardActions(
                     onNext = {
-                        keyboardController?.hide() // 키패드 숨기기
+                        //keyboardController?.hide() // 키패드 숨기기
                         viewModel.onSearchButtonClicked()
                     }
                 )
@@ -223,35 +203,101 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
             )
         }
 
-        // 유저 리스트 표시 영역
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .fillMaxWidth()
-                .constrainAs(userListBox) {
-                    top.linkTo(searchBox.bottom, margin = 10.dp)
+                .width(searchBoxWidth)
+                .padding(start = 20.dp, end = 20.dp)
+                .constrainAs(contentDescription) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                    height = Dimension.fillToConstraints
+                    top.linkTo(searchBox.bottom, margin = 30.dp)
                 }
-                .padding(30.dp)
         ) {
-            // itemsIndexed를 사용하여 각 아이템의 인덱스 접근
-            itemsIndexed(userList) { index, user ->
-                UserCard(
-                    baseViewModel,
-                    userCardWidth,
-                    userCardHeight,
-                    user,
-                    onClick = {
-                        selectedUser = user
-                        showDialog = true
-                    }
-                )
-            }
+            // # // 추측한 단어 // 유사도 // 유사도 순위
+            Text(
+                text = "#",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+            )
+
+            Text(
+                text = "추측한 단어",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+            )
+
+            Text(
+                text = "유사도",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+            )
+
+            Text(
+                text = "유사도 순위",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+            )
         }
 
-    }
+        Box(
+            modifier = Modifier
+                .width(searchBoxWidth)
+                .height(2.dp)
+                .background(Color.Black)
+                .constrainAs(contentBoxBorder) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(contentDescription.bottom, margin = 5.dp)
+                }
+        )
 
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(screenHeight/2)
+                .padding(start = 15.dp)
+                .constrainAs(contentBox) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(contentBoxBorder.bottom        ) // contentBoxBorder 아래에 위치
+                    bottom.linkTo(parent.bottom) // 화면의 남은 공간을 채울 수 있도록 설정
+                }
+        ) {
+            // 유사도 순으로 내림차순 정렬
+            val sortedWords = submitedWords.sortedBy { it.similarityRank }
+
+            items(sortedWords.size) { index ->
+
+                val word = sortedWords[index]
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .width(searchBoxWidth)
+                        .padding(start = 20.dp, end = 20.dp)
+                ) {
+                    Text(
+                        text = "${index}", // 기존 입력 순서 인덱스
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = word.word,
+                        fontSize = 18.sp
+                    )
+                    Text(
+                        text = "${(word.similarity * 100)}",
+                        fontSize = 18.sp
+                    )
+                    Text(
+                        text = "${word.similarityRank}",
+                        fontSize = 18.sp
+                    )
+                }
+            }
+        }
+    }
 }

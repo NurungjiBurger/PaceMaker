@@ -34,7 +34,6 @@ open class SignUpScreenViewModel @Inject constructor(
     val registrationResult: LiveData<String> get() = _registrationResult
 
     fun enrollUserToServer(email : String, password: String, nickName: String) {
-
         // 서버에 유저 등록하기
         // firebase의 uid와 닉네임을 등록해주면 된다.
         CoroutineScope(Dispatchers.IO).launch {

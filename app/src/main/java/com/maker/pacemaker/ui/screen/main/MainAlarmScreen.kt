@@ -119,7 +119,7 @@ fun MainAlarmScreen(viewModel: MainAlarmScreenViewModel) {
 
         Button(
             onClick = {
-                viewModel.addAlarm("학습해~", "공부 안한지 너무 오래되지 않았니?", System.currentTimeMillis() - 86400000) // 알람 추가
+                //viewModel.addAlarm("학습해~", "공부 안한지 너무 오래되지 않았니?", System.currentTimeMillis() - 86400000) // 알람 추가
             },
             colors = ButtonDefaults.textButtonColors(
                 containerColor = Color.Transparent
@@ -137,13 +137,4 @@ fun MainAlarmScreen(viewModel: MainAlarmScreenViewModel) {
             Text(text = "Add Alarm")
         }
     }
-}
-
-@Composable
-@Preview
-fun PreviewMainAlarmScreen() {
-
-    //val mainAlarmScreenViewModel = DummyMainAlarmScreenViewModel()
-
-    //MainAlarmScreen(baseViewModel, mainViewModel, mainAlarmScreenViewModel)
 }
