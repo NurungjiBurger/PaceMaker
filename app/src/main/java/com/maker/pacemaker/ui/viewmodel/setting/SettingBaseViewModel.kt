@@ -13,9 +13,6 @@ open class SettingBaseViewModel @Inject constructor(
 
     val baseViewModel = base
 
-    val _dailyCount = MutableStateFlow(0)
-    val dailyCount: MutableStateFlow<Int> get() = _dailyCount
-
     val _ratioMode = MutableStateFlow("일반 모드")
     val ratioMode: MutableStateFlow<String> get() = _ratioMode
 
@@ -23,7 +20,7 @@ open class SettingBaseViewModel @Inject constructor(
     val categoryList: MutableStateFlow<List<String>> get() = _categoryList
 
     init {
-        _dailyCount.value = baseViewModel.sharedPreferences.getInt("myDailyCount", 30)
+        baseViewModel._dailyCount.value = baseViewModel.sharedPreferences.getInt("myDailyCount", 30)
         _ratioMode.value = baseViewModel.sharedPreferences.getString("ratioMode", "일반 모드") ?: "일반 모드"
         _categoryList.value = baseViewModel.sharedPreferences.getStringSet("categoryList", setOf())?.toList() ?: emptyList()
 

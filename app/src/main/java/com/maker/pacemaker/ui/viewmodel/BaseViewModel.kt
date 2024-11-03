@@ -79,8 +79,11 @@ open class BaseViewModel @Inject constructor(
         RetrofitClient.getRetrofitInstance(context).create(ApiService::class.java)
     )
 
-    val _userName = MutableStateFlow<String>("상빈")
+    private val _userName = MutableStateFlow<String>("상빈")
     val userName: MutableStateFlow<String> get() = _userName
+
+    val _dailyCount = MutableStateFlow(0)
+    val dailyCount: MutableStateFlow<Int> get() = _dailyCount
 
     // Activity navigation을 위한 LiveData
     val _activityNavigationTo = MutableLiveData<ActivityNavigationTo?>()

@@ -7,13 +7,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class SettingMyPageScreenViewModel @Inject constructor(
-    private val base: SettingBaseViewModel
+    val base: SettingBaseViewModel
 ) : ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
 
     fun dataRefresh(){
-        baseViewModel.baseViewModel.getUserInfo()
+        baseViewModel.getUserInfo()
     }
 
 }

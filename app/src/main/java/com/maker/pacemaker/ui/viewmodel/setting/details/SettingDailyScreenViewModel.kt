@@ -18,15 +18,15 @@ open class SettingDailyScreenViewModel @Inject constructor(
     private val base: SettingBaseViewModel
 ): ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
 
-    val repository = baseViewModel.baseViewModel.repository
+    val repository = baseViewModel.repository
 
-    private val _dailySetting = MutableStateFlow(baseViewModel.baseViewModel.sharedPreferences.getString("dailySetting", "여유롭게"))
+    private val _dailySetting = MutableStateFlow(baseViewModel.sharedPreferences.getString("dailySetting", "여유롭게"))
     val dailySetting: MutableStateFlow<String?> get() = _dailySetting
 
     init {
-        _dailySetting.value = baseViewModel.baseViewModel.sharedPreferences.getString("dailySetting", "여유롭게")
+        _dailySetting.value = baseViewModel.sharedPreferences.getString("dailySetting", "여유롭게")
     }
 
     fun selectDailySetting(setting: String, count: Int) {
@@ -39,9 +39,9 @@ open class SettingDailyScreenViewModel @Inject constructor(
 
     fun completeDailySetting(result: Boolean) {
         if (result) {
-            baseViewModel.baseViewModel.editor.putString("dailySetting", _dailySetting.value)
-            baseViewModel.baseViewModel.editor.putInt("myDailyCount", baseViewModel._dailyCount.value)
-            baseViewModel.baseViewModel.editor.apply()
+            baseViewModel.editor.putString("dailySetting", _dailySetting.value)
+            baseViewModel.editor.putInt("myDailyCount", baseViewModel._dailyCount.value)
+            baseViewModel.editor.apply()
 
             Log.d("SettingDailyScreenViewModel", "dailySetting: ${_dailySetting.value}, dailyCount: ${baseViewModel._dailyCount.value}")
 
@@ -53,7 +53,7 @@ open class SettingDailyScreenViewModel @Inject constructor(
             }
         }
         else {
-            _dailySetting.value = baseViewModel.baseViewModel.sharedPreferences.getString("dailySetting", "여유롭게")
+            _dailySetting.value = baseViewModel.sharedPreferences.getString("dailySetting", "여유롭게")
         }
     }
 

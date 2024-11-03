@@ -21,9 +21,9 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
     private val base: MainBaseViewModel,
 ) : ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
 
-    val repository = baseViewModel.baseViewModel.repository
+    val repository = baseViewModel.repository
 
     // 오늘의 문제                                           정답 ,   문제 설명
     private val _todayProblems = MutableStateFlow<List<Problem>>(emptyList())
@@ -32,7 +32,7 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
     private val _problemHints = MutableStateFlow<Map<Int, List<String>>>(emptyMap())
     val problemHints = _problemHints
 
-    private val _todaySolvedCount = MutableStateFlow(baseViewModel.baseViewModel.sharedPreferences.getInt("todaySolvedCount", 0))
+    private val _todaySolvedCount = MutableStateFlow(baseViewModel.sharedPreferences.getInt("todaySolvedCount", 0))
     val todaySolvedCount: MutableStateFlow<Int> get() = _todaySolvedCount
 
     private val _answer = MutableStateFlow("")
@@ -53,8 +53,10 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
             val problemsList = mutableListOf<Problem>()
             val hintsMap = mutableMapOf<Int, List<String>>()
 
+            val dailycnt = baseViewModel.sharedPreferences.getInt("myDailyCount", 30)
+
             // 10개의 랜덤 문제 번호 생성
-            val randomProblemIds = (1..150).shuffled().take(10)
+            val randomProblemIds = (1..150).shuffled().take(dailycnt)
             Log.d("MainProblemSolveScreenViewModel", "Fetching problems for IDs: $randomProblemIds")
 
             randomProblemIds.forEach { problemId ->
@@ -100,9 +102,9 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
 
             withContext(Dispatchers.Main) {
                 if (reportResponse.message.contains("success")) {
-                    baseViewModel.baseViewModel.triggerToast("신고가 접수되었습니다.")
+                    baseViewModel.triggerToast("신고가 접수되었습니다.")
                 } else {
-                    baseViewModel.baseViewModel.triggerToast("신고에 실패했습니다.")
+                    baseViewModel.triggerToast("신고에 실패했습니다.")
                 }
             }
         }
@@ -122,8 +124,8 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
                 } else {
                     // 사용자에게 오답임을 알림
                     withContext(Dispatchers.Main) {
-                        baseViewModel.baseViewModel.triggerVibration()
-                        baseViewModel.baseViewModel.triggerToast("오답입니다. 다시 시도해주세요.")
+                        baseViewModel.triggerVibration()
+                        baseViewModel.triggerToast("오답입니다. 다시 시도해주세요.")
                     }
                     // 추가로 힌트 개방
                     if (_wrongCnt.value < 3) _wrongCnt.value += 1
