@@ -50,4 +50,11 @@ open class MainAlarmScreenViewModel @Inject constructor(
         }
         loadAlarms()
     }
+
+    fun deleteAllAlarms() {
+        viewModelScope.launch {
+            alarmRepository.deleteAllAlarms() // 모든 알람 삭제
+        }
+        loadAlarms()
+    }
 }

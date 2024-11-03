@@ -61,7 +61,7 @@ class PaceMakerFirebaseMessagingService : FirebaseMessagingService {
 
         val channelId = "default_channel_id"
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.noticeicon) // 알림 아이콘
+            .setSmallIcon(R.drawable.logo) // 알림 아이콘
             .setContentTitle(title) // 알림 제목
             .setContentText(messageBody) // 알림 내용
             .setAutoCancel(true)

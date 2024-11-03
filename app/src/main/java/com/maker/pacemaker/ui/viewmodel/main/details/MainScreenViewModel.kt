@@ -18,6 +18,8 @@ open class MainScreenViewModel @Inject constructor(
     val baseViewModel = base
 
     init {
+        baseViewModel.baseViewModel.setLoading(true)
+
         val user = baseViewModel.baseViewModel.auth.currentUser
 
         if (user == null) {
@@ -30,9 +32,9 @@ open class MainScreenViewModel @Inject constructor(
                         baseViewModel.baseViewModel.editor.putString("idToken", idToken).apply()
 
                         Log.d("idtoken", "사용자의 토큰: $idToken")
-                        //baseViewModel.baseViewModel.setLoading(true)
+
                         baseViewModel.baseViewModel.getUserInfo()
-                        //baseViewModel.baseViewModel.setLoading(false)
+                        baseViewModel.baseViewModel.setLoading(false)
 
                     } else {
                         Log.e("identifyUserByToken", "토큰 가져오기 실패: ${task.exception}")

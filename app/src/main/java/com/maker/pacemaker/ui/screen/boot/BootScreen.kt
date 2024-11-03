@@ -52,6 +52,8 @@ import com.maker.pacemaker.ui.screen.Component.UpBar
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.boot.BootBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.boot.details.BootScreenViewModel
+import kotlinx.coroutines.delay
+
 @Composable
 fun BootScreen(viewModel: BootScreenViewModel) {
 
@@ -116,6 +118,7 @@ fun BootScreen(viewModel: BootScreenViewModel) {
 
         // 권한 결과에 따라 화면 전환
         LaunchedEffect(isPermissionGranted) {
+            delay(2000)
             if (isPermissionGranted) {
                 if (viewModel.fireBaseUID != "") {
                     baseViewModel.goActivity(ActivityType.MAIN)
