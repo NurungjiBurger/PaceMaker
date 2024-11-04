@@ -30,6 +30,8 @@ class MainProblemSolveScreenViewModel @Inject constructor(
     val mainViewModel = base
     val repository = baseViewModel.repository
 
+    var fetch = false
+
     private val _todayProblems = MutableStateFlow<List<Problem>>(emptyList())
     val todayProblems = _todayProblems
 
@@ -152,6 +154,7 @@ class MainProblemSolveScreenViewModel @Inject constructor(
             _todayProblems.value = problemsList
 
             baseViewModel.setLoading(false)
+            fetch = true
         }
     }
 

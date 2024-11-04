@@ -34,6 +34,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
@@ -175,7 +176,8 @@ fun SignUpScreen(viewModel: SignUpScreenViewModel) {
             TextField(
                 value = PWState.value,
                 onValueChange = { PWState.value = it },
-                placeholder = { Text("6자리 이상 비밀번호를 입력하세요") },
+                placeholder = { Text("사용하실 6자리 이상 비밀번호를 입력하세요") },
+                visualTransformation = PasswordVisualTransformation(),
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,

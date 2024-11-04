@@ -59,6 +59,8 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     val baseViewModel = viewModel.baseViewModel
     val mainViewModel = viewModel.mainViewModel
 
+    var fetch = viewModel.fetch
+
     val isLoading by baseViewModel.isLoading.collectAsState()
 
     val todaySolvedCount by viewModel.todaySolvedCount.collectAsState()
@@ -361,12 +363,12 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
             }
 
 
-            // 로딩 다이얼로그
-            isLoading?.let {
+            if (isLoading == true || fetch == false) {
                 Loading(
                     "학습문제 가져오는 중...",
-                    isLoading = it,
-                    onDismiss = { /* Dismiss Logic */ })
+                    isLoading = true,
+                    onDismiss = { /* Dismiss Logic */ }
+                )
             }
         }
     }
