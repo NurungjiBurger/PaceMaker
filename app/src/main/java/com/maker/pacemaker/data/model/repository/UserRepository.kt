@@ -52,7 +52,7 @@ class UserRepository(private val apiService: ApiService) {
     }
 
     // 정답 확인
-    suspend fun solveProblem(userId: Int, problemId: Int, answer: AnswerRequest) : AnswerResponse {
+    suspend fun solveProblem(userId: String, problemId: Int, answer: AnswerRequest) : AnswerResponse {
         return apiService.solveProblem(userId, problemId, answer)
     }
 

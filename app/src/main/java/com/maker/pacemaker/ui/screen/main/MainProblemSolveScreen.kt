@@ -41,6 +41,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.ui.screen.Component.HintCard
+import com.maker.pacemaker.ui.screen.Component.Loading
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSearchScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSolveScreenViewModel
 
@@ -49,6 +50,8 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
 
     val baseViewModel = viewModel.baseViewModel
     val mainViewModel = viewModel.mainViewModel
+
+    val isLoading by baseViewModel.isLoading.collectAsState()
 
     val todaySolvedCount by viewModel.todaySolvedCount.collectAsState()
     val todayProblems by viewModel.todayProblems.collectAsState()
@@ -275,5 +278,8 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
         }
 
     }
+
+    // 로딩 다이얼로그
+    isLoading?.let { Loading("학습문제 가져오는 중...", isLoading = it, onDismiss = { /* Dismiss Logic */ }) }
 
 }

@@ -42,7 +42,7 @@ interface ApiService {
     // 정답 확인
     @POST("solutions/")
     suspend fun solveProblem(
-        @Query("user_id") userId: Int,
+        @Query("user_id") userId: String,
         @Query("problem_id") problemId: Int,
         @Body answer: AnswerRequest
     ): AnswerResponse

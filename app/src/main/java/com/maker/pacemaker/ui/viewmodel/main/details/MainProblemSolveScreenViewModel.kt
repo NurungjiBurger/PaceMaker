@@ -51,10 +51,12 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
 
     private fun fetchRandomProblems() {
         viewModelScope.launch(Dispatchers.IO) {
+            baseViewModel.setLoading(true)
+
             val problemsList = mutableListOf<Problem>()
             val hintsMap = mutableMapOf<Int, List<String>>()
 
-            val dailycnt = baseViewModel.sharedPreferences.getInt("myDailyCount", 30)
+            val dailycnt = baseViewModel.sharedPreferences.getInt("myDailyCount", 1)
 
             // 10개의 랜덤 문제 번호 생성
             val randomProblemIds = (1..150).shuffled().take(dailycnt)
@@ -69,9 +71,9 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
                     problemsList.add(problemResponse)
 
                     // 해당 문제의 힌트 가져오기
-                    val hintResponse: ProblemHintResponse = repository.getProblemHints(problemId)
-                    hintsMap[problemId] = hintResponse.hints
-                    Log.d("MainProblemSolveScreenViewModel", "Fetched hints for problem ID $problemId: ${hintResponse.hints}")
+//                    val hintResponse: ProblemHintResponse = repository.getProblemHints(problemId)
+//                    hintsMap[problemId] = hintResponse.hints
+//                    Log.d("MainProblemSolveScreenViewModel", "Fetched hints for problem ID $problemId: ${hintResponse.hints}")
 
                 } catch (e: Exception) {
                     Log.e("MainProblemSolveScreenViewModel", "Error fetching problem ID: $problemId", e)
@@ -81,6 +83,8 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
             // 가져온 문제와 힌트를 StateFlow에 저장
             _todayProblems.value = problemsList
             _problemHints.value = hintsMap
+
+            baseViewModel.setLoading(false)
         }
     }
 
@@ -116,9 +120,10 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val answerRequest = AnswerRequest(_answer.value)
-                val answerResponse = repository.solveProblem(1, _todayProblems.value[_todaySolvedCount.value].problem_id, answerRequest)
+                val uId = baseViewModel.sharedPreferences.getString("fireBaseUID", "")
+                val answerResponse = uId?.let { repository.solveProblem(it, _todayProblems.value[_todaySolvedCount.value].problem_id, answerRequest) }
                 // 정답 확인
-                if (answerResponse.result) {
+                if (answerResponse?.result == true) {
                     _todaySolvedCount.value += 1
                     _answer.value = ""
                     _wrongCnt.value = 0
