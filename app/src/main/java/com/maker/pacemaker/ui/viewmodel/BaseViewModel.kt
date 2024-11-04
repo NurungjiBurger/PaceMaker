@@ -105,11 +105,26 @@ open class BaseViewModel @Inject constructor(
     }
 
     fun getUserInfo() {
-        //setLoading(true)
         viewModelScope.launch {
             _userInfo.value = repository.getMyUserInfo()
-            Log.d("UserInfo", userInfo.toString())
-            //setLoading(false)
+            _userInfo.value?.let { userInfo ->
+                Log.d("UserInfo", userInfo.toString())
+                saveUserInfoToPreferences(userInfo)
+            }
+        }
+    }
+
+    private fun saveUserInfoToPreferences(userInfo: User) {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putString("fireBaseUID", userInfo.uid)
+            putString("nickname", userInfo.nickname)
+            putInt("exp", userInfo.exp)
+            putInt("level", userInfo.level)
+            putInt("myDailyCount", userInfo.daily_cnt)
+            putStringSet("preferred_categories", userInfo.preferred_categories.toSet())
+            putInt("followers_count", userInfo.followers_count)
+            apply()
         }
     }
 

@@ -1,6 +1,7 @@
 package com.maker.pacemaker.ui.screen.main
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -37,12 +38,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.ui.screen.Component.HintCard
 import com.maker.pacemaker.ui.screen.Component.Loading
@@ -139,7 +143,6 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
-
         val (topBar, contentBox, hintBox, reportButton) = createRefs()
 
         Row(
@@ -167,134 +170,177 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
             )
         }
 
-        ConstraintLayout(
-            modifier = Modifier
-                .padding(20.dp)
-                .background(color = Color(0xFFFAFAFA))
-                .constrainAs(contentBox) {
-                    top.linkTo(topBar.bottom, margin = 70.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-        ) {
-            val (problemPart, answerPart, submitButton) = createRefs()
+        if (todayProblems.size == todaySolvedCount) {
 
-            if (!todayProblems.isEmpty()) {
-                Text(
-                    text = todayProblems[todaySolvedCount].description,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.constrainAs(problemPart) {
+            Image(
+                painter = painterResource(id = R.drawable.mascot),
+                contentDescription = "mascot",
+                modifier = Modifier
+                    .width(screenWidth / 2)
+                    .height(screenHeight / 2)
+                    .constrainAs(contentBox) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
                     }
+            )
+
+            Text(
+                text = "오늘의 문제를 모두 풀었어요!\n내일 또 만나요!",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(20.dp)
+                    .constrainAs(hintBox) {
+                        top.linkTo(contentBox.bottom, margin = 50.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+            )
+
+        } else {
+            ConstraintLayout(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .background(color = Color(0xFFFAFAFA))
+                    .constrainAs(contentBox) {
+                        top.linkTo(topBar.bottom, margin = 70.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+            ) {
+                val (problemPart, answerPart, submitButton) = createRefs()
+
+                if (!todayProblems.isEmpty()) {
+                    Text(
+                        text = todayProblems[todaySolvedCount].description,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.constrainAs(problemPart) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                    )
+                }
+
+                TextField(
+                    value = answer,
+                    onValueChange = { viewModel.onAnswerChanged(it) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White)
+                        .border(2.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
+                        .constrainAs(answerPart) {
+                            top.linkTo(problemPart.bottom, margin = 10.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                    label = { Text("정답") },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFFAFAFA),
+                        unfocusedContainerColor = Color(0xFFFAFAFA),
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            keyboardController?.hide() // 키패드 숨기기
+                            viewModel.onSubmit()
+                        }
+                    )
                 )
+
+                Box(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(50.dp)
+                        .background(Color(0xFF1429A0), shape = RoundedCornerShape(10.dp))
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) { viewModel.onSubmit() }
+                        .constrainAs(submitButton) {
+                            top.linkTo(answerPart.bottom, margin = 10.dp)
+                            end.linkTo(parent.end)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "제출",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+
             }
 
-            TextField(
-                value = answer,
-                onValueChange = { viewModel.onAnswerChanged(it) },
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White)
-                    .border(2.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
-                    .constrainAs(answerPart) {
-                        top.linkTo(problemPart.bottom, margin = 10.dp)
+                    .padding(10.dp)
+                    .constrainAs(hintBox) {
+                        top.linkTo(contentBox.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                label = { Text("정답") },
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color(0xFFFAFAFA),
-                    unfocusedContainerColor = Color(0xFFFAFAFA),
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Done // 다음 필드로 이동
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        keyboardController?.hide() // 키패드 숨기기
-                        viewModel.onSubmit()
-                    }
-                )
-            )
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                // `wrongCnt`만큼의 힌트를 표시
+                items(wrongCnt) { index ->
+                    problemHints[todayProblems[todaySolvedCount].problem_id]?.getOrNull(index)
+                        ?.let { hint ->
+                            HintCard(
+                                baseViewModel,
+                                hintWidth,
+                                hintHeight,
+                                hint,
+                                20,
+                                onClick = { baseViewModel.triggerVibration() })
+                        }
+                }
+            }
 
             Box(
                 modifier = Modifier
-                    .width(100.dp)
-                    .height(50.dp)
-                    .background(Color(0xFF1429A0), shape = RoundedCornerShape(10.dp))
+                    .width(60.dp)
+                    .height(30.dp)
+                    .background(Color.Red, shape = RoundedCornerShape(40.dp))
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
-                    ) { viewModel.onSubmit() }
-                    .constrainAs(submitButton) {
-                        top.linkTo(answerPart.bottom, margin = 10.dp)
-                        end.linkTo(parent.end)
+                    ) {
+                        selectedProblem = todayProblems[todaySolvedCount] // 클릭된 문제 설정
+                        showDialog = true // 다이얼로그 열기
+                    }
+                    .constrainAs(reportButton) {
+                        end.linkTo(parent.end, margin = 15.dp)
+                        bottom.linkTo(parent.bottom, margin = 15.dp)
                     },
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 Text(
-                    text = "제출",
-                    fontSize = 20.sp,
+                    text = "신고",
+                    fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             }
 
-        }
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-                .constrainAs(hintBox) {
-                    top.linkTo(contentBox.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            // `wrongCnt`만큼의 힌트를 표시
-            items(wrongCnt) { index ->
-                problemHints[todayProblems[todaySolvedCount].problem_id]?.getOrNull(index)?.let { hint ->
-                    HintCard(baseViewModel, hintWidth, hintHeight, hint, 20, onClick = { baseViewModel.triggerVibration() })
-                }
+            // 로딩 다이얼로그
+            isLoading?.let {
+                Loading(
+                    "학습문제 가져오는 중...",
+                    isLoading = it,
+                    onDismiss = { /* Dismiss Logic */ })
             }
         }
-
-        Box(
-          modifier = Modifier
-              .width(60.dp)
-              .height(30.dp)
-              .background(Color.Red, shape = RoundedCornerShape(40.dp))
-              .clickable(
-                  interactionSource = remember { MutableInteractionSource() },
-                  indication = null
-              ) {
-                  selectedProblem = todayProblems[todaySolvedCount] // 클릭된 문제 설정
-                  showDialog = true // 다이얼로그 열기
-              }
-              .constrainAs(reportButton) {
-                  end.linkTo(parent.end, margin = 15.dp)
-                  bottom.linkTo(parent.bottom, margin = 15.dp)
-              },
-            contentAlignment = Alignment.Center
-        ){
-            Text(
-                text = "신고",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-        }
-
     }
-
-    // 로딩 다이얼로그
-    isLoading?.let { Loading("학습문제 가져오는 중...", isLoading = it, onDismiss = { /* Dismiss Logic */ }) }
-
 }

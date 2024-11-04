@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.maker.pacemaker"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.maker.pacemaker"
         minSdk = 31
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -64,6 +64,7 @@ dependencies {
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.androidx.hilt.work)
     kapt("androidx.room:room-compiler:2.6.1") // annotationProcessor는 제거
     implementation("androidx.room:room-ktx:2.6.1")
 
@@ -121,6 +122,12 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android.v160)
     implementation(libs.kotlinx.coroutines.android)
 
+    // work manager
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
+
+    // Hilt WorkManager 통합
+    implementation("androidx.hilt:hilt-work:1.2.0")
+    kapt("androidx.hilt:hilt-compiler:1.2.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

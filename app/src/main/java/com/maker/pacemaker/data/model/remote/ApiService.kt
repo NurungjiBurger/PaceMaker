@@ -205,7 +205,7 @@ data class Problem(
     val level: Int,
     val category: String,
     val tried_cnt: Int,
-    val creator_user_id: Int,
+    val creator_user_id: String,
 )
 
 // 정답 확인 요청

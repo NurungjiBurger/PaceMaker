@@ -180,20 +180,29 @@ class MainProblemSolveScreenViewModel @Inject constructor(
     }
 
     fun onSubmit() {
+        Log.d("MainProblemSolveScreenViewModel", "Submitting answer")
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val answerRequest = AnswerRequest(_answer.value)
                 val uId = baseViewModel.sharedPreferences.getString("fireBaseUID", "")
                 val currentProblem = _todayProblems.value[_todaySolvedCount.value]
 
+                Log.d("MainProblemSolveScreenViewModel", "Current problem: $currentProblem")
+                Log.d("MainProblemSolveScreenViewModel", "Current answer: ${_answer.value}")
+
                 val answerResponse = uId?.let {
                     Log.d("MainProblemSolveScreenViewModel", "Submitting answer: $it")
                     repository.solveProblem(it, currentProblem.problem_id, answerRequest)
                 }
 
+                _answer.value = ""
+                Log.d("MainProblemSolveScreenViewModel", "Answer response: $answerResponse")
+
                 if (answerResponse?.result == true) {
+                    // Update the count of solved problems
                     _todaySolvedCount.value += 1
-                    _answer.value = ""
+                    // Save the updated count to SharedPreferences
+                    saveSolvedCount(_todaySolvedCount.value)
                     _wrongCnt.value = 0
                 } else {
                     handleIncorrectAnswer()
@@ -201,6 +210,16 @@ class MainProblemSolveScreenViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("MainProblemSolveScreenViewModel", "Error submitting answer", e)
             }
+        }
+    }
+
+    /**
+     * Save the number of problems solved to SharedPreferences.
+     */
+    private fun saveSolvedCount(count: Int) {
+        baseViewModel.sharedPreferences.edit().apply {
+            putInt("todaySolvedCount", count)
+            apply()
         }
     }
 

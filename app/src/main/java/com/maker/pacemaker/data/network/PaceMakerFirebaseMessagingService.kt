@@ -9,11 +9,14 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.provider.ContactsContract
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -22,6 +25,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.db.AlarmDao
 import com.maker.pacemaker.data.model.db.AlarmEntity
+import com.maker.pacemaker.data.model.worker.SaveAlarmWorker
 import com.maker.pacemaker.ui.activity.main.MainActivity
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -85,6 +89,19 @@ class PaceMakerFirebaseMessagingService : FirebaseMessagingService {
         // 알람 저장 (예: 타이틀과 내용 저장)
         saveAlarm(title!!, messageBody!!)
     }
+
+//    private fun saveAlarm(title: String, message: String) {
+//        val data = ContactsContract.Contacts.Data.Builder()
+//            .putString("title", title)
+//            .putString("message", message)
+//            .build()
+//
+//        val workRequest = OneTimeWorkRequestBuilder<SaveAlarmWorker>()
+//            .setInputData(data)
+//            .build()
+//
+//        WorkManager.getInstance(this).enqueue(workRequest)
+//    }
 
     private fun saveAlarm(title: String, message: String) {
         CoroutineScope(Dispatchers.IO).launch {
