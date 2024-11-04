@@ -23,8 +23,10 @@ import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.data.model.remote.ApiService
 import com.maker.pacemaker.data.model.remote.RetrofitClient
 import com.maker.pacemaker.data.model.remote.User
+import com.maker.pacemaker.data.model.remote.sendFcmToken
 import com.maker.pacemaker.data.model.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -111,6 +113,11 @@ open class BaseViewModel @Inject constructor(
                 Log.d("UserInfo", userInfo.toString())
                 saveUserInfoToPreferences(userInfo)
             }
+
+            // fcmToken 서버 테스트
+            sendFCMTokenToServer(sharedPreferences.getString("fireBaseUID", "")!!, sharedPreferences.getString("fcmToken", "")!!)
+//            getFCMToken()
+//            deleteFCMToekn(sharedPreferences.getString("fcmToken", "")!!)
         }
     }
 
@@ -146,6 +153,41 @@ open class BaseViewModel @Inject constructor(
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
+    fun sendFCMTokenToServer(userId: String, fcmToken: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val request = sendFcmToken(userId, fcmToken, "Android")
+            val response = try {
+                repository.sendFcmToken(request)
+            } catch (e: Exception) {
+                Log.e("FCM", "sendFCMTokenToServer: $e")
+                null
+            }
+        }
+    }
+
+    fun getFCMToken() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = try {
+                repository.getFcmToken(sharedPreferences.getString("fireBaseUID", "")!!)
+            } catch (e: Exception) {
+                Log.e("FCM", "getFCMToken: $e")
+                null
+            }
+        }
+    }
+
+    fun deleteFCMToekn(toekn: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = try {
+                repository.deleteFcmToken(toekn)
+            } catch (e: Exception) {
+                Log.e("FCM", "deleteFCMToekn: $e")
+            }
+
+            Log.d("FCM", "deleteFCMToekn: $response")
+        }
+    }
+
     fun setFireBaseUID() {
         val user = FirebaseAuth.getInstance().currentUser
         val uid = user?.uid
@@ -155,6 +197,10 @@ open class BaseViewModel @Inject constructor(
             Log.d("FirebaseUID", "User UID: $uid")
             editor.putString("fireBaseUID", uid)
             editor.apply()
+
+            if (sharedPreferences.getString("fcmtoken", "") != "") {
+                sendFCMTokenToServer(uid, sharedPreferences.getString("fcmToken", "")!!)
+            }
         } else {
             // UID를 가져오지 못한 경우 (예: 로그아웃 상태)
             Log.d("FirebaseUID", "User is not logged in.")
