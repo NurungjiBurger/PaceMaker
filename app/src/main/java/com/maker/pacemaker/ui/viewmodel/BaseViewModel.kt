@@ -115,8 +115,7 @@ open class BaseViewModel @Inject constructor(
     }
 
     private fun saveUserInfoToPreferences(userInfo: User) {
-        val sharedPreferences: SharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
+        with(editor) { // sharedPreferences.edit()) {
             putString("fireBaseUID", userInfo.uid)
             putString("nickname", userInfo.nickname)
             putInt("exp", userInfo.exp)

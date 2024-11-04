@@ -211,7 +211,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                         end.linkTo(parent.end)
                     }
             ) {
-                val (problemPart, answerPart, submitButton) = createRefs()
+                val (problemPart, answerPart, skipButton, submitButton) = createRefs()
 
                 if (!todayProblems.isEmpty()) {
                     Text(
@@ -277,6 +277,33 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
+                }
+
+                Log.d("MainProblemSolveScreen", "wrongCnt: $wrongCnt")
+
+                if (wrongCnt >= 3) {
+                    Box(
+                        modifier = Modifier
+                            .width(100.dp)
+                            .height(50.dp)
+                            .background(Color(0xFF1429A0), shape = RoundedCornerShape(10.dp))
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) { viewModel.onSkip() }
+                            .constrainAs(skipButton) {
+                                top.linkTo(answerPart.bottom, margin = 10.dp)
+                                start.linkTo(parent.start)
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "넘기기",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
                 }
 
             }

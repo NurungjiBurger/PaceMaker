@@ -225,13 +225,13 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
                 .padding(30.dp)
                 .constrainAs(contentBox) {
                     if (hashTags.isNotEmpty()) {
-                        top.linkTo(hashTagBox.bottom, margin = 20.dp) // 해시태그가 있을 경우
+                        top.linkTo(hashTagBox.bottom, margin = 30.dp) // 해시태그가 있을 경우
                     } else {
-                        top.linkTo(searchBox.bottom, margin = 20.dp) // 해시태그가 없을 경우
+                        top.linkTo(searchBox.bottom, margin = 30.dp) // 해시태그가 없을 경우
                     }
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom, margin = 20.dp)
+                    bottom.linkTo(parent.bottom)
                 }
                 .heightIn(max = screenHeight - (searchBoxHeight + 80.dp)),
         ) {

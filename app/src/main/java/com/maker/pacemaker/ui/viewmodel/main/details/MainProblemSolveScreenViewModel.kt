@@ -3,12 +3,16 @@ package com.maker.pacemaker.ui.viewmodel.main.details
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.maker.pacemaker.data.model.remote.AnswerRequest
 import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.data.model.remote.reportRequest
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -105,6 +109,9 @@ class MainProblemSolveScreenViewModel @Inject constructor(
             baseViewModel.setLoading(true)
             try {
                 val dailyCount = baseViewModel.sharedPreferences.getInt("myDailyCount", 1)
+
+                Log.d("MainProblemSolveScreenViewModel", "Fetching $dailyCount random problems")
+
                 val randomProblemIds = (1..254).shuffled().take(dailyCount)
 
                 fetchProblemsByIds(randomProblemIds)
@@ -179,6 +186,39 @@ class MainProblemSolveScreenViewModel @Inject constructor(
         }
     }
 
+
+    fun onSkip() {
+        viewModelScope.launch(Dispatchers.IO) {
+            // 현재 문제를 가져옵니다.
+            val currentProblem = _todayProblems.value[_todaySolvedCount.value]
+
+            // word 필드에서 answer JSON 문자열을 추출합니다.
+            val wordJson = currentProblem.word
+
+            // Gson을 사용하여 JSON 파싱을 수행합니다.
+            val gson = Gson()
+            val jsonObject = gson.fromJson(wordJson, JsonObject::class.java)
+
+            // answer 배열을 가져오고 첫 번째 답변을 추출합니다.
+            val firstAnswer = jsonObject.getAsJsonArray("answer").firstOrNull()?.asString ?: "정답이 없습니다."
+
+            withContext(Dispatchers.Main) {
+                // 진동과 토스트 메시지를 표시합니다.
+                baseViewModel.triggerVibration()
+                baseViewModel.triggerToast("정답은 $firstAnswer 입니다. 2초 후 다음 문제로 넘어갑니다.")
+                _answer.value = firstAnswer
+            }
+
+            delay(2000)
+
+            // 다음 문제로 넘어가기 위한 로직
+            _answer.value = ""
+            _todaySolvedCount.value += 1
+            saveSolvedCount(_todaySolvedCount.value)
+            _wrongCnt.value = 0
+        }
+    }
+
     fun onSubmit() {
         Log.d("MainProblemSolveScreenViewModel", "Submitting answer")
         viewModelScope.launch(Dispatchers.IO) {
@@ -199,9 +239,7 @@ class MainProblemSolveScreenViewModel @Inject constructor(
                 Log.d("MainProblemSolveScreenViewModel", "Answer response: $answerResponse")
 
                 if (answerResponse?.result == true) {
-                    // Update the count of solved problems
                     _todaySolvedCount.value += 1
-                    // Save the updated count to SharedPreferences
                     saveSolvedCount(_todaySolvedCount.value)
                     _wrongCnt.value = 0
                 } else {
@@ -228,6 +266,6 @@ class MainProblemSolveScreenViewModel @Inject constructor(
             baseViewModel.triggerVibration()
             baseViewModel.triggerToast("오답입니다. 다시 시도해주세요.")
         }
-        if (_wrongCnt.value < 3) _wrongCnt.value += 1
+        _wrongCnt.value += 1
     }
 }

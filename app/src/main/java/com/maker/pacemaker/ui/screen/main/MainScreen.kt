@@ -228,7 +228,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
-                    ) { baseViewModel.goScreen(ScreenType.CSMANTLE) },
+                    ) { baseViewModel.goScreen(ScreenType.LAB) },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
