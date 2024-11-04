@@ -64,7 +64,7 @@ class MainProblemSolveScreenViewModel @Inject constructor(
 
         if (currentDate != savedDate) {
             Log.d("MainProblemSolveScreenViewModel", "New date detected: $currentDate")
-            fetchRandomProblems(currentDate)
+            fetchDailyProblems(currentDate)
         } else {
             Log.d("MainProblemSolveScreenViewModel", "Loading saved problems")
             loadSavedProblems()
@@ -101,27 +101,30 @@ class MainProblemSolveScreenViewModel @Inject constructor(
         }
     }
 
-    /**
-     * 랜덤한 문제들을 가져오고 `SharedPreferences`에 저장합니다.
-     */
-    private fun fetchRandomProblems(currentDate: String) {
+    private fun fetchDailyProblems(currentDate: String) {
         viewModelScope.launch(Dispatchers.IO) {
             baseViewModel.setLoading(true)
             try {
-                val dailyCount = baseViewModel.sharedPreferences.getInt("myDailyCount", 1)
+                // 서버에서 데일리 문제를 가져옵니다.
+                val userId = baseViewModel.sharedPreferences.getString("fireBaseUID", "")!!
+                val problems = repository.getDailyProblem(userId)
 
-                Log.d("MainProblemSolveScreenViewModel", "Fetching $dailyCount random problems")
+                Log.d("MainProblemSolveScreenViewModel", "Fetched daily problems: $problems")
 
-                val randomProblemIds = (1..254).shuffled().take(dailyCount)
+                // 문제 ID를 추출하여 fetchProblemsByIds 호출
+                val problemIds = problems.map { it.problem_id }
+                fetchProblemsByIds(problemIds)
 
-                fetchProblemsByIds(randomProblemIds)
+                // 문제 리스트를 상태에 저장합니다 (optional).
+                // _todayProblems.value = problems
 
-                saveProblemData(currentDate, randomProblemIds)
+                // 문제 ID와 날짜를 저장합니다.
+                saveProblemData(currentDate, problemIds)
             } catch (e: Exception) {
-                Log.e("MainProblemSolveScreenViewModel", "Error fetching random problems", e)
+                Log.e("MainProblemSolveScreenViewModel", "Error fetching daily problems", e)
+            } finally {
+                baseViewModel.setLoading(false)
             }
-
-            baseViewModel.setLoading(false)
         }
     }
 

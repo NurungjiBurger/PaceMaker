@@ -41,6 +41,11 @@ class UserRepository(private val apiService: ApiService) {
         return apiService.getProblemById(problemId)
     }
 
+    // 데일리 문제 조회
+    suspend fun getDailyProblem(userId: String) : List<Problem> {
+        return apiService.getDailyProblem(userId)
+    }
+
     // 특정 데이터가 들어간 문제 조회
     suspend fun getProblemsByKeyWord(keyword: String) : List<Problem> {
         return apiService.getProblemsByKeyWord(keyword)
