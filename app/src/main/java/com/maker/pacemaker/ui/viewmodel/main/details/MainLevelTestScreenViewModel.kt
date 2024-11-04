@@ -12,7 +12,8 @@ open class MainLevelTestScreenViewModel @Inject constructor(
     private val base: MainBaseViewModel
 ): ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val mainViewModel = base
 
     private val _nowProblem = MutableStateFlow("객체지향의 SOLID 중 “클래스는 단 하나의 목적을 가져야 하며, 클래스를 변경하는 이유는 단 하나의 이유여야 한다.”는 원칙은 ?")
     val nowProblem: MutableStateFlow<String> get() = _nowProblem
@@ -39,7 +40,7 @@ open class MainLevelTestScreenViewModel @Inject constructor(
                 // 오답인 경우
                 // 사용자에게 오답임을 알림
                 _userResponse.value = TextFieldValue()
-                baseViewModel.baseViewModel.triggerVibration()
+                baseViewModel.triggerVibration()
             }
         }
     }

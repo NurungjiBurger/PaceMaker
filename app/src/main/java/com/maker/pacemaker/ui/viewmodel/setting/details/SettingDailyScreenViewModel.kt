@@ -19,6 +19,7 @@ open class SettingDailyScreenViewModel @Inject constructor(
 ): ViewModel() {
 
     val baseViewModel = base.baseViewModel
+    val settingViewModel = base
 
     val repository = baseViewModel.repository
 

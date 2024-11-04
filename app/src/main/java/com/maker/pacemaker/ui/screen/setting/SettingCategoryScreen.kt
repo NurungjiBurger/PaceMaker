@@ -37,8 +37,8 @@ import com.maker.pacemaker.ui.viewmodel.setting.details.SettingCategoryScreenVie
 @Composable
 fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val settingViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val settingViewModel = viewModel.settingViewModel
 
     val settingCategories = settingViewModel.categoryList.collectAsState().value
 

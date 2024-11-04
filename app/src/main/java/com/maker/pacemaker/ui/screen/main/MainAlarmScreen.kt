@@ -41,8 +41,8 @@ import java.util.Locale
 @Composable
 fun MainAlarmScreen(viewModel: MainAlarmScreenViewModel) {
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val mainViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val mainViewModel = viewModel.mainViewModel
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비

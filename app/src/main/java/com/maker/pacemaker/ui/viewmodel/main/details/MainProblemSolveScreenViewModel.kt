@@ -22,6 +22,7 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
     val baseViewModel = base.baseViewModel
+    val mainViewModel = base
 
     val repository = baseViewModel.repository
 

@@ -12,25 +12,26 @@ open class SettingRatioScreenViewModel @Inject constructor(
     private val base: SettingBaseViewModel
 ) : ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val settingViewModel = base
 
     fun selectRatioSetting(setting: String) {
-        baseViewModel._ratioMode.value = setting
+        settingViewModel._ratioMode.value = setting
     }
 
     fun completeRatioSetting(result: Boolean) {
         if (result) {
-            baseViewModel.baseViewModel.editor.putString("ratioMode", baseViewModel._ratioMode.value)
-            baseViewModel.baseViewModel.editor.apply()
+            baseViewModel.editor.putString("ratioMode", settingViewModel._ratioMode.value)
+            baseViewModel.editor.apply()
 
-            baseViewModel._ratioMode.value =
-                baseViewModel.baseViewModel.sharedPreferences.getString("ratioMode", "일반 모드").toString()
-            Log.d("SettingRatioScreenViewModel", "${baseViewModel._ratioMode.value} Ratio Setting Saved")
+            settingViewModel._ratioMode.value =
+                baseViewModel.sharedPreferences.getString("ratioMode", "일반 모드").toString()
+            Log.d("SettingRatioScreenViewModel", "${settingViewModel._ratioMode.value} Ratio Setting Saved")
             Log.d("SettingRatioScreenViewModel", "Ratio Setting Saved")
         }
         else {
-            baseViewModel._ratioMode.value =
-                baseViewModel.baseViewModel.sharedPreferences.getString("ratioMode", "일반 모드").toString()
+            settingViewModel._ratioMode.value =
+                baseViewModel.sharedPreferences.getString("ratioMode", "일반 모드").toString()
         }
     }
 

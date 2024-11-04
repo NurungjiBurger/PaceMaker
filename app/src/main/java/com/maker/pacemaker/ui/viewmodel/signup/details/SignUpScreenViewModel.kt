@@ -24,11 +24,14 @@ open class SignUpScreenViewModel @Inject constructor(
     private val base: SignUpBaseViewModel,
 ) : ViewModel() {
 
-    val baseViewModel = base
-    var passWordSettingEnabled = false
-    val repository = baseViewModel.baseViewModel.repository
+    val baseViewModel = base.baseViewModel
+    val signUpViewModel = base
 
-    val auth = baseViewModel.baseViewModel.auth
+
+    var passWordSettingEnabled = false
+    val repository = baseViewModel.repository
+
+    val auth = baseViewModel.auth
 
     private val _registrationResult = MutableLiveData<String>()
     private val _isLoggedIn = MutableLiveData<Boolean>() // 로그인 상태 LiveData
@@ -48,7 +51,7 @@ open class SignUpScreenViewModel @Inject constructor(
             // UI 업데이트는 메인 스레드에서 해야 하므로 withContext를 사용
             withContext(Dispatchers.Main) {
                 // 유저 등록 후 메인 화면으로 이동
-                baseViewModel.baseViewModel.goActivity(ActivityType.MAIN)
+                baseViewModel.goActivity(ActivityType.MAIN)
             }
         }
     }
@@ -60,11 +63,11 @@ open class SignUpScreenViewModel @Inject constructor(
                     if (task.isSuccessful) {
                         MyApplication.email = email
                         _isLoggedIn.value = true // 로그인 성공 시 이벤트 발생
-                        baseViewModel.baseViewModel.setFireBaseUID()
-                        baseViewModel.baseViewModel.triggerToast("로그인에 성공하였습니다.")
+                        baseViewModel.setFireBaseUID()
+                        baseViewModel.triggerToast("로그인에 성공하였습니다.")
                     } else {
-                        baseViewModel.baseViewModel.triggerVibration()
-                        baseViewModel.baseViewModel.triggerToast("이메일 또는 비밀번호가 일치하지 않습니다.")
+                        baseViewModel.triggerVibration()
+                        baseViewModel.triggerToast("이메일 또는 비밀번호가 일치하지 않습니다.")
                     }
                 }
         }
@@ -80,7 +83,7 @@ open class SignUpScreenViewModel @Inject constructor(
         if (email.isNotEmpty() && password.length >= 6) {
             registerUser(email, password)
         } else {
-            baseViewModel.baseViewModel.triggerToast("이메일과 비밀번호를 입력하세요.")
+            baseViewModel.triggerToast("이메일과 비밀번호를 입력하세요.")
         }
     }
 
@@ -91,20 +94,20 @@ open class SignUpScreenViewModel @Inject constructor(
                     auth.currentUser?.sendEmailVerification()
                         ?.addOnCompleteListener { sendTask ->
                             if (sendTask.isSuccessful) {
-                                baseViewModel.baseViewModel.triggerToast("전송된 메일을 확인해 주세요.")
+                                baseViewModel.triggerToast("전송된 메일을 확인해 주세요.")
 
-                                baseViewModel.baseViewModel.setFireBaseUID()
+                                baseViewModel.setFireBaseUID()
 
                                 _registrationResult.value = "전송된 메일을 확인해 주세요."
                                 // 이메일 인증 확인 절차 시작
                                 checkIfEmailVerifiedPeriodically()
                             } else {
-                                baseViewModel.baseViewModel.triggerToast("메일 전송 실패")
+                                baseViewModel.triggerToast("메일 전송 실패")
                                 _registrationResult.value = "메일 전송 실패"
                             }
                         }
                 } else {
-                    baseViewModel.baseViewModel.triggerToast("회원가입 실패")
+                    baseViewModel.triggerToast("회원가입 실패")
                     _registrationResult.value = "회원가입 실패"
                 }
             }
@@ -122,7 +125,7 @@ open class SignUpScreenViewModel @Inject constructor(
                     if (task.isSuccessful && user.isEmailVerified) {
                         // 이메일 인증이 완료된 경우 Firebase에 최종 사용자 데이터 저장
                         saveUserDataToDatabase()
-                        baseViewModel.baseViewModel.triggerToast("이메일 인증 완료. 회원가입에 성공하였습니다.")
+                        baseViewModel.triggerToast("이메일 인증 완료. 회원가입에 성공하였습니다.")
                         _registrationResult.value = "이메일 인증 완료."
                         handler.removeCallbacks(this) // 반복 중지
                     } else {
@@ -150,10 +153,10 @@ open class SignUpScreenViewModel @Inject constructor(
         db.collection("users").document(uid)
             .set(userData)
             .addOnSuccessListener {
-                baseViewModel.baseViewModel.triggerToast("사용자 정보가 등록되었습니다.")
+                baseViewModel.triggerToast("사용자 정보가 등록되었습니다.")
             }
             .addOnFailureListener { e ->
-                baseViewModel.baseViewModel.triggerToast("사용자 정보 등록 실패: ${e.message}")
+                baseViewModel.triggerToast("사용자 정보 등록 실패: ${e.message}")
             }
     }
 }

@@ -54,8 +54,8 @@ import com.maker.pacemaker.ui.screen.Component.TopNavBar
 fun MainScreen(viewModel: MainScreenViewModel) {
 
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val mainViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val mainViewModel = viewModel.mainViewModel
 
     val user by baseViewModel.userInfo.collectAsState()
     val userName by baseViewModel.userName.collectAsState()

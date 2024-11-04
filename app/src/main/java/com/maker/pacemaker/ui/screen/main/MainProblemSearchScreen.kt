@@ -59,6 +59,9 @@ import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSearchScreenView
 @Composable
 fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
 
+    val baseViewModel = viewModel.baseViewModel
+    val mainViewModel = viewModel.mainViewModel
+
     val words = viewModel.words.collectAsState()
     val hashTags = viewModel.hashTags.collectAsState().value
     val searchedProblems = viewModel.searchedProblems.collectAsState().value

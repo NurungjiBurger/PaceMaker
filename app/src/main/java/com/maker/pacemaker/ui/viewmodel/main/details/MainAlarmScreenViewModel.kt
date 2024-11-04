@@ -19,7 +19,8 @@ open class MainAlarmScreenViewModel @Inject constructor(
     alarmDao: AlarmDao
 ) : ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val mainViewModel = base
 
     private val alarmRepository = AlarmRepository(alarmDao)
 

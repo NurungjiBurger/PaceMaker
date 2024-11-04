@@ -38,8 +38,8 @@ import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemAddScreenViewMod
 @Composable
 fun MainProblemAddScreen(viewModel: MainProblemAddScreenViewModel) {
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val mainViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val mainViewModel = viewModel.mainViewModel
 
     val problem by viewModel.problem.collectAsState()
     val answer by viewModel.answer.collectAsState()

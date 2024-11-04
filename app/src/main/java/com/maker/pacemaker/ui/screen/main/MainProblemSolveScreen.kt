@@ -48,7 +48,7 @@ import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSolveScreenViewM
 fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
 
     val baseViewModel = viewModel.baseViewModel
-    val mainViewModel = viewModel.baseViewModel
+    val mainViewModel = viewModel.mainViewModel
 
     val todaySolvedCount by viewModel.todaySolvedCount.collectAsState()
     val todayProblems by viewModel.todayProblems.collectAsState()

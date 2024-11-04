@@ -44,7 +44,7 @@ import com.maker.pacemaker.ui.viewmodel.setting.details.SettingDailyScreenViewMo
 fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
 
     val baseViewModel = viewModel.baseViewModel
-    val settingViewModel = viewModel.baseViewModel
+    val settingViewModel = viewModel.settingViewModel
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비

@@ -12,7 +12,8 @@ open class MainProblemAddScreenViewModel @Inject constructor(
     private val base: MainBaseViewModel,
 ) : ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val mainViewModel = base
 
     private val _problem = MutableStateFlow("")
     val problem = _problem
@@ -51,8 +52,8 @@ open class MainProblemAddScreenViewModel @Inject constructor(
     fun onSubmit() {
         // 서버 제출
 
-        baseViewModel.baseViewModel.triggerToast("문제가 추가가 신청되었습니다.")
-        baseViewModel.baseViewModel.goScreen(ScreenType.MAIN)
+        baseViewModel.triggerToast("문제가 추가가 신청되었습니다.")
+        baseViewModel.goScreen(ScreenType.MAIN)
     }
 
 }

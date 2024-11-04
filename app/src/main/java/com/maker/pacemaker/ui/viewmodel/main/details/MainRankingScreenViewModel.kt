@@ -16,7 +16,8 @@ open class MainRankingScreenViewModel @Inject constructor(
     private val base: MainBaseViewModel
 ): ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val mainViewModel = base
 
     // 검색할 유저 이름
     private val _userName = MutableStateFlow("")
@@ -55,13 +56,13 @@ open class MainRankingScreenViewModel @Inject constructor(
     fun onSearchButtonClicked() {
         // userName에 저장된 검색어로 필터링
         CoroutineScope(Dispatchers.IO).launch {
-            baseViewModel.baseViewModel.setLoading(true)
-            val response = baseViewModel.baseViewModel.repository.searchUser(_userName.value)
+            baseViewModel.setLoading(true)
+            val response = baseViewModel.repository.searchUser(_userName.value)
 
             if (response.users.isNotEmpty()) {
                 _userList.value = response.users
             }
-            baseViewModel.baseViewModel.setLoading(false)
+            baseViewModel.setLoading(false)
         }
     }
 

@@ -29,8 +29,8 @@ import com.maker.pacemaker.ui.viewmodel.boot.details.EntryScreenViewModel
 @Composable
 fun EntryScreen(viewModel: EntryScreenViewModel) {
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val bootViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val bootViewModel = viewModel.bootViewModel
 
     Box(modifier = Modifier.fillMaxSize()) {
         // 배경 이미지

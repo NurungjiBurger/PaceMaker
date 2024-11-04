@@ -8,8 +8,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class SignInLoadScreenViewModel @Inject constructor(
-    val base: SignUpBaseViewModel
+    private val base: SignUpBaseViewModel
 ) : ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val signInViewModel = base
 }

@@ -57,8 +57,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun BootScreen(viewModel: BootScreenViewModel) {
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val bootViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val bootViewModel = viewModel.bootViewModel
 
     val isPermissionGranted by viewModel.isPermissionGranted.collectAsState()
 

@@ -40,8 +40,8 @@ import com.maker.pacemaker.ui.viewmodel.setting.details.SettingRatioScreenViewMo
 @Composable
 fun SettingRatioScreen(viewModel: SettingRatioScreenViewModel) {
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val settingViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val settingViewModel = viewModel.settingViewModel
 
     val ratioMode = settingViewModel.ratioMode.collectAsState()
 
