@@ -146,7 +146,7 @@ data class loginRequest(
 // 서버 응답 데이터 클래스
 data class loginResponse(
     val success: Boolean,
-    val user_id: Int // 유저 인덱스
+    val user_id: String // 유저 인덱스
 )
 
     
@@ -215,7 +215,7 @@ data class AnswerRequest(
 
 // 정답 확인 응답
 data class AnswerResponse(
-    val user_id: Int,
+    val user_id: String,
     val problem_id: Int,
     val result: Boolean,
     val exp_gained: Int,
@@ -225,7 +225,7 @@ data class AnswerResponse(
 
 // 문제 신고 요청
 data class reportRequest(
-    val user_id: Int,
+    val user_id: String,
     val reason: String
 )
 
@@ -234,13 +234,13 @@ data class reportResponse(
     val message: String,
     val report_id: Int,
     val problem_id: Int,
-    val user_id: Int,
+    val user_id: String,
     val reason: String
 )
 
 // 문제 생성 요청
 data class CreateProblemRequest(
-    val creator_user_id: Int,
+    val creator_user_id: String,
     val word: String,
     val description: String,
     val category_id: Int,
@@ -256,7 +256,7 @@ data class CreateProblemResponse(
 
 // 문제 댓글 달기 요청
 data class CommentRequest(
-    val user_id: Int,
+    val user_id: String,
     val comment: String
 )
 
@@ -265,7 +265,7 @@ data class CommentResponse(
     val message: String,
     val comment_id: Int,
     val problem_id: Int,
-    val user_id: Int,
+    val user_id: String,
     val comment: String
 )
 

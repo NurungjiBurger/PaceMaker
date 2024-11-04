@@ -87,7 +87,7 @@ class PaceMakerFirebaseMessagingService : FirebaseMessagingService {
     }
 
     private fun saveAlarm(title: String, message: String) {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             // 데이터베이스에 알람 저장
             val newAlarm = AlarmEntity(alarmType = title, content = message, dateTime = System.currentTimeMillis())
             alarmDao.insertAlarm(newAlarm)

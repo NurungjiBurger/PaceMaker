@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -34,7 +36,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -65,6 +69,8 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
 
     val hintWidth = screenWidth - 20.dp
     val hintHeight = screenHeight / 8
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     // 다이얼로그 상태 관리
     var selectedProblem by remember { mutableStateOf<Problem?>(null) }
@@ -205,6 +211,15 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 ),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done // 다음 필드로 이동
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        keyboardController?.hide() // 키패드 숨기기
+                        viewModel.onSubmit()
+                    }
+                )
             )
 
             Box(
