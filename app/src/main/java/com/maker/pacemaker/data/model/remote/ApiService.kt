@@ -1,6 +1,7 @@
 package com.maker.pacemaker.data.model.remote
 
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -115,7 +116,46 @@ interface ApiService {
     suspend fun searchUserByUid(
         @Path("uid") uid: String
     ): User
+
+    //////////////////////////////////////////////////////////
+
+    // fcm 토큰 전송
+    @POST("fcm/")
+    suspend fun sendFcmToken(
+        @Body sendFcmTokenRequest: sendFcmToken
+    ): sendFcmToken
+
+    // fcm 토큰 조회
+    @GET("fcm/{user_id}")
+    suspend fun getFcmToken(
+        @Path("user_id") user_id: String
+    ): getFcmTokenResponse
+
+    // fcm 토큰 삭제
+    @DELETE("fcm/{fcm_token}")
+    suspend fun deleteFcmToken(
+        @Path("fcm_token") fcm_token: String
+    )
 }
+
+data class getFcmTokenResponse(
+    val tokens: List<FCMToken>
+)
+
+data class FCMToken(
+    val id: Int,
+    val user_id: String,
+    val fcm_token: String,
+    val device_type: String
+)
+
+data class sendFcmToken(
+    val user_id: String,
+    val fcm_token: String,
+    val device_type: String
+)
+
+/////////////////////////////////////////////////////////////
 
 data class userRequest(
     val nickname: String

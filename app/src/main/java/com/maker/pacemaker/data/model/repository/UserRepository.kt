@@ -20,8 +20,10 @@ import com.maker.pacemaker.data.model.remote.loginResponse
 //import com.maker.pacemaker.data.model.remote.ServerResponse
 import com.maker.pacemaker.data.model.remote.SearchUserResponse
 import com.maker.pacemaker.data.model.remote.User
+import com.maker.pacemaker.data.model.remote.getFcmTokenResponse
 import com.maker.pacemaker.data.model.remote.reportRequest
 import com.maker.pacemaker.data.model.remote.reportResponse
+import com.maker.pacemaker.data.model.remote.sendFcmToken
 import com.maker.pacemaker.data.model.remote.userRequest
 import com.maker.pacemaker.data.model.remote.userResponse
 
@@ -113,4 +115,20 @@ class UserRepository(private val apiService: ApiService) {
         return apiService.searchUserByUid(uid)
     }
 
+    /////////////////////////////////////////////////////////////
+
+    // fcm token 전송
+    suspend fun sendFcmToken(request: sendFcmToken): sendFcmToken {
+        return apiService.sendFcmToken(request)
+    }
+
+    // fcm token 조회
+    suspend fun getFcmToken(user_id: String): getFcmTokenResponse  {
+        return apiService.getFcmToken(user_id)
+    }
+
+    // fcm token 삭제
+    suspend fun deleteFcmToken(fcmToken: String)  {
+        return apiService.deleteFcmToken(fcmToken)
+    }
 }
