@@ -59,8 +59,6 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     val baseViewModel = viewModel.baseViewModel
     val mainViewModel = viewModel.mainViewModel
 
-    var fetch = viewModel.fetch
-
     val isLoading by baseViewModel.isLoading.collectAsState()
 
     val todaySolvedCount by viewModel.todaySolvedCount.collectAsState()
@@ -172,7 +170,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
             )
         }
 
-        if (todayProblems.size == todaySolvedCount) {
+        if (todayProblems.size == todaySolvedCount && todayProblems.isNotEmpty()) {
 
             Image(
                 painter = painterResource(id = R.drawable.mascot),
@@ -363,12 +361,12 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
             }
 
 
-            if (isLoading == true || fetch == false) {
+            // 로딩 다이얼로그
+            isLoading?.let {
                 Loading(
                     "학습문제 가져오는 중...",
-                    isLoading = true,
-                    onDismiss = { /* Dismiss Logic */ }
-                )
+                    isLoading = it,
+                    onDismiss = { /* Dismiss Logic */ })
             }
         }
     }
