@@ -51,8 +51,8 @@ import com.maker.pacemaker.ui.viewmodel.signup.details.SignUpScreenViewModel
 @Composable
 fun SignUpScreen(viewModel: SignUpScreenViewModel) {
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val signUpBaseViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val signUpViewModel = viewModel.signUpViewModel
 
     val emailState = remember { mutableStateOf(TextFieldValue("")) }
     val PWState = remember { mutableStateOf(TextFieldValue("")) }

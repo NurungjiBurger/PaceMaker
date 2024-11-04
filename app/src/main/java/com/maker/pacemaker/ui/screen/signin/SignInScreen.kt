@@ -44,8 +44,8 @@ import com.maker.pacemaker.ui.viewmodel.signin.details.SignInScreenViewModel
 @Composable
 fun SignInScreen(viewModel: SignInScreenViewModel) {
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val signInBaseViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val signInViewModel = viewModel.signInViewModel
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비

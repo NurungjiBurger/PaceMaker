@@ -15,10 +15,13 @@ open class MainScreenViewModel @Inject constructor(
     private val base: MainBaseViewModel,
 ) : ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val mainViewModel = base
 
     init {
-        val user = baseViewModel.baseViewModel.auth.currentUser
+        baseViewModel.setLoading(true)
+
+        val user = baseViewModel.auth.currentUser
 
         if (user == null) {
             Log.e("identifyUserByToken", "사용자가 로그인되지 않았습니다.")
@@ -27,10 +30,12 @@ open class MainScreenViewModel @Inject constructor(
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val idToken = task.result?.token
-                        baseViewModel.baseViewModel.editor.putString("idToken", idToken).apply()
+                        baseViewModel.editor.putString("idToken", idToken).apply()
 
-                        Log.d("idtoken", "사용자의 토큰: $idToken")              
-                        baseViewModel.baseViewModel.getUserInfo()
+                        Log.d("idtoken", "사용자의 토큰: $idToken")
+
+                        baseViewModel.getUserInfo()
+                        baseViewModel.setLoading(false)
 
                     } else {
                         Log.e("identifyUserByToken", "토큰 가져오기 실패: ${task.exception}")

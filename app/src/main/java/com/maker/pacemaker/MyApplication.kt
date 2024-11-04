@@ -2,7 +2,9 @@ package com.maker.pacemaker
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
+import androidx.hilt.work.HiltWorkerFactory
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -12,9 +14,20 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
+import androidx.core.app.NotificationCompat
 
 @HiltAndroidApp
 class MyApplication : Application() {
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+//    override fun getWorkManagerConfiguration(): Configuration {
+//        return Configuration.Builder()
+//            .setWorkerFactory(workerFactory)
+//            .build()
+//    }
 
     companion object {
         private lateinit var instance: MyApplication

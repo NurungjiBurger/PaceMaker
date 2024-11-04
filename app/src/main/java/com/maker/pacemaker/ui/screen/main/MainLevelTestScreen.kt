@@ -44,8 +44,8 @@ import com.maker.pacemaker.ui.viewmodel.main.details.MainLevelTestScreenViewMode
 @Composable
 fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val settingViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val settingViewModel = viewModel.mainViewModel
 
     val nowProblem = viewModel.nowProblem.collectAsState()
     val userResponse = viewModel.userResponse.collectAsState()

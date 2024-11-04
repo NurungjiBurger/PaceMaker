@@ -44,8 +44,8 @@ import com.maker.pacemaker.ui.viewmodel.main.details.MainMenuScreenViewModel
 @Composable
 fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val mainViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val mainViewModel = viewModel.mainViewModel
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비

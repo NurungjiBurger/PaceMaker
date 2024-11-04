@@ -9,11 +9,14 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.provider.ContactsContract
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -22,6 +25,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.db.AlarmDao
 import com.maker.pacemaker.data.model.db.AlarmEntity
+import com.maker.pacemaker.data.model.worker.SaveAlarmWorker
 import com.maker.pacemaker.ui.activity.main.MainActivity
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,7 +65,7 @@ class PaceMakerFirebaseMessagingService : FirebaseMessagingService {
 
         val channelId = "default_channel_id"
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.noticeicon) // 알림 아이콘
+            .setSmallIcon(R.drawable.logo) // 알림 아이콘
             .setContentTitle(title) // 알림 제목
             .setContentText(messageBody) // 알림 내용
             .setAutoCancel(true)
@@ -86,8 +90,21 @@ class PaceMakerFirebaseMessagingService : FirebaseMessagingService {
         saveAlarm(title!!, messageBody!!)
     }
 
+//    private fun saveAlarm(title: String, message: String) {
+//        val data = ContactsContract.Contacts.Data.Builder()
+//            .putString("title", title)
+//            .putString("message", message)
+//            .build()
+//
+//        val workRequest = OneTimeWorkRequestBuilder<SaveAlarmWorker>()
+//            .setInputData(data)
+//            .build()
+//
+//        WorkManager.getInstance(this).enqueue(workRequest)
+//    }
+
     private fun saveAlarm(title: String, message: String) {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             // 데이터베이스에 알람 저장
             val newAlarm = AlarmEntity(alarmType = title, content = message, dateTime = System.currentTimeMillis())
             alarmDao.insertAlarm(newAlarm)

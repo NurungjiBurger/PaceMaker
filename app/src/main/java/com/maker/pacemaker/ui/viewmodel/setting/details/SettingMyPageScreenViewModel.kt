@@ -10,10 +10,11 @@ open class SettingMyPageScreenViewModel @Inject constructor(
     private val base: SettingBaseViewModel
 ) : ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val settingViewModel = base
 
     fun dataRefresh(){
-        baseViewModel.baseViewModel.getUserInfo()
+        baseViewModel.getUserInfo()
     }
 
 }

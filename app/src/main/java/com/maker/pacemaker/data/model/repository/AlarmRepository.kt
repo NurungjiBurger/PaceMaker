@@ -9,11 +9,15 @@ class AlarmRepository(private val alarmDao: AlarmDao) {
         alarmDao.insertAlarm(alarm)
     }
 
-    fun getAllAlarms(): Flow<List<AlarmEntity>> {
+    suspend fun getAllAlarms(): Flow<List<AlarmEntity>> {
         return alarmDao.getAllAlarms()
     }
 
     suspend fun deleteAlarmById(alarmId: Long) {
         alarmDao.deleteAlarmById(alarmId) // ID로 알람 삭제
+    }
+
+    suspend fun deleteAllAlarms() {
+        alarmDao.deleteAllAlarms() // 모든 알람 삭제
     }
 }

@@ -1,38 +1,44 @@
 package com.maker.pacemaker.ui.viewmodel.main.details
 
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.maker.pacemaker.data.model.remote.AnswerRequest
 import com.maker.pacemaker.data.model.remote.Problem
-import com.maker.pacemaker.data.model.remote.ProblemHintResponse
 import com.maker.pacemaker.data.model.remote.reportRequest
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-open class MainProblemSolveScreenViewModel @Inject constructor(
-    private val base: MainBaseViewModel,
+class MainProblemSolveScreenViewModel @Inject constructor(
+    private val base: MainBaseViewModel
 ) : ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val mainViewModel = base
+    val repository = baseViewModel.repository
 
-    val repository = baseViewModel.baseViewModel.repository
-
-    // 오늘의 문제                                           정답 ,   문제 설명
     private val _todayProblems = MutableStateFlow<List<Problem>>(emptyList())
     val todayProblems = _todayProblems
 
     private val _problemHints = MutableStateFlow<Map<Int, List<String>>>(emptyMap())
     val problemHints = _problemHints
 
-    private val _todaySolvedCount = MutableStateFlow(baseViewModel.baseViewModel.sharedPreferences.getInt("todaySolvedCount", 0))
+    private val _todaySolvedCount = MutableStateFlow(
+        baseViewModel.sharedPreferences.getInt("todaySolvedCount", 0)
+    )
     val todaySolvedCount: MutableStateFlow<Int> get() = _todaySolvedCount
 
     private val _answer = MutableStateFlow("")
@@ -45,39 +51,107 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
     val report = _report
 
     init {
-        fetchRandomProblems()
+        handleDailyProblemLoad()
     }
 
-    private fun fetchRandomProblems() {
+    /**
+     * 오늘의 문제를 로드하는 초기화 로직.
+     * 날짜를 비교하여 새로운 문제를 가져올지, 저장된 문제를 사용할지 결정합니다.
+     */
+    private fun handleDailyProblemLoad() {
+        val currentDate = getCurrentDate()
+        val savedDate = baseViewModel.sharedPreferences.getString("date", "")
+
+        if (currentDate != savedDate) {
+            Log.d("MainProblemSolveScreenViewModel", "New date detected: $currentDate")
+            fetchDailyProblems(currentDate)
+        } else {
+            Log.d("MainProblemSolveScreenViewModel", "Loading saved problems")
+            loadSavedProblems()
+        }
+    }
+
+    private fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(Date())
+    }
+
+    /**
+     * `SharedPreferences`에 문제 번호 리스트와 날짜를 저장합니다.
+     */
+    private fun saveProblemData(date: String, problemIds: List<Int>) {
+        baseViewModel.sharedPreferences.edit().apply {
+            putString("date", date)
+            putString("problems", problemIds.joinToString(","))
+            apply()
+        }
+    }
+
+    /**
+     * `SharedPreferences`에서 문제 번호 리스트를 불러옵니다.
+     */
+    private fun loadSavedProblems() {
+        val problemIds = baseViewModel.sharedPreferences.getString("problems", "")
+            ?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList()
+
+        Log.d("MainProblemSolveScreenViewModel", "Loaded problem IDs: $problemIds")
+
+        if (problemIds.isNotEmpty()) {
+            fetchProblemsByIds(problemIds)
+        }
+    }
+
+    private fun fetchDailyProblems(currentDate: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            baseViewModel.setLoading(true)
+            try {
+                // 서버에서 데일리 문제를 가져옵니다.
+                val userId = baseViewModel.sharedPreferences.getString("fireBaseUID", "")!!
+                val problems = repository.getDailyProblem(userId)
+
+                Log.d("MainProblemSolveScreenViewModel", "Fetched daily problems: $problems")
+
+                // 문제 ID를 추출하여 fetchProblemsByIds 호출
+                val problemIds = problems.map { it.problem_id }
+                fetchProblemsByIds(problemIds)
+
+                // 문제 리스트를 상태에 저장합니다 (optional).
+                // _todayProblems.value = problems
+
+                // 문제 ID와 날짜를 저장합니다.
+                saveProblemData(currentDate, problemIds)
+            } catch (e: Exception) {
+                Log.e("MainProblemSolveScreenViewModel", "Error fetching daily problems", e)
+            } finally {
+                baseViewModel.setLoading(false)
+            }
+        }
+    }
+
+    /**
+     * 서버에서 지정된 문제 ID에 해당하는 문제를 가져옵니다.
+     */
+    private fun fetchProblemsByIds(problemIds: List<Int>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            baseViewModel.setLoading(true)
+
             val problemsList = mutableListOf<Problem>()
             val hintsMap = mutableMapOf<Int, List<String>>()
 
-            // 10개의 랜덤 문제 번호 생성
-            val randomProblemIds = (1..150).shuffled().take(10)
-            Log.d("MainProblemSolveScreenViewModel", "Fetching problems for IDs: $randomProblemIds")
-
-            randomProblemIds.forEach { problemId ->
+            problemIds.forEach { problemId ->
                 try {
-                    Log.d("MainProblemSolveScreenViewModel", "Fetching problem ID: $problemId")
-
-                    // 문제 가져오기
-                    val problemResponse = repository.getProblemById(problemId)
-                    problemsList.add(problemResponse)
-
-                    // 해당 문제의 힌트 가져오기
-                    val hintResponse: ProblemHintResponse = repository.getProblemHints(problemId)
-                    hintsMap[problemId] = hintResponse.hints
-                    Log.d("MainProblemSolveScreenViewModel", "Fetched hints for problem ID $problemId: ${hintResponse.hints}")
-
+                    val problem = repository.getProblemById(problemId)
+                    problemsList.add(problem)
+                    // 힌트 로딩 로직 (생략 가능)
+                    // hintsMap[problemId] = repository.getProblemHints(problemId).hints
                 } catch (e: Exception) {
                     Log.e("MainProblemSolveScreenViewModel", "Error fetching problem ID: $problemId", e)
                 }
             }
 
-            // 가져온 문제와 힌트를 StateFlow에 저장
             _todayProblems.value = problemsList
-            _problemHints.value = hintsMap
+
+            baseViewModel.setLoading(false)
         }
     }
 
@@ -91,47 +165,110 @@ open class MainProblemSolveScreenViewModel @Inject constructor(
 
     fun onReport() {
         viewModelScope.launch(Dispatchers.IO) {
-            // 문제 신고
-            val reportRequest = reportRequest(1, _report.value)
-            val reportResponse = repository.reportProblem(
-                _todayProblems.value[_todaySolvedCount.value].problem_id,
-                reportRequest
-            )
+            val uId = baseViewModel.sharedPreferences.getString("fireBaseUID", "")
+            val reportRequest = uId?.let { reportRequest(it, _report.value) }
+            try {
+                val reportResponse = reportRequest?.let {
+                    repository.reportProblem(
+                        _todayProblems.value[_todaySolvedCount.value].problem_id,
+                        it
+                    )
+                }
+                withContext(Dispatchers.Main) {
+                    if (reportResponse != null) {
+                        if (reportResponse.message.contains("success")) {
+                            baseViewModel.triggerToast("신고가 접수되었습니다.")
+                        } else {
+                            baseViewModel.triggerToast("신고에 실패했습니다.")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("MainProblemSolveScreenViewModel", "Report failed", e)
+            }
+        }
+    }
+
+
+    fun onSkip() {
+        viewModelScope.launch(Dispatchers.IO) {
+            // 현재 문제를 가져옵니다.
+            val currentProblem = _todayProblems.value[_todaySolvedCount.value]
+
+            // word 필드에서 answer JSON 문자열을 추출합니다.
+            val wordJson = currentProblem.word
+
+            // Gson을 사용하여 JSON 파싱을 수행합니다.
+            val gson = Gson()
+            val jsonObject = gson.fromJson(wordJson, JsonObject::class.java)
+
+            // answer 배열을 가져오고 첫 번째 답변을 추출합니다.
+            val firstAnswer = jsonObject.getAsJsonArray("answer").firstOrNull()?.asString ?: "정답이 없습니다."
 
             withContext(Dispatchers.Main) {
-                if (reportResponse.message.contains("success")) {
-                    baseViewModel.baseViewModel.triggerToast("신고가 접수되었습니다.")
-                } else {
-                    baseViewModel.baseViewModel.triggerToast("신고에 실패했습니다.")
-                }
+                // 진동과 토스트 메시지를 표시합니다.
+                baseViewModel.triggerVibration()
+                baseViewModel.triggerToast("정답은 $firstAnswer 입니다. 2초 후 다음 문제로 넘어갑니다.")
+                _answer.value = firstAnswer
             }
+
+            delay(2000)
+
+            // 다음 문제로 넘어가기 위한 로직
+            _answer.value = ""
+            _todaySolvedCount.value += 1
+            saveSolvedCount(_todaySolvedCount.value)
+            _wrongCnt.value = 0
         }
     }
 
     fun onSubmit() {
-        // 정답 제출, 서버 통신
+        Log.d("MainProblemSolveScreenViewModel", "Submitting answer")
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val answerRequest = AnswerRequest(_answer.value)
-                val answerResponse = repository.solveProblem(1, _todayProblems.value[_todaySolvedCount.value].problem_id, answerRequest)
-                // 정답 확인
-                if (answerResponse.result) {
+                val uId = baseViewModel.sharedPreferences.getString("fireBaseUID", "")
+                val currentProblem = _todayProblems.value[_todaySolvedCount.value]
+
+                Log.d("MainProblemSolveScreenViewModel", "Current problem: $currentProblem")
+                Log.d("MainProblemSolveScreenViewModel", "Current answer: ${_answer.value}")
+
+                val answerResponse = uId?.let {
+                    Log.d("MainProblemSolveScreenViewModel", "Submitting answer: $it")
+                    repository.solveProblem(it, currentProblem.problem_id, answerRequest)
+                }
+
+                _answer.value = ""
+                Log.d("MainProblemSolveScreenViewModel", "Answer response: $answerResponse")
+
+                if (answerResponse?.result == true) {
                     _todaySolvedCount.value += 1
-                    _answer.value = ""
+                    saveSolvedCount(_todaySolvedCount.value)
                     _wrongCnt.value = 0
                 } else {
-                    // 사용자에게 오답임을 알림
-                    withContext(Dispatchers.Main) {
-                        baseViewModel.baseViewModel.triggerVibration()
-                        baseViewModel.baseViewModel.triggerToast("오답입니다. 다시 시도해주세요.")
-                    }
-                    // 추가로 힌트 개방
-                    if (_wrongCnt.value < 3) _wrongCnt.value += 1
+                    handleIncorrectAnswer()
                 }
             } catch (e: Exception) {
-                // 에러 처리 (예: 서버 통신 실패)
+                Log.e("MainProblemSolveScreenViewModel", "Error submitting answer", e)
             }
         }
     }
 
+    /**
+     * Save the number of problems solved to SharedPreferences.
+     */
+    private fun saveSolvedCount(count: Int) {
+        baseViewModel.sharedPreferences.edit().apply {
+            putInt("todaySolvedCount", count)
+            apply()
+        }
+    }
+
+    private suspend fun handleIncorrectAnswer() {
+        withContext(Dispatchers.Main) {
+            baseViewModel.triggerVibration()
+            baseViewModel.triggerToast("오답입니다. 다시 시도해주세요.")
+        }
+        _wrongCnt.value += 1
+    }
 }

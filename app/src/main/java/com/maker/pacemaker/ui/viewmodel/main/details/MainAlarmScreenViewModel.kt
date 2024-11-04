@@ -19,7 +19,8 @@ open class MainAlarmScreenViewModel @Inject constructor(
     alarmDao: AlarmDao
 ) : ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val mainViewModel = base
 
     private val alarmRepository = AlarmRepository(alarmDao)
 
@@ -47,6 +48,13 @@ open class MainAlarmScreenViewModel @Inject constructor(
     fun deleteAlarm(alarmId: Long) {
         viewModelScope.launch {
             alarmRepository.deleteAlarmById(alarmId) // ID로 알람 삭제
+        }
+        loadAlarms()
+    }
+
+    fun deleteAllAlarms() {
+        viewModelScope.launch {
+            alarmRepository.deleteAllAlarms() // 모든 알람 삭제
         }
         loadAlarms()
     }

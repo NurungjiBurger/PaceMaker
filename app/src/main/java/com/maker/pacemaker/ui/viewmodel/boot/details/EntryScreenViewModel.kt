@@ -11,5 +11,6 @@ open class EntryScreenViewModel @Inject constructor(
     private val base: MainBaseViewModel
 ): ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val bootViewModel = base
 }

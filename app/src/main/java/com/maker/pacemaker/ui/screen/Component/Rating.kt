@@ -80,7 +80,7 @@ fun Rating(baseViewModel: BaseViewModel) {
                 )
 
                 Text(
-                    text = "상위${userName}%",
+                    text = "상위 %",
                     fontSize = 15.sp,
                     modifier = Modifier
                         .constrainAs(percent) {

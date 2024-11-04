@@ -11,13 +11,14 @@ open class SettingCategoryScreenViewModel @Inject constructor(
     private val base: SettingBaseViewModel
 ): ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val settingViewModel = base
 
     private val _selectedCategory = MutableStateFlow("")
     val selectedCategory: MutableStateFlow<String> get() = _selectedCategory
 
     init {
-        _selectedCategory.value = baseViewModel.baseViewModel.sharedPreferences.getString("selectedCategory", "01234") ?: "01234"
+        _selectedCategory.value = baseViewModel.sharedPreferences.getString("selectedCategory", "01234") ?: "01234"
     }
 
     fun selectCategory(category: String) {

@@ -14,7 +14,8 @@ open class MainCSMantleScreenViewModel @Inject constructor(
     private val base: MainBaseViewModel
 ): ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val mainViewModel = base
 
     private val _words = MutableStateFlow("")
     val words = _words

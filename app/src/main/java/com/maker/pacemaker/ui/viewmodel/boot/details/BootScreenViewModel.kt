@@ -15,9 +15,10 @@ open class BootScreenViewModel @Inject constructor(
     private val base: MainBaseViewModel
 ): ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val bootViewModel = base
 
-    val fireBaseUID = baseViewModel.baseViewModel.sharedPreferences.getString("fireBaseUID", "")
+    val fireBaseUID = baseViewModel.sharedPreferences.getString("fireBaseUID", "")
 
     private val _isPermissionGranted = MutableStateFlow(false)
     val isPermissionGranted = _isPermissionGranted
@@ -30,8 +31,8 @@ open class BootScreenViewModel @Inject constructor(
 
 
     fun updatePermissionGranted(granted: Boolean) {
-        baseViewModel.baseViewModel.editor.putBoolean("permissionGranted", granted)
-        baseViewModel.baseViewModel.editor.apply()
+        baseViewModel.editor.putBoolean("permissionGranted", granted)
+        baseViewModel.editor.apply()
 
         _isPermissionGranted.value = granted
     }

@@ -21,8 +21,8 @@ import com.maker.pacemaker.ui.viewmodel.signin.details.SignInScreenViewModel
 @Composable
 fun SignInLoadScreen(viewModel: SignInScreenViewModel) {
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val signInBaseViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val signInViewModel = viewModel.signInViewModel
 
     ConstraintLayout(
         modifier = Modifier

@@ -62,6 +62,9 @@ open class BaseViewModel @Inject constructor(
     //private val _networkStatus = MutableStateFlow(networkStatusTracker.networkStatus.value)
     //val networkStatus = _networkStatus.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: MutableStateFlow<Boolean> get() = _isLoading
+
     init {
         viewModelScope.launch {
 
@@ -76,8 +79,11 @@ open class BaseViewModel @Inject constructor(
         RetrofitClient.getRetrofitInstance(context).create(ApiService::class.java)
     )
 
-    val _userName = MutableStateFlow<String>("상빈")
+    private val _userName = MutableStateFlow<String>("상빈")
     val userName: MutableStateFlow<String> get() = _userName
+
+    val _dailyCount = MutableStateFlow(0)
+    val dailyCount: MutableStateFlow<Int> get() = _dailyCount
 
     // Activity navigation을 위한 LiveData
     val _activityNavigationTo = MutableLiveData<ActivityNavigationTo?>()
@@ -92,16 +98,36 @@ open class BaseViewModel @Inject constructor(
     private val _userInfo = MutableStateFlow<User>(User("","",0,0,0,emptyList(),0))
     val userInfo: StateFlow<User> get() = _userInfo
 
+    fun setLoading(isLoading: Boolean) {
+        Log.d("isLoading", _isLoading.value.toString())
+        _isLoading.value = isLoading
+        Log.d("isLoading", _isLoading.value.toString())
+    }
+
     fun getUserInfo() {
         viewModelScope.launch {
             _userInfo.value = repository.getMyUserInfo()
+            _userInfo.value?.let { userInfo ->
+                Log.d("UserInfo", userInfo.toString())
+                saveUserInfoToPreferences(userInfo)
+            }
+        }
+    }
 
-            Log.d("UserInfo", userInfo.toString())
+    private fun saveUserInfoToPreferences(userInfo: User) {
+        with(editor) { // sharedPreferences.edit()) {
+            putString("fireBaseUID", userInfo.uid)
+            putString("nickname", userInfo.nickname)
+            putInt("exp", userInfo.exp)
+            putInt("level", userInfo.level)
+            putInt("myDailyCount", userInfo.daily_cnt)
+            putStringSet("preferred_categories", userInfo.preferred_categories.toSet())
+            putInt("followers_count", userInfo.followers_count)
+            apply()
         }
     }
 
     fun restate() {
-
         _activityNavigationTo.postValue(null)
         _screenNavigationTo.postValue(null)
     }

@@ -11,7 +11,7 @@ import java.util.logging.Level
 interface ApiService {
 
      //회원가입시 서버로 전송, create_user
-     @POST("users/me")
+     @POST("users/")
      suspend fun createUser(
          @Query("nickname") nickname: String
      ): userResponse
@@ -22,10 +22,15 @@ interface ApiService {
         @Body server: loginRequest
     ): loginResponse
 
-
     // 문제 조회
     @GET("problems/{problem_id}")
     suspend fun getProblemById(@Path("problem_id") problemId: Int): Problem
+
+    // 데일리 문제 조회
+    @GET("problems/{user_id}/daily")
+    suspend fun getDailyProblem(
+        @Path("user_id") userId: String
+    ): List<Problem>
 
     // 특정 데이터가 들어간 문제 조회
     @GET("problems/")
@@ -42,7 +47,7 @@ interface ApiService {
     // 정답 확인
     @POST("solutions/")
     suspend fun solveProblem(
-        @Query("user_id") userId: Int,
+        @Query("user_id") userId: String,
         @Query("problem_id") problemId: Int,
         @Body answer: AnswerRequest
     ): AnswerResponse
@@ -132,7 +137,6 @@ data class User(
     val exp: Int,
     val level: Int,
     val daily_cnt: Int,
-    val message: String,
     val preferred_categories: List<String>,
     val followers_count: Int
 )
@@ -147,7 +151,7 @@ data class loginRequest(
 // 서버 응답 데이터 클래스
 data class loginResponse(
     val success: Boolean,
-    val user_id: Int // 유저 인덱스
+    val user_id: String // 유저 인덱스
 )
 
     
@@ -206,7 +210,7 @@ data class Problem(
     val level: Int,
     val category: String,
     val tried_cnt: Int,
-    val creator_user_id: Int,
+    val creator_user_id: String,
 )
 
 // 정답 확인 요청
@@ -216,7 +220,7 @@ data class AnswerRequest(
 
 // 정답 확인 응답
 data class AnswerResponse(
-    val user_id: Int,
+    val user_id: String,
     val problem_id: Int,
     val result: Boolean,
     val exp_gained: Int,
@@ -226,7 +230,7 @@ data class AnswerResponse(
 
 // 문제 신고 요청
 data class reportRequest(
-    val user_id: Int,
+    val user_id: String,
     val reason: String
 )
 
@@ -235,13 +239,13 @@ data class reportResponse(
     val message: String,
     val report_id: Int,
     val problem_id: Int,
-    val user_id: Int,
+    val user_id: String,
     val reason: String
 )
 
 // 문제 생성 요청
 data class CreateProblemRequest(
-    val creator_user_id: Int,
+    val creator_user_id: String,
     val word: String,
     val description: String,
     val category_id: Int,
@@ -257,7 +261,7 @@ data class CreateProblemResponse(
 
 // 문제 댓글 달기 요청
 data class CommentRequest(
-    val user_id: Int,
+    val user_id: String,
     val comment: String
 )
 
@@ -266,7 +270,7 @@ data class CommentResponse(
     val message: String,
     val comment_id: Int,
     val problem_id: Int,
-    val user_id: Int,
+    val user_id: String,
     val comment: String
 )
 

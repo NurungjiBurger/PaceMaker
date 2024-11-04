@@ -5,6 +5,7 @@ biometricVersion = "1.2.0-alpha05"
 coilCompose = "2.0.0"
 comSquareupRetrofit2Retrofit2 = "2.9.0"
 constraintlayoutComposeVersion = "1.0.1"
+coreKtxVersion = "1.15.0"
 firebaseBom = "33.3.0"
 firebaseBomVersion = "32.2.0"
 firebaseFirestoreKtx = "25.1.0"
@@ -50,11 +51,13 @@ firebaseMessagingKtx = "24.0.1"
 googleGmsGoogleServices = "4.4.2"
 firebaseFirestore = "25.1.0"
 firebaseStorageKtx = "21.0.1"
+hiltWork = "1.2.0"
 
 [libraries]
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometricVersion" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutComposeVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-ktx-v1150 = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
 androidx-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "materialIconsCore" }
@@ -111,6 +114,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
 
 
 [plugins]

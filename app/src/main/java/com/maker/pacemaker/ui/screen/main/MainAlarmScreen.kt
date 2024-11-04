@@ -41,8 +41,8 @@ import java.util.Locale
 @Composable
 fun MainAlarmScreen(viewModel: MainAlarmScreenViewModel) {
 
-    val baseViewModel = viewModel.baseViewModel.baseViewModel
-    val mainViewModel = viewModel.baseViewModel
+    val baseViewModel = viewModel.baseViewModel
+    val mainViewModel = viewModel.mainViewModel
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
@@ -119,7 +119,7 @@ fun MainAlarmScreen(viewModel: MainAlarmScreenViewModel) {
 
         Button(
             onClick = {
-                //viewModel.addAlarm("학습해~", "공부 안한지 너무 오래되지 않았니?", System.currentTimeMillis() - 86400000) // 알람 추가
+                viewModel.deleteAllAlarms()
             },
             colors = ButtonDefaults.textButtonColors(
                 containerColor = Color.Transparent
@@ -134,7 +134,7 @@ fun MainAlarmScreen(viewModel: MainAlarmScreenViewModel) {
                     bottom.linkTo(parent.bottom)
                 }
         ) {
-            Text(text = "Add Alarm")
+            Text(text = "전체 삭제")
         }
     }
 }

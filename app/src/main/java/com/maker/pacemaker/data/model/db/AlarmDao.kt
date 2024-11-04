@@ -18,4 +18,7 @@ interface AlarmDao {
 
     @Query("DELETE FROM alarms WHERE id = :alarmId")
     suspend fun deleteAlarmById(alarmId: Long) // ID로 알람 삭제
+
+    @Query("DELETE FROM alarms")
+    suspend fun deleteAllAlarms() // 모든 알람 삭제
 }

@@ -14,10 +14,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class SignInScreenViewModel @Inject constructor(
-    val base: SignUpBaseViewModel
+    private val base: SignUpBaseViewModel
 ) : ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val signInViewModel = base
 
     private var _errorMessage: String? = null
     val errorMessage: String?
@@ -39,7 +40,7 @@ open class SignInScreenViewModel @Inject constructor(
         if (email.isNotEmpty() && password.length > 0) {
             loginUser(email, password)
         } else {
-            baseViewModel.baseViewModel.triggerToast("이메일과 비밀번호를 입력하세요.")
+            baseViewModel.triggerToast("이메일과 비밀번호를 입력하세요.")
         }
     }
 
@@ -50,11 +51,11 @@ open class SignInScreenViewModel @Inject constructor(
                     if (task.isSuccessful) {
                         MyApplication.email = email
                         _isLoggedIn.value = true // 로그인 성공 시 이벤트 발생
-                        baseViewModel.baseViewModel.setFireBaseUID()
-                        baseViewModel.baseViewModel.triggerToast("로그인에 성공하였습니다.")
+                        baseViewModel.setFireBaseUID()
+                        baseViewModel.triggerToast("로그인에 성공하였습니다.")
                     } else {
-                        baseViewModel.baseViewModel.triggerVibration()
-                        baseViewModel.baseViewModel.triggerToast("이메일 또는 비밀번호가 일치하지 않습니다.")
+                        baseViewModel.triggerVibration()
+                        baseViewModel.triggerToast("이메일 또는 비밀번호가 일치하지 않습니다.")
                     }
                 }
         }

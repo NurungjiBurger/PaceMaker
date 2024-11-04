@@ -14,9 +14,10 @@ open class MainProblemSearchScreenViewModel @Inject constructor(
     private val base: MainBaseViewModel,
 ) : ViewModel() {
 
-    val baseViewModel = base
+    val baseViewModel = base.baseViewModel
+    val mainViewModel = base
 
-    val repository = baseViewModel.baseViewModel.repository
+    val repository = baseViewModel.repository
 
     private val _words = MutableStateFlow("")
     val words = _words
