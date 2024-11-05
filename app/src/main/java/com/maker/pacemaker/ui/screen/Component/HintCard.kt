@@ -37,10 +37,10 @@ fun HintCard(
         modifier = Modifier
             .width(width)
             .height(height)
-            .background(Color.White, shape = RoundedCornerShape(10.dp))
+            .background(Color(0xFFFFCC5D).copy(alpha = 0.5f), shape = RoundedCornerShape(10.dp))
             .border(
                 width = 1.dp,
-                color = Color.Gray,
+                color = Color(0xFFFFCC5D),
                 shape = RoundedCornerShape(10.dp)
             )
             .clickable(
@@ -49,52 +49,19 @@ fun HintCard(
                 indication = null
             )
     ) {
-        val (hintText, buttonBox) = createRefs()
+        val (hintText) = createRefs()
 
         Text(
             text = text,
             fontSize = textSize.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.constrainAs(hintText) {
-                top.linkTo(parent.top, 15.dp)
+                top.linkTo(parent.top)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom)
             }
         )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .constrainAs(buttonBox) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom, 15.dp)
-                },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround,
-        ){
-            Text(
-                text = "좋아요",
-                fontSize = 10.sp,
-                color = Color.Gray,
-                modifier = Modifier
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) { baseViewModel.triggerToast("좋아요") }
-            )
-
-            Text(
-                text = "싫어요",
-                fontSize = 10.sp,
-                color = Color.Gray,
-                modifier = Modifier
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) { baseViewModel.triggerToast("싫어요") }
-            )
-        }
     }
 
 }

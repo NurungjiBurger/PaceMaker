@@ -30,23 +30,41 @@ class MainProblemSolveScreenViewModel @Inject constructor(
     val mainViewModel = base
     val repository = baseViewModel.repository
 
+    // 오늘의 문제
     private val _todayProblems = MutableStateFlow<List<Problem>>(emptyList())
     val todayProblems = _todayProblems
 
+    // 오늘의 문제들 힌트
     private val _problemHints = MutableStateFlow<Map<Int, List<String>>>(emptyMap())
     val problemHints = _problemHints
+    
+    // 풀어야 하는 문제 번호
+    private val _nowProblemIndex = MutableStateFlow(
+        baseViewModel.sharedPreferences.getInt("problemIndex", 0)
+    )
+    val nowProblemIndex = _nowProblemIndex
 
+    // 푼 문제 수
     private val _todaySolvedCount = MutableStateFlow(
         baseViewModel.sharedPreferences.getInt("todaySolvedCount", 0)
     )
     val todaySolvedCount: MutableStateFlow<Int> get() = _todaySolvedCount
+    
+    // 틀린 문제 수
+    private val _todayWrongCount = MutableStateFlow(
+        baseViewModel.sharedPreferences.getInt("todayWrongCount", 0)
+    )
+    val todayWrongCount: MutableStateFlow<Int> get() = _todayWrongCount
 
+    // 유저 정답
     private val _answer = MutableStateFlow("")
     val answer = _answer
 
+    // 현재 틀린 횟수
     private val _wrongCnt = MutableStateFlow(0)
     val wrongCnt = _wrongCnt
 
+    // 신고 내용
     private val _report = MutableStateFlow("")
     val report = _report
 
@@ -65,6 +83,7 @@ class MainProblemSolveScreenViewModel @Inject constructor(
         if (currentDate != savedDate) {
             Log.d("MainProblemSolveScreenViewModel", "New date detected: $currentDate")
             fetchDailyProblems(currentDate)
+
         } else {
             Log.d("MainProblemSolveScreenViewModel", "Loading saved problems")
             loadSavedProblems()
@@ -170,7 +189,7 @@ class MainProblemSolveScreenViewModel @Inject constructor(
             try {
                 val reportResponse = reportRequest?.let {
                     repository.reportProblem(
-                        _todayProblems.value[_todaySolvedCount.value].problem_id,
+                        _todayProblems.value[_nowProblemIndex.value].problem_id,
                         it
                     )
                 }
@@ -189,11 +208,10 @@ class MainProblemSolveScreenViewModel @Inject constructor(
         }
     }
 
-
     fun onSkip() {
         viewModelScope.launch(Dispatchers.IO) {
             // 현재 문제를 가져옵니다.
-            val currentProblem = _todayProblems.value[_todaySolvedCount.value]
+            val currentProblem = _todayProblems.value[_nowProblemIndex.value]
 
             // word 필드에서 answer JSON 문자열을 추출합니다.
             val wordJson = currentProblem.word
@@ -216,8 +234,9 @@ class MainProblemSolveScreenViewModel @Inject constructor(
 
             // 다음 문제로 넘어가기 위한 로직
             _answer.value = ""
-            _todaySolvedCount.value += 1
-            saveSolvedCount(_todaySolvedCount.value)
+            _nowProblemIndex.value += 1
+            _todayWrongCount.value += 1
+            saveCnts()
             _wrongCnt.value = 0
         }
     }
@@ -228,7 +247,7 @@ class MainProblemSolveScreenViewModel @Inject constructor(
             try {
                 val answerRequest = AnswerRequest(_answer.value)
                 val uId = baseViewModel.sharedPreferences.getString("fireBaseUID", "")
-                val currentProblem = _todayProblems.value[_todaySolvedCount.value]
+                val currentProblem = _todayProblems.value[_nowProblemIndex.value]
 
                 Log.d("MainProblemSolveScreenViewModel", "Current problem: $currentProblem")
                 Log.d("MainProblemSolveScreenViewModel", "Current answer: ${_answer.value}")
@@ -242,10 +261,12 @@ class MainProblemSolveScreenViewModel @Inject constructor(
                 Log.d("MainProblemSolveScreenViewModel", "Answer response: $answerResponse")
 
                 if (answerResponse?.result == true) {
+                    _nowProblemIndex.value += 1
                     _todaySolvedCount.value += 1
-                    saveSolvedCount(_todaySolvedCount.value)
+                    saveCnts()
                     _wrongCnt.value = 0
                 } else {
+                    _wrongCnt.value += 1
                     handleIncorrectAnswer()
                 }
             } catch (e: Exception) {
@@ -254,12 +275,11 @@ class MainProblemSolveScreenViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Save the number of problems solved to SharedPreferences.
-     */
-    private fun saveSolvedCount(count: Int) {
+    private fun saveCnts() {
         baseViewModel.sharedPreferences.edit().apply {
-            putInt("todaySolvedCount", count)
+            putInt("problemIndex", _nowProblemIndex.value)
+            putInt("todaySolvedCount", _todaySolvedCount.value)
+            putInt("todayWrongCount", _todayWrongCount.value)
             apply()
         }
     }
@@ -269,6 +289,5 @@ class MainProblemSolveScreenViewModel @Inject constructor(
             baseViewModel.triggerVibration()
             baseViewModel.triggerToast("오답입니다. 다시 시도해주세요.")
         }
-        _wrongCnt.value += 1
     }
 }

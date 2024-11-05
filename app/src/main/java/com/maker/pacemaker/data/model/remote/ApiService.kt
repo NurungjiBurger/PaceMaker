@@ -177,7 +177,7 @@ data class User(
     val exp: Int,
     val level: Int,
     val daily_cnt: Int,
-    val preferred_categories: List<String>,
+    val preferred_categories: List<Int>,
     val followers_count: Int
 )
 

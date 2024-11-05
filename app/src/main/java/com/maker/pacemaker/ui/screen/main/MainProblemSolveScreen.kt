@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -50,6 +52,7 @@ import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.ui.screen.Component.HintCard
 import com.maker.pacemaker.ui.screen.Component.Loading
+import com.maker.pacemaker.ui.screen.Component.ProblemCard
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSearchScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSolveScreenViewModel
 
@@ -61,8 +64,10 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
 
     val isLoading by baseViewModel.isLoading.collectAsState()
 
+    val nowProblemIndex by viewModel.nowProblemIndex.collectAsState()
     val todaySolvedCount by viewModel.todaySolvedCount.collectAsState()
     val todayProblems by viewModel.todayProblems.collectAsState()
+    val todayWrongCount by viewModel.todayWrongCount.collectAsState()
     val problemHints by viewModel.problemHints.collectAsState()
     val answer by viewModel.answer.collectAsState()
     val wrongCnt by viewModel.wrongCnt.collectAsState()
@@ -80,12 +85,64 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     var selectedProblem by remember { mutableStateOf<Problem?>(null) }
     var showDialog by remember { mutableStateOf(false) }
 
-
     // 다이얼로그 열기
     if (showDialog && selectedProblem != null) {
         AlertDialog(
             containerColor = Color.White,
-            onDismissRequest = { showDialog = false }, // 다이얼로그 외부 클릭 시 닫기
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = selectedProblem!!.word) },
+            text = { Text(text = selectedProblem!!.description) }, // 상세 내용
+            confirmButton = {
+                TextButton(
+                    onClick = { showDialog = false },
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = Color.Transparent
+                    ),
+                ) {
+                    Text(
+                        "닫기",
+                        color = Color.Black
+                    )
+                }
+            },
+        )
+    }
+
+    //  힌트 다이얼로그 상태 관리
+    var selectedProblemHintIndex by remember { mutableStateOf<Int?>(null) }
+    var selectedProblemHint by remember { mutableStateOf<String?>(null) }
+    var showHintDialog by remember { mutableStateOf(false) }
+
+    if (showHintDialog && selectedProblemHint != null) {
+        AlertDialog(
+            containerColor = Color.White,
+            onDismissRequest = { showHintDialog = false },
+            title = { Text(text = selectedProblemHintIndex.toString()) },
+            text = { Text(text = selectedProblemHint!!) }, // 상세 내용
+            confirmButton = {
+                TextButton(
+                    onClick = { showHintDialog = false },
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = Color.Transparent
+                    ),
+                ) {
+                    Text(
+                        "닫기",
+                        color = Color.Black
+                    )
+                }
+            },
+        )
+    }
+
+    // 신고 다이얼로그 상태 관리
+    var selectedReportProblem by remember { mutableStateOf<Problem?>(null) }
+    var showReportDialog by remember { mutableStateOf(false) }
+
+    if (showReportDialog && selectedReportProblem != null) {
+        AlertDialog(
+            containerColor = Color.White,
+            onDismissRequest = { showReportDialog = false }, // 다이얼로그 외부 클릭 시 닫기
             title = { Text("어떤 문제가 있나요?") },
             text = {
                 Column (
@@ -117,7 +174,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                         ) {
                             // 신고 처리 로직 추가 (예: 서버에 신고 내용 전송)
                             viewModel.onReport()
-                            showDialog = false // 다이얼로그 닫기
+                            showReportDialog = false // 다이얼로그 닫기
                         }
                         .padding(10.dp)
                 )
@@ -131,7 +188,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
-                        ) { showDialog = false }
+                        ) { showReportDialog = false }
                         .padding(10.dp)
                 )
             }
@@ -141,64 +198,138 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFFFAFAFA))
+            .background(color = Color(0xFFDFE9FE))
     ) {
         val (topBar, contentBox, hintBox, reportButton) = createRefs()
 
-        Row(
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 40.dp, end = 40.dp, top = 20.dp)
+                .width(screenWidth - 60.dp)
+                .height(50.dp)
+                .background(Color(0xFFEFF4FE), shape = RoundedCornerShape(10.dp))
                 .constrainAs(topBar) {
-                    top.linkTo(parent.top)
+                    top.linkTo(parent.top, margin = 40.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "학습하기",
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Transparent)
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .width((screenWidth - 60.dp) / 3)
+                        .height(50.dp)
+                ) {
+                    Text(
+                        text = "전체 문제",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
 
-            Text(
-                text = "${todaySolvedCount} / ${todayProblems.size}",
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-            )
+                    Text(
+                        text = "${todayProblems.size}개",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .width(1.dp)
+                        .height(40.dp)
+                        .background(Color.Gray)
+                )
+
+                Column(
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .width((screenWidth - 60.dp) / 3)
+                        .height(50.dp)
+                ) {
+                    Text(
+                        text = "맞춘 문제",
+                        fontSize = 20.sp,
+                        color = Color(0xFF5387F7),
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
+
+                    Text(
+                        text = "${todaySolvedCount}개",
+                        fontSize = 20.sp,
+                        color = Color(0xFF5387F7),
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .width(1.dp)
+                        .height(40.dp)
+                        .background(Color.Gray)
+                )
+
+                Column(
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .width((screenWidth - 60.dp) / 3)
+                        .height(50.dp)
+                ) {
+                    Text(
+                        text = "틀린 문제",
+                        fontSize = 20.sp,
+                        color = Color(0xFFEC5151),
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
+
+                    Text(
+                        text = "${todayWrongCount}개",
+                        fontSize = 20.sp,
+                        color = Color(0xFFEC5151),
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
         }
 
-        if (todayProblems.size == todaySolvedCount && todayProblems.isNotEmpty()) {
+        if (todayProblems.size == nowProblemIndex && todayProblems.isNotEmpty()) {
 
-            Image(
-                painter = painterResource(id = R.drawable.mascot),
-                contentDescription = "mascot",
+            LazyColumn(
                 modifier = Modifier
-                    .width(screenWidth / 2)
-                    .height(screenHeight / 2)
+                    .fillMaxWidth()
+                    .padding(30.dp)
                     .constrainAs(contentBox) {
-                        top.linkTo(parent.top)
+                        top.linkTo(topBar.bottom, margin = 70.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         bottom.linkTo(parent.bottom)
                     }
-            )
-
-            Text(
-                text = "오늘의 문제를 모두 풀었어요!\n내일 또 만나요!",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(20.dp)
-                    .constrainAs(hintBox) {
-                        top.linkTo(contentBox.bottom, margin = 50.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
+                    .heightIn(max = (screenHeight - 80.dp)),
+            ) {
+                items(todayProblems.size) { index ->
+                    val problem = todayProblems[index]
+                    ProblemCard(problem) {
+                        selectedProblem = problem // 클릭된 문제 설정
+                        showDialog = true // 다이얼로그 열기
                     }
-            )
+                }
+            }
 
         } else {
             ConstraintLayout(
@@ -215,7 +346,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
 
                 if (!todayProblems.isEmpty()) {
                     Text(
-                        text = todayProblems[todaySolvedCount].description,
+                        text = todayProblems[nowProblemIndex].description,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.constrainAs(problemPart) {
@@ -281,30 +412,31 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
 
                 Log.d("MainProblemSolveScreen", "wrongCnt: $wrongCnt")
 
-                if (wrongCnt >= 3) {
-                    Box(
-                        modifier = Modifier
-                            .width(100.dp)
-                            .height(50.dp)
-                            .background(Color(0xFF1429A0), shape = RoundedCornerShape(10.dp))
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            ) { viewModel.onSkip() }
-                            .constrainAs(skipButton) {
-                                top.linkTo(answerPart.bottom, margin = 10.dp)
-                                start.linkTo(parent.start)
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "넘기기",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                    }
+                Box(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(50.dp)
+                        .background(Color(0xFFFFCC5D), shape = RoundedCornerShape(10.dp))
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            if (wrongCnt >= 3) viewModel.onSkip()
+                        }
+                        .constrainAs(skipButton) {
+                            top.linkTo(answerPart.bottom, margin = 10.dp)
+                            start.linkTo(parent.start)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text =  if (wrongCnt >= 3) "넘기기" else "${wrongCnt} / 3" ,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
                 }
+
 
             }
 
@@ -321,7 +453,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
             ) {
                 // `wrongCnt`만큼의 힌트를 표시
                 items(wrongCnt) { index ->
-                    problemHints[todayProblems[todaySolvedCount].problem_id]?.getOrNull(index)
+                    problemHints[todayProblems[nowProblemIndex].problem_id]?.getOrNull(index)
                         ?.let { hint ->
                             HintCard(
                                 baseViewModel,
@@ -329,37 +461,41 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                                 hintHeight,
                                 hint,
                                 20,
-                                onClick = { baseViewModel.triggerVibration() })
+                                onClick = {
+                                    baseViewModel.triggerVibration()
+                                    selectedProblemHintIndex = index // 클릭된 힌트 인덱스 설정
+                                    selectedProblemHint = hint // 클릭된 문제 설정
+                                    showHintDialog = true // 다이얼로그 열기
+                                })
                         }
                 }
             }
 
             Box(
                 modifier = Modifier
-                    .width(60.dp)
+                    .fillMaxWidth()
                     .height(30.dp)
-                    .background(Color.Red, shape = RoundedCornerShape(40.dp))
+                    .background(Color.White)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
                     ) {
-                        selectedProblem = todayProblems[todaySolvedCount] // 클릭된 문제 설정
-                        showDialog = true // 다이얼로그 열기
+                        selectedReportProblem = todayProblems[nowProblemIndex] // 클릭된 문제 설정
+                        showReportDialog = true // 다이얼로그 열기
                     }
                     .constrainAs(reportButton) {
                         end.linkTo(parent.end, margin = 15.dp)
                         bottom.linkTo(parent.bottom, margin = 15.dp)
                     },
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.CenterEnd
             ) {
                 Text(
-                    text = "신고",
+                    text = "> 신고하기",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = Color(0xFFFF1111)
                 )
             }
-
 
             // 로딩 다이얼로그
             isLoading?.let {

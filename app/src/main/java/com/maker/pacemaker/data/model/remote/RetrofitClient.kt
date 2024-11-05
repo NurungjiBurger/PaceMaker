@@ -8,7 +8,12 @@ import java.util.concurrent.TimeUnit
 
 
 object RetrofitClient {
-    private const val BASE_URL = "http://k11a406.p.ssafy.io/"
+
+    // real server
+    // private const val BASE_URL = "http://k11a406.p.ssafy.io/"
+
+    // test server
+    private const val BASE_URL = "http://k11a406.p.ssafy.io:8000/"
 
     private lateinit var retrofit: Retrofit
 

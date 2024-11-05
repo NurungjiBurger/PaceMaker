@@ -128,7 +128,7 @@ open class BaseViewModel @Inject constructor(
             putInt("exp", userInfo.exp)
             putInt("level", userInfo.level)
             putInt("myDailyCount", userInfo.daily_cnt)
-            putStringSet("preferred_categories", userInfo.preferred_categories.toSet())
+            //putString("preferred_categories", userInfo.preferred_categories.toSet())
             putInt("followers_count", userInfo.followers_count)
             apply()
         }
