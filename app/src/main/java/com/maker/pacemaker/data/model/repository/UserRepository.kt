@@ -25,6 +25,8 @@ import com.maker.pacemaker.data.model.remote.getFcmTokenResponse
 import com.maker.pacemaker.data.model.remote.reportRequest
 import com.maker.pacemaker.data.model.remote.reportResponse
 import com.maker.pacemaker.data.model.remote.sendFcmToken
+import com.maker.pacemaker.data.model.remote.updateCategoriesRequest
+import com.maker.pacemaker.data.model.remote.updateCategoriesResponse
 import com.maker.pacemaker.data.model.remote.userRequest
 import com.maker.pacemaker.data.model.remote.userResponse
 
@@ -99,6 +101,11 @@ class UserRepository(private val apiService: ApiService) {
     // 내 유저 레벨 설정
     suspend fun updateLevel(level: Int): LevelResponse {
         return apiService.updateLevel(level)
+    }
+
+    // 유저 카테고리 설정
+    suspend fun updateCategories(request: updateCategoriesRequest): updateCategoriesResponse {
+        return apiService.updateCategories(request)
     }
 
     // 유저 닉네임 설정

@@ -122,25 +122,21 @@ open class BaseViewModel @Inject constructor(
     }
 
     private fun saveUserInfoToPreferences(userInfo: User) {
-        with(editor) { // sharedPreferences.edit()) {
+        with(editor) {
             putString("fireBaseUID", userInfo.uid)
             putString("nickname", userInfo.nickname)
             putInt("exp", userInfo.exp)
             putInt("level", userInfo.level)
             putInt("myDailyCount", userInfo.daily_cnt)
-            // List<Int> -> String 변환하여
-            // 직렬화
-            val categoriesString = userInfo.preferred_categories.joinToString(",")
-            putString("preferred_categories", categoriesString)
+
+            // List<Int> -> Set<String>으로 변환하여 저장
+            val categoriesStringSet = userInfo.preferred_categories.map { it.toString() }.toSet()
+            putStringSet("preferred_categories", categoriesStringSet)
+
             putInt("followers_count", userInfo.followers_count)
             apply()
         }
     }
-
-    // 역직렬화
-    // List<Int> -> String 변환하여 저장
-//    val categoriesString = userInfo.preferred_categories.joinToString(",")
-//    putString("preferred_categories", categoriesString)
 
     fun restate() {
         _activityNavigationTo.postValue(null)

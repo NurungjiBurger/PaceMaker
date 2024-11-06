@@ -92,6 +92,12 @@ interface ApiService {
         @Body request: DailyCntRequest
     ): DailyCntResponse
 
+    // 유저 카테고리 설정
+    @PATCH("users/me/categories")
+    suspend fun updateCategories(
+        @Body preferred_categories: updateCategoriesRequest
+    ): updateCategoriesResponse
+
     // 유저 레벨 설정
     @PATCH("users/me/level")
     suspend fun updateLevel(
@@ -143,6 +149,19 @@ interface ApiService {
     ): getCategoriesResponse
 }
 
+// 선호 카테고리 수정 요청
+data class updateCategoriesRequest(
+    val preferred_categories: List<Int>
+)
+
+// 선호 카테고리 수정 응답
+data class updateCategoriesResponse(
+    val message: String,
+    val uid: String,
+    val preferred_categories: List<Int>
+)
+
+// 카테고리 조회 응답
 data class getCategoriesResponse(
     val categories: List<Category>
 )

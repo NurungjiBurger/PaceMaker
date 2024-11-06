@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.ui.screen.Component.BoxCard
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingCategoryScreenViewModel
 
 @Composable
@@ -78,13 +77,12 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             items(settingCategories.size) { index ->
                 val category = settingCategories[index]
-
-                // `selectedCategories` 문자열에서 해당 인덱스의 문자 값이 '1'이면 선택됨
-                val isSelected = selectedCategories.getOrNull(index) == '1'
+                val isSelected = selectedCategories.contains(index)
 
                 Box(
                     modifier = Modifier
@@ -94,15 +92,14 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                             color = if (isSelected) Color(0xFF1429A0) else Color.White,
                             shape = RoundedCornerShape(10.dp)
                         )
-                        .border(2.dp, Color(0xFF1429A0), RoundedCornerShape(10.dp))
+                        .border(2.dp, if (isSelected) Color(0xFF1429A0) else Color.Black, RoundedCornerShape(10.dp))
                         .clickable {
-                            // index를 사용하여 선택 토글
-                            viewModel.toggleCategorySelection(index)
+                            viewModel.toggleCategorySelection(category.category_id)
                         },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = category,
+                        text = category.name,
                         color = if (isSelected) Color.White else Color.Black,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
@@ -130,11 +127,8 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
                     .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) {
-                       // viewModel.completeDailySetting(false)
+                    .clickable {
+                        // 취소 클릭 시 아무 것도 저장하지 않음
                         baseViewModel.goScreen(ScreenType.MYPAGE)
                     },
                 contentAlignment = Alignment.Center
@@ -147,17 +141,14 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                 )
             }
 
-
             Box(
                 modifier = Modifier
                     .width(150.dp)
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
                     .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) {
+                    .clickable {
+                        // 선택된 카테고리 서버에 저장
                         viewModel.completeSelection()
                         baseViewModel.goScreen(ScreenType.MYPAGE)
                     },
