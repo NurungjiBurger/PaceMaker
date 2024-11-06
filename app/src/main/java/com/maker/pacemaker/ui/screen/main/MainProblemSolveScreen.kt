@@ -51,6 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -335,10 +336,11 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                     .height(screenHeight / 2)
                     .padding(30.dp)
                     .constrainAs(contentBox) {
-                        top.linkTo(topBar.bottom, margin = 70.dp)
+                        top.linkTo(topBar.bottom, margin = 20.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         bottom.linkTo(parent.bottom)
+                        height = Dimension.fillToConstraints
                     }
                     // 네비게이션 바 아래 여백을 추가
                     .padding(bottom = WindowInsets.navigationBars.getTop(density = LocalDensity.current).dp),

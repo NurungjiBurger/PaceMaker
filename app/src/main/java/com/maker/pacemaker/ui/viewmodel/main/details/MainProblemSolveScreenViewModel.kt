@@ -269,6 +269,7 @@ class MainProblemSolveScreenViewModel @Inject constructor(
                     _todaySolvedCount.value += 1
                     saveCnts()
                     _wrongCnt.value = 0
+                    _report.value = ""
                 } else {
                     _wrongCnt.value += 1
                     handleIncorrectAnswer()

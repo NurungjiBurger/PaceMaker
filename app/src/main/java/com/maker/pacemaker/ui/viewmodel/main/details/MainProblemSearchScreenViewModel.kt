@@ -1,5 +1,6 @@
 package com.maker.pacemaker.ui.viewmodel.main.details
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maker.pacemaker.data.model.remote.Problem
@@ -23,15 +24,8 @@ open class MainProblemSearchScreenViewModel @Inject constructor(
     private val _words = MutableStateFlow("")
     val words = _words
 
-    private val _hashTags = MutableStateFlow<List<String>>(emptyList())
-    val hashTags = _hashTags
-
     private val _searchedProblems = MutableStateFlow<List<Problem>>(emptyList())
     val searchedProblems = _searchedProblems
-
-    init {
-        restate()
-    }
 
     fun restate() {
         _words.value = ""
@@ -41,6 +35,8 @@ open class MainProblemSearchScreenViewModel @Inject constructor(
     private fun fetchProblems(searchKeyword: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val response = repository.getProblemsByKeyWord(searchKeyword)
+
+            Log.d("MainProblemSearchScreenViewModel", "fetchProblems: $response")
 
             if (response.isNotEmpty()) {
                 _searchedProblems.value = response

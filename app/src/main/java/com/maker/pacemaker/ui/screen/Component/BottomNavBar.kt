@@ -99,7 +99,7 @@ fun BottomNavBar(baseViewModel: BaseViewModel) {
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
-                    ) { baseViewModel.triggerToast("기타페이지입니다.") }
+                    ) { baseViewModel.goScreen(ScreenType.MENU) }
             )
 
         }
