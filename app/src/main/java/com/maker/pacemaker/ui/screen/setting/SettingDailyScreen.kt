@@ -119,7 +119,7 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
 
                 ConstraintLayout (
                     modifier = Modifier
-                        .width(225.dp)
+                        .width(200.dp)
                         .height(100.dp)
                         .background(Color(0xFFFAFAFA))
                         .border(

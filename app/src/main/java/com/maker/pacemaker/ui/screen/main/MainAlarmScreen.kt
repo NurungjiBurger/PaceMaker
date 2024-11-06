@@ -98,7 +98,7 @@ fun MainAlarmScreen(viewModel: MainAlarmScreenViewModel) {
                 .height(600.dp)
                 .constrainAs(contentBox) {
                 top.linkTo(upBar.bottom, margin = 50.dp)
-                bottom.linkTo(parent.bottom, margin = 30.dp)
+                bottom.linkTo(addButton.top, margin = 30.dp)
             }
         ) {
             println("Alarms: ${alarms.size}")
@@ -131,7 +131,7 @@ fun MainAlarmScreen(viewModel: MainAlarmScreenViewModel) {
                     top.linkTo(contentBox.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
+                    bottom.linkTo(parent.bottom, margin = 20.dp)
                 }
         ) {
             Text(text = "전체 삭제")

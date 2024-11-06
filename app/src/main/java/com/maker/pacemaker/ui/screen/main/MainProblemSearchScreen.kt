@@ -50,6 +50,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.ui.screen.Component.BoxCard
@@ -83,10 +85,21 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
 
     // 다이얼로그 열기
     if (showDialog && selectedProblem != null) {
+
+        // word 필드에서 answer JSON 문자열을 추출합니다.
+        val wordJson = selectedProblem?.word
+
+        // Gson을 사용하여 JSON 파싱을 수행합니다.
+        val gson = Gson()
+        val jsonObject = gson.fromJson(wordJson, JsonObject::class.java)
+
+        // answer 배열을 가져오고 첫 번째 답변을 추출합니다.
+        val firstAnswer = jsonObject.getAsJsonArray("answer").firstOrNull()?.asString ?: "정답이 없습니다."
+
         AlertDialog(
             containerColor = Color.White,
             onDismissRequest = { showDialog = false },
-            title = { Text(text = selectedProblem!!.word) },
+            title = { Text(text = firstAnswer) },
             text = { Text(text = selectedProblem!!.description) }, // 상세 내용
             confirmButton = {
                 TextButton(
