@@ -1,6 +1,7 @@
 package com.maker.pacemaker.ui.viewmodel.main.details
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.maker.pacemaker.data.model.User
 import com.maker.pacemaker.data.model.remote.SearchUser
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
@@ -19,6 +20,8 @@ open class MainRankingScreenViewModel @Inject constructor(
     val baseViewModel = base.baseViewModel
     val mainViewModel = base
 
+    val repository = baseViewModel.repository
+
     // 검색할 유저 이름
     private val _userName = MutableStateFlow("")
     val userName = _userName
@@ -27,43 +30,27 @@ open class MainRankingScreenViewModel @Inject constructor(
     private val _userList =  MutableStateFlow<List<SearchUser>>(emptyList()) // MutableStateFlow<List<User>>(emptyList())
     val userList = _userList
 
-    // 전체 유저 리스트 (초기 상태로 유지)
-    private val initialUserList = listOf(
-        User(name = "김철수", level = 2, followers = 500, isFollowing = true),
-        User(name = "이영희", level = 4, followers = 2500, isFollowing = false),
-        User(name = "박지수", level = 1, followers = 120, isFollowing = true),
-        User(name = "최민준", level = 3, followers = 8800, isFollowing = false),
-        User(name = "정다은", level = 6, followers = 40000, isFollowing = true),
-        User(name = "김철수", level = 2, followers = 500, isFollowing = true),
-        User(name = "이영희", level = 4, followers = 2500, isFollowing = false),
-        User(name = "박지수", level = 1, followers = 120, isFollowing = true),
-        User(name = "최민준", level = 3, followers = 8800, isFollowing = false),
-        User(name = "김철수", level = 2, followers = 500, isFollowing = true),
-        User(name = "이영희", level = 4, followers = 2500, isFollowing = false),
-        User(name = "박지수", level = 1, followers = 120, isFollowing = true),
-        User(name = "최민준", level = 3, followers = 8800, isFollowing = false),
-    )
-
-    init {
-        restate()
+    fun restate() {
+        _userList.value = emptyList()
+        _userName.value = ""
+        fetchUsers(_userName.value)
     }
 
-    fun restate() {
-        _userList.value = emptyList() //initialUserList.sortedByDescending { it.level }
-        _userName.value = ""
+    private fun fetchUsers(searchKeyword: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = repository.searchUser(searchKeyword)
+
+            if (response.users.isNotEmpty()) {
+                _userList.value = response.users
+            } else {
+                _userList.value = emptyList()
+            }
+        }
     }
 
     fun onSearchButtonClicked() {
         // userName에 저장된 검색어로 필터링
-        CoroutineScope(Dispatchers.IO).launch {
-            baseViewModel.setLoading(true)
-            val response = baseViewModel.repository.searchUser(_userName.value)
-
-            if (response.users.isNotEmpty()) {
-                _userList.value = response.users
-            }
-            baseViewModel.setLoading(false)
-        }
+        fetchUsers(_userName.value)
     }
 
     fun onUserNameChanged(userName: String) {

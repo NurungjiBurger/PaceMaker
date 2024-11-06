@@ -28,9 +28,8 @@ interface ApiService {
     suspend fun getProblemById(@Path("problem_id") problemId: Int): Problem
 
     // 데일리 문제 조회
-    @GET("problems/{user_id}/daily")
+    @GET("problems/daily")
     suspend fun getDailyProblem(
-        @Path("user_id") userId: String
     ): List<Problem>
 
     // 특정 데이터가 들어간 문제 조회
@@ -43,7 +42,7 @@ interface ApiService {
     @GET("problems/{problem_id}/hints")
     suspend fun getProblemHints(
         @Path("problem_id") problemId: Int
-    ): ProblemHintResponse
+    ): List<ProblemHint>
 
     // 정답 확인
     @POST("solutions/")
@@ -93,10 +92,16 @@ interface ApiService {
         @Body request: DailyCntRequest
     ): DailyCntResponse
 
+    // 유저 카테고리 설정
+    @PATCH("users/me/categories")
+    suspend fun updateCategories(
+        @Body preferred_categories: updateCategoriesRequest
+    ): updateCategoriesResponse
+
     // 유저 레벨 설정
     @PATCH("users/me/level")
     suspend fun updateLevel(
-        @Body levelResult: Int
+        @Body levelResult: LevelRequest
     ): LevelResponse
 
     // 유저 닉네임 설정
@@ -136,7 +141,46 @@ interface ApiService {
     suspend fun deleteFcmToken(
         @Path("fcm_token") fcm_token: String
     )
+
+    //////////////////////////////////////////////////////
+
+    @GET("categories/")
+    suspend fun getCategories(
+    ): getCategoriesResponse
+
+
+    //////////////////////////////////////////////////////
+
+    // 레벨 테스트 문제 조회
+    @GET("/level-test/{level}")
+    suspend fun getLevelTestProblemsByLevel(
+        @Path("level") level: Int
+    ): List<Problem>
 }
+
+// 선호 카테고리 수정 요청
+data class updateCategoriesRequest(
+    val preferred_categories: List<Int>
+)
+
+// 선호 카테고리 수정 응답
+data class updateCategoriesResponse(
+    val message: String,
+    val uid: String,
+    val preferred_categories: List<Int>
+)
+
+// 카테고리 조회 응답
+data class getCategoriesResponse(
+    val categories: List<Category>
+)
+
+data class Category(
+    val category_id: Int,
+    val name: String
+)
+
+///////////////////////////////////////////////
 
 data class getFcmTokenResponse(
     val tokens: List<FCMToken>
@@ -177,7 +221,7 @@ data class User(
     val exp: Int,
     val level: Int,
     val daily_cnt: Int,
-    val preferred_categories: List<String>,
+    val preferred_categories: List<Int>,
     val followers_count: Int
 )
 
@@ -224,6 +268,11 @@ data class DailyCntResponse(
     val daily_cnt: Int,
     val level: Int,
     val exp: Int
+)
+
+// 유저 레벨 설정 요청
+data class LevelRequest(
+    val levelResult: Int
 )
 
 // 유저 레벨 설정 응답
@@ -315,9 +364,9 @@ data class CommentResponse(
 )
 
 // 문제 힌트 조회 응답
-data class ProblemHintResponse(
+data class ProblemHint(
     val problem_id: Int,
-    val hints: List<String>
+    val hint: String
 )
 
 

@@ -49,6 +49,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.ui.screen.Component.BoxCard
@@ -63,7 +66,6 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
     val mainViewModel = viewModel.mainViewModel
 
     val words = viewModel.words.collectAsState()
-    val hashTags = viewModel.hashTags.collectAsState().value
     val searchedProblems = viewModel.searchedProblems.collectAsState().value
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
@@ -83,10 +85,21 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
 
     // 다이얼로그 열기
     if (showDialog && selectedProblem != null) {
+
+        // word 필드에서 answer JSON 문자열을 추출합니다.
+        val wordJson = selectedProblem?.word
+
+        // Gson을 사용하여 JSON 파싱을 수행합니다.
+        val gson = Gson()
+        val jsonObject = gson.fromJson(wordJson, JsonObject::class.java)
+
+        // answer 배열을 가져오고 첫 번째 답변을 추출합니다.
+        val firstAnswer = jsonObject.getAsJsonArray("answer").firstOrNull()?.asString ?: "정답이 없습니다."
+
         AlertDialog(
             containerColor = Color.White,
             onDismissRequest = { showDialog = false },
-            title = { Text(text = selectedProblem!!.word) },
+            title = { Text(text = firstAnswer) },
             text = { Text(text = selectedProblem!!.description) }, // 상세 내용
             confirmButton = {
                 TextButton(
@@ -193,45 +206,16 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
             )
         }
 
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 80.dp), // 각 태그가 가로로 80dp 이상이면 줄바꿈
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 30.dp, end = 30.dp)
-                .constrainAs(hashTagBox) {
-                    top.linkTo(searchBox.bottom, margin = 20.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .background(color = Color(0xFFFAFAFA)),
-            horizontalArrangement = Arrangement.spacedBy(3.dp),
-            verticalArrangement = Arrangement.spacedBy(3.dp)
-        ) {
-            items(hashTags.size) { index ->
-                val hashTag = hashTags[index]
-                Text(
-                    text = "#${hashTag}",
-                    fontSize = 20.sp,
-                    color = Color(0xFFA5A5A5),
-                )
-            }
-        }
-
-        Log.d("MainProblemSearchScreen", "HashTagSize : ${hashTags.size}")
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(30.dp)
                 .constrainAs(contentBox) {
-                    if (hashTags.isNotEmpty()) {
-                        top.linkTo(hashTagBox.bottom, margin = 30.dp) // 해시태그가 있을 경우
-                    } else {
-                        top.linkTo(searchBox.bottom, margin = 30.dp) // 해시태그가 없을 경우
-                    }
+                    top.linkTo(searchBox.bottom, margin = 15.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)
+                    height = Dimension.fillToConstraints
                 }
                 .heightIn(max = screenHeight - (searchBoxHeight + 80.dp)),
         ) {

@@ -169,7 +169,7 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
         ){
             NavCard(baseViewModel, "1일 학습 목표", user.daily_cnt.toString(), { baseViewModel.goScreen(ScreenType.DAILY) })
-            NavCard(baseViewModel, "퀴즈 카테고리", "", { })//baseViewModel.goScreen(ScreenType.CATEGORY) })
+            NavCard(baseViewModel, "퀴즈 카테고리", "", { baseViewModel.goScreen(ScreenType.CATEGORY) })
             NavCard(baseViewModel, "복습 단어 비율", ratioMode, { })//baseViewModel.goScreen(ScreenType.RATIO) })
         }
     }

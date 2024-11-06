@@ -10,20 +10,24 @@ import com.maker.pacemaker.data.model.remote.CreateProblemRequest
 import com.maker.pacemaker.data.model.remote.CreateProblemResponse
 import com.maker.pacemaker.data.model.remote.DailyCntRequest
 import com.maker.pacemaker.data.model.remote.DailyCntResponse
+import com.maker.pacemaker.data.model.remote.LevelRequest
 import com.maker.pacemaker.data.model.remote.LevelResponse
 import com.maker.pacemaker.data.model.remote.NicknameResponse
 import com.maker.pacemaker.data.model.remote.Problem
-import com.maker.pacemaker.data.model.remote.ProblemHintResponse
+import com.maker.pacemaker.data.model.remote.ProblemHint
 import com.maker.pacemaker.data.model.remote.loginRequest
 import com.maker.pacemaker.data.model.remote.loginResponse
 //import com.maker.pacemaker.data.model.remote.ServerRequest
 //import com.maker.pacemaker.data.model.remote.ServerResponse
 import com.maker.pacemaker.data.model.remote.SearchUserResponse
 import com.maker.pacemaker.data.model.remote.User
+import com.maker.pacemaker.data.model.remote.getCategoriesResponse
 import com.maker.pacemaker.data.model.remote.getFcmTokenResponse
 import com.maker.pacemaker.data.model.remote.reportRequest
 import com.maker.pacemaker.data.model.remote.reportResponse
 import com.maker.pacemaker.data.model.remote.sendFcmToken
+import com.maker.pacemaker.data.model.remote.updateCategoriesRequest
+import com.maker.pacemaker.data.model.remote.updateCategoriesResponse
 import com.maker.pacemaker.data.model.remote.userRequest
 import com.maker.pacemaker.data.model.remote.userResponse
 
@@ -44,8 +48,8 @@ class UserRepository(private val apiService: ApiService) {
     }
 
     // 데일리 문제 조회
-    suspend fun getDailyProblem(userId: String) : List<Problem> {
-        return apiService.getDailyProblem(userId)
+    suspend fun getDailyProblem() : List<Problem> {
+        return apiService.getDailyProblem()
     }
 
     // 특정 데이터가 들어간 문제 조회
@@ -54,7 +58,7 @@ class UserRepository(private val apiService: ApiService) {
     }
 
     // 문제 힌트 조회
-    suspend fun getProblemHints(problemId: Int) : ProblemHintResponse {
+    suspend fun getProblemHints(problemId: Int) : List<ProblemHint> {
         return apiService.getProblemHints(problemId)
     }
 
@@ -96,8 +100,13 @@ class UserRepository(private val apiService: ApiService) {
     }
 
     // 내 유저 레벨 설정
-    suspend fun updateLevel(level: Int): LevelResponse {
-        return apiService.updateLevel(level)
+    suspend fun updateLevel(request: LevelRequest): LevelResponse {
+        return apiService.updateLevel(request)
+    }
+
+    // 유저 카테고리 설정
+    suspend fun updateCategories(request: updateCategoriesRequest): updateCategoriesResponse {
+        return apiService.updateCategories(request)
     }
 
     // 유저 닉네임 설정
@@ -130,5 +139,20 @@ class UserRepository(private val apiService: ApiService) {
     // fcm token 삭제
     suspend fun deleteFcmToken(fcmToken: String)  {
         return apiService.deleteFcmToken(fcmToken)
+    }
+
+    ///////////////////////////////////////////////////////////////////
+
+
+    // 카테고리 조회
+    suspend fun getCategories(): getCategoriesResponse {
+        return apiService.getCategories()
+    }
+
+    //////////////////////////////////////////////////////////////////////
+
+    // 레벨 테스트 문제 조회
+    suspend fun getLevelTestProblemsByLevel(level: Int): List<Problem> {
+        return apiService.getLevelTestProblemsByLevel(level)
     }
 }

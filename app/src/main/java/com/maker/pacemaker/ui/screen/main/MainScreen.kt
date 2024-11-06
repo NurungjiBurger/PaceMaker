@@ -247,6 +247,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                 .fillMaxWidth()
                 .height(60.dp)
                 .constrainAs(bottomBar) {
+                    top.linkTo(contentBox.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)

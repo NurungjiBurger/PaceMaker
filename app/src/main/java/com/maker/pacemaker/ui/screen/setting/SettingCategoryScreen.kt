@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.data.model.ScreenType
-import com.maker.pacemaker.ui.screen.Component.BoxCard
 import com.maker.pacemaker.ui.viewmodel.setting.details.SettingCategoryScreenViewModel
 
 @Composable
@@ -40,7 +40,8 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
     val baseViewModel = viewModel.baseViewModel
     val settingViewModel = viewModel.settingViewModel
 
-    val settingCategories = settingViewModel.categoryList.collectAsState().value
+    val settingCategories by viewModel.settingCategories.collectAsState()
+    val selectedCategories by viewModel.selectedCategories.collectAsState()
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
@@ -65,9 +66,9 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                 }
         )
 
-        // LazyVerticalGrid를 사용하여 카테고리 리스트를 표시합니다.
+        // LazyVerticalGrid를 사용하여 카테고리 리스트를 표시
         LazyVerticalGrid(
-            columns = GridCells.Fixed(3), // 3개씩 가로로 배치
+            columns = GridCells.Fixed(3),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
@@ -76,22 +77,35 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            // Use items() to directly consume the settingCategories
-            items(settingCategories.size) { index -> // Iterate based on the size of the list
-                val category = settingCategories[index] // Get the category using the index
-                BoxCard(
-                    baseViewModel,
-                    100.dp,
-                    100.dp,
-                    category, // Category name
-                    20,
-                    "", // Set description as needed
-                    30, // Set value as needed
-                    false,
-                    onClick = { Log.d("TEST", "add to next") } // Handle category selection
-                )
+            items(settingCategories.size) { index ->
+                val category = settingCategories[index]
+                val isSelected = selectedCategories.contains(index)
+
+                Box(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(100.dp)
+                        .background(
+                            color = if (isSelected) Color(0xFF1429A0) else Color.White,
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .border(2.dp, if (isSelected) Color(0xFF1429A0) else Color.Black, RoundedCornerShape(10.dp))
+                        .clickable {
+                            viewModel.toggleCategorySelection(category.category_id)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = category.name,
+                        color = if (isSelected) Color.White else Color.Black,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
 
@@ -113,11 +127,8 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
                     .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) {
-                       // viewModel.completeDailySetting(false)
+                    .clickable {
+                        // 취소 클릭 시 아무 것도 저장하지 않음
                         baseViewModel.goScreen(ScreenType.MYPAGE)
                     },
                 contentAlignment = Alignment.Center
@@ -130,18 +141,15 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                 )
             }
 
-
             Box(
                 modifier = Modifier
                     .width(150.dp)
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
                     .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) {
-                        //viewModel.completeDailySetting(true)
+                    .clickable {
+                        // 선택된 카테고리 서버에 저장
+                        viewModel.completeSelection()
                         baseViewModel.goScreen(ScreenType.MYPAGE)
                     },
                 contentAlignment = Alignment.Center

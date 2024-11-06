@@ -46,8 +46,15 @@ fun UserCard(
 ) {
 
     val context = LocalContext.current
+    // 레벨 값을 1에서 6 사이로 보정
+    val correctedLevel = when {
+        user.level < 1 -> 1
+        user.level > 6 -> 6
+        else -> user.level
+    }
+
     val resourceId = context.resources.getIdentifier(
-        "level_${user.level}", "drawable", context.packageName
+        "level_$correctedLevel", "drawable", context.packageName
     )
 
     ConstraintLayout(
