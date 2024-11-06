@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,7 +41,8 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
     val baseViewModel = viewModel.baseViewModel
     val settingViewModel = viewModel.settingViewModel
 
-    val settingCategories = settingViewModel.categoryList.collectAsState().value
+    val settingCategories by viewModel.settingCategories.collectAsState()
+    val selectedCategories by viewModel.selectedCategories.collectAsState()
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
@@ -65,9 +67,9 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                 }
         )
 
-        // LazyVerticalGrid를 사용하여 카테고리 리스트를 표시합니다.
+        // LazyVerticalGrid를 사용하여 카테고리 리스트를 표시
         LazyVerticalGrid(
-            columns = GridCells.Fixed(3), // 3개씩 가로로 배치
+            columns = GridCells.Fixed(3),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
@@ -78,20 +80,35 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                 },
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Use items() to directly consume the settingCategories
-            items(settingCategories.size) { index -> // Iterate based on the size of the list
-                val category = settingCategories[index] // Get the category using the index
-                BoxCard(
-                    baseViewModel,
-                    100.dp,
-                    100.dp,
-                    category, // Category name
-                    20,
-                    "", // Set description as needed
-                    30, // Set value as needed
-                    false,
-                    onClick = { Log.d("TEST", "add to next") } // Handle category selection
-                )
+            items(settingCategories.size) { index ->
+                val category = settingCategories[index]
+
+                // `selectedCategories` 문자열에서 해당 인덱스의 문자 값이 '1'이면 선택됨
+                val isSelected = selectedCategories.getOrNull(index) == '1'
+
+                Box(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(100.dp)
+                        .background(
+                            color = if (isSelected) Color(0xFF1429A0) else Color.White,
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .border(2.dp, Color(0xFF1429A0), RoundedCornerShape(10.dp))
+                        .clickable {
+                            // index를 사용하여 선택 토글
+                            viewModel.toggleCategorySelection(index)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = category,
+                        color = if (isSelected) Color.White else Color.Black,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
 
@@ -141,7 +158,7 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
                     ) {
-                        //viewModel.completeDailySetting(true)
+                        viewModel.completeSelection()
                         baseViewModel.goScreen(ScreenType.MYPAGE)
                     },
                 contentAlignment = Alignment.Center

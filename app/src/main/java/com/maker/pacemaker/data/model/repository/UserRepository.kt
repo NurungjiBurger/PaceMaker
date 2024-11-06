@@ -13,13 +13,14 @@ import com.maker.pacemaker.data.model.remote.DailyCntResponse
 import com.maker.pacemaker.data.model.remote.LevelResponse
 import com.maker.pacemaker.data.model.remote.NicknameResponse
 import com.maker.pacemaker.data.model.remote.Problem
-import com.maker.pacemaker.data.model.remote.ProblemHintResponse
+import com.maker.pacemaker.data.model.remote.ProblemHint
 import com.maker.pacemaker.data.model.remote.loginRequest
 import com.maker.pacemaker.data.model.remote.loginResponse
 //import com.maker.pacemaker.data.model.remote.ServerRequest
 //import com.maker.pacemaker.data.model.remote.ServerResponse
 import com.maker.pacemaker.data.model.remote.SearchUserResponse
 import com.maker.pacemaker.data.model.remote.User
+import com.maker.pacemaker.data.model.remote.getCategoriesResponse
 import com.maker.pacemaker.data.model.remote.getFcmTokenResponse
 import com.maker.pacemaker.data.model.remote.reportRequest
 import com.maker.pacemaker.data.model.remote.reportResponse
@@ -54,7 +55,7 @@ class UserRepository(private val apiService: ApiService) {
     }
 
     // 문제 힌트 조회
-    suspend fun getProblemHints(problemId: Int) : ProblemHintResponse {
+    suspend fun getProblemHints(problemId: Int) : List<ProblemHint> {
         return apiService.getProblemHints(problemId)
     }
 
@@ -130,5 +131,13 @@ class UserRepository(private val apiService: ApiService) {
     // fcm token 삭제
     suspend fun deleteFcmToken(fcmToken: String)  {
         return apiService.deleteFcmToken(fcmToken)
+    }
+
+    ///////////////////////////////////////////////////////////////////
+
+
+    // 카테고리 조회
+    suspend fun getCategories(): getCategoriesResponse {
+        return apiService.getCategories()
     }
 }

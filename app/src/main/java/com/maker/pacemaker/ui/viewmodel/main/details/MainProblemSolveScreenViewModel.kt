@@ -161,7 +161,8 @@ class MainProblemSolveScreenViewModel @Inject constructor(
                     val problem = repository.getProblemById(problemId)
                     problemsList.add(problem)
                     // 힌트 로딩 로직 (생략 가능)
-                    hintsMap[problemId] = repository.getProblemHints(problemId).hints
+                    val hints = repository.getProblemHints(problemId).map { it.hint }
+                    hintsMap[problemId] = hints
                 } catch (e: Exception) {
                     Log.e("MainProblemSolveScreenViewModel", "Error fetching problem ID: $problemId", e)
                 }

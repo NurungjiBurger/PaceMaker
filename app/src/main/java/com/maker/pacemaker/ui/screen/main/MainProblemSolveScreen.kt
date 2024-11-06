@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +52,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.maker.pacemaker.R
 import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.ui.screen.Component.HintCard
@@ -76,8 +82,8 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
 
-    val hintWidth = screenWidth - 20.dp
-    val hintHeight = screenHeight / 8
+    val hintWidth = screenWidth - 60.dp
+    val hintHeight = screenHeight / 9
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -87,10 +93,21 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
 
     // 다이얼로그 열기
     if (showDialog && selectedProblem != null) {
+
+        // word 필드에서 answer JSON 문자열을 추출합니다.
+        val wordJson = selectedProblem?.word
+
+        // Gson을 사용하여 JSON 파싱을 수행합니다.
+        val gson = Gson()
+        val jsonObject = gson.fromJson(wordJson, JsonObject::class.java)
+
+        // answer 배열을 가져오고 첫 번째 답변을 추출합니다.
+        val firstAnswer = jsonObject.getAsJsonArray("answer").firstOrNull()?.asString ?: "정답이 없습니다."
+
         AlertDialog(
             containerColor = Color.White,
             onDismissRequest = { showDialog = false },
-            title = { Text(text = selectedProblem!!.word) },
+            title = { Text(text = firstAnswer) },
             text = { Text(text = selectedProblem!!.description) }, // 상세 내용
             confirmButton = {
                 TextButton(
@@ -109,7 +126,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     }
 
     //  힌트 다이얼로그 상태 관리
-    var selectedProblemHintIndex by remember { mutableStateOf<Int?>(null) }
+    var selectedProblemHintTitle by remember { mutableStateOf<String?>(null) }
     var selectedProblemHint by remember { mutableStateOf<String?>(null) }
     var showHintDialog by remember { mutableStateOf(false) }
 
@@ -117,7 +134,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
         AlertDialog(
             containerColor = Color.White,
             onDismissRequest = { showHintDialog = false },
-            title = { Text(text = selectedProblemHintIndex.toString()) },
+            title = { Text(text = selectedProblemHintTitle!!) },
             text = { Text(text = selectedProblemHint!!) }, // 상세 내용
             confirmButton = {
                 TextButton(
@@ -310,6 +327,8 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
 
         if (todayProblems.size == nowProblemIndex && todayProblems.isNotEmpty()) {
 
+            Log.d("MainProblemSolveScreen", "todayProblems: $todayProblems")
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -320,10 +339,12 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                         end.linkTo(parent.end)
                         bottom.linkTo(parent.bottom)
                     }
-                    .heightIn(max = (screenHeight - 80.dp)),
+                    // 네비게이션 바 아래 여백을 추가
+                    .padding(bottom = WindowInsets.navigationBars.getTop(density = LocalDensity.current).dp),
             ) {
                 items(todayProblems.size) { index ->
                     val problem = todayProblems[index]
+                    Log.d("MainProblemSolveScreen", "problem: $problem")
                     ProblemCard(problem) {
                         selectedProblem = problem // 클릭된 문제 설정
                         showDialog = true // 다이얼로그 열기
@@ -449,7 +470,8 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                verticalArrangement = Arrangement.spacedBy(20.dp)
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // `wrongCnt`만큼의 힌트를 표시
                 items(wrongCnt) { index ->
@@ -459,11 +481,10 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                                 baseViewModel,
                                 hintWidth,
                                 hintHeight,
-                                hint,
+                                "힌트 ${index + 1}",
                                 20,
                                 onClick = {
-                                    baseViewModel.triggerVibration()
-                                    selectedProblemHintIndex = index // 클릭된 힌트 인덱스 설정
+                                    selectedProblemHintTitle = "힌트 ${index + 1}" // 클릭된 힌트 인덱스 설정
                                     selectedProblemHint = hint // 클릭된 문제 설정
                                     showHintDialog = true // 다이얼로그 열기
                                 })

@@ -42,7 +42,7 @@ interface ApiService {
     @GET("problems/{problem_id}/hints")
     suspend fun getProblemHints(
         @Path("problem_id") problemId: Int
-    ): ProblemHintResponse
+    ): List<ProblemHint>
 
     // 정답 확인
     @POST("solutions/")
@@ -135,7 +135,24 @@ interface ApiService {
     suspend fun deleteFcmToken(
         @Path("fcm_token") fcm_token: String
     )
+
+    //////////////////////////////////////////////////////
+
+    @GET("categories/")
+    suspend fun getCategories(
+    ): getCategoriesResponse
 }
+
+data class getCategoriesResponse(
+    val categories: List<Category>
+)
+
+data class Category(
+    val category_id: Int,
+    val name: String
+)
+
+///////////////////////////////////////////////
 
 data class getFcmTokenResponse(
     val tokens: List<FCMToken>
@@ -314,9 +331,9 @@ data class CommentResponse(
 )
 
 // 문제 힌트 조회 응답
-data class ProblemHintResponse(
+data class ProblemHint(
     val problem_id: Int,
-    val hints: List<String>
+    val hint: String
 )
 
 
