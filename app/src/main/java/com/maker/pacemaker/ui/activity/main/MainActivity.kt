@@ -85,6 +85,7 @@ class MainActivity : BaseActivity() {
                 composable("menuScreen") { MainMenuScreen(mainMenuScreenViewModel) }
                 composable("levelTestScreen") {
                     mainLevelTestScreenViewModel.restate()
+                    mainLevelTestScreenViewModel.resumeTimer()
                     MainLevelTestScreen(mainLevelTestScreenViewModel)
                 }
                 composable("problemAddScreen") { MainProblemAddScreen(mainProblemAddScreenViewModel) }

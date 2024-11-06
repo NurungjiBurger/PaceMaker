@@ -1,6 +1,7 @@
 package com.maker.pacemaker.ui.screen.main
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
+import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.ui.viewmodel.main.details.MainLevelTestScreenViewModel
 
@@ -50,10 +52,12 @@ import com.maker.pacemaker.ui.viewmodel.main.details.MainLevelTestScreenViewMode
 @Composable
 fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
 
+    val baseViewModel = viewModel.baseViewModel
+
     // ViewModel에서 가져오는 데이터들
     val timeLimit = viewModel.timeLimit.collectAsState()
     val level = viewModel.level.collectAsState()
-    val testProblems = viewModel.testProblems.collectAsState()
+    val testProblems = viewModel.testProblems.collectAsState().value
     val nowProblemIndex = viewModel.nowProblemIndex.collectAsState()
     val wrongCnt = viewModel.wrongCnt.collectAsState()
     val circleStates = viewModel.circleStates.collectAsState()
@@ -75,12 +79,18 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
         }
     }
 
+    // 뒤로 가기 버튼 처리
+    BackHandler {
+        viewModel.pauseTimer()
+        baseViewModel.goScreen(ScreenType.MENU)
+    }
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
-        val (upBar, divider, timer, step, contentBox, submitButton) = createRefs()
+        val (upBar, divider, timer, levelscript, step, contentBox) = createRefs()
 
         // 상단 바
         Box(
@@ -166,13 +176,26 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
                     }
             )
 
+            Text(
+                text = "현재 레벨 : ${level.value}",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .constrainAs(levelscript){
+                        top.linkTo(timer.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(step.top)
+                    }
+            )
+
             // 문제 진행 상태 (동그라미)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(20.dp)
                     .constrainAs(step) {
-                        top.linkTo(timer.bottom, margin = 10.dp)
+                        top.linkTo(levelscript.bottom, margin = 10.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
@@ -180,7 +203,7 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 // 문제 수만큼 동그라미 표시
-                testProblems.value.forEachIndexed { index, _ ->
+                testProblems.forEachIndexed { index, _ ->
                     Box(
                         modifier = Modifier
                             .width(50.dp)
@@ -203,49 +226,50 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
                 }
             }
 
-            // 문제와 입력란
-            Column(
+            ConstraintLayout(
                 modifier = Modifier
-                    .padding(30.dp)
+                    .padding(20.dp)
+                    .background(color = Color(0xFFFAFAFA))
                     .constrainAs(contentBox) {
-                        top.linkTo(step.bottom, margin = 20.dp)
+                        top.linkTo(step.bottom, margin = 30.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                    },
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    }
             ) {
-                // 현재 문제 표시
-                val currentProblem = testProblems.value.getOrNull(nowProblemIndex.value)
-                Text(
-                    text = "문제: ${currentProblem?.description}",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                val (problemPart, answerPart, skipButton, submitButton) = createRefs()
 
-                Spacer(modifier = Modifier.height(20.dp))
+                if (!testProblems.isEmpty()) {
+                    Text(
+                        text = testProblems[nowProblemIndex.value].description,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.constrainAs(problemPart) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                    )
+                }
 
-                // 답안 입력란
                 TextField(
                     value = answer,
                     onValueChange = { viewModel.onAnswerChanged(it) },
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        cursorColor = Color.Black
-                    ),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(
-                            width = 1.dp,
-                            color = Color.Black,
-                            shape = RoundedCornerShape(16.dp)
-                        ),
-                    label = {
-                        Text(text = "정답", color = Color.Black)
-                    },
+                        .background(Color.Transparent, shape = RoundedCornerShape(10.dp))
+                        .border(2.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
+                        .constrainAs(answerPart) {
+                            top.linkTo(problemPart.bottom, margin = 10.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                    label = { Text("정답") },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFFAFAFA),
+                        unfocusedContainerColor = Color(0xFFFAFAFA),
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Next
                     ),
@@ -256,30 +280,54 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
                         }
                     )
                 )
-            }
 
-            // 제출 버튼
-            Box(
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(50.dp)
-                    .background(Color(0xFF1429A0), shape = RoundedCornerShape(10.dp))
-                    .border(1.dp, Color.Black, shape = RoundedCornerShape(10.dp))
-                    .constrainAs(submitButton) {
-                        top.linkTo(contentBox.bottom, margin = 10.dp)
-                        end.linkTo(parent.end, margin = 30.dp)
-                    }
-                    .clickable {
-                        viewModel.onSubmit() // 제출 버튼 클릭 시
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "제출",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
+                Box(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(50.dp)
+                        .background(Color(0xFF1429A0), shape = RoundedCornerShape(10.dp))
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) { viewModel.onSubmit() }
+                        .constrainAs(submitButton) {
+                            top.linkTo(answerPart.bottom, margin = 10.dp)
+                            end.linkTo(parent.end)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "제출",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+
+                Log.d("MainProblemSolveScreen", "wrongCnt: $wrongCnt")
+
+                Box(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(50.dp)
+                        .background(Color.Red, shape = RoundedCornerShape(10.dp))
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {}
+                        .constrainAs(skipButton) {
+                            top.linkTo(answerPart.bottom, margin = 10.dp)
+                            start.linkTo(parent.start)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text =  "${wrongCnt.value} / 3",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
             }
         }
     }

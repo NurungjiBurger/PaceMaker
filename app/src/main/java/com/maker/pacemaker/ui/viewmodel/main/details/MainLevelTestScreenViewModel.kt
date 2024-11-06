@@ -74,6 +74,8 @@ open class MainLevelTestScreenViewModel @Inject constructor(
     private val _ment = MutableStateFlow("")
     val ment = _ment
 
+    private var isTimerRunning = MutableStateFlow(false)
+
     init{
         if (baseViewModel.sharedPreferences.getString("leveltestdate", "") != getCurrentDate()) {
             restate()
@@ -199,6 +201,7 @@ open class MainLevelTestScreenViewModel @Inject constructor(
         if (testSolvedCount.value >= pivot) {
             // 레벨 업
             _level.value += 1
+            _nowProblemIndex.value = 0
             restate()
         } else {
             finishLevelTest()
@@ -248,13 +251,23 @@ open class MainLevelTestScreenViewModel @Inject constructor(
     // 제한시간을 1초에 1씩 줄여나가는 함수
     fun startTimeLimitCountdown() {
         viewModelScope.launch(Dispatchers.Main) {
-            // 1초마다 timeLimit을 감소
             while (_timeLimit.value > 0) {
-                delay(1000)  // 1초 대기
-                _timeLimit.value -= 1
+                if (isTimerRunning.value) {  // isTimerRunning이 true일 때만 실행
+                    delay(1000)  // 1초 대기
+                    _timeLimit.value -= 1
+                } else {
+                    delay(100)  // 잠시 대기하여 while 루프가 빠르게 반복되지 않도록
+                }
             }
-            // timeLimit이 0이 되면 실행될 로직
-            finishLevelTest()
+            finishLevelTest()  // timeLimit이 0이 되면 실행될 로직
         }
+    }
+
+    fun pauseTimer() {
+        isTimerRunning.value = false
+    }
+
+    fun resumeTimer() {
+        isTimerRunning.value = true
     }
 }
