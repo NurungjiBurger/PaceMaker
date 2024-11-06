@@ -28,9 +28,8 @@ interface ApiService {
     suspend fun getProblemById(@Path("problem_id") problemId: Int): Problem
 
     // 데일리 문제 조회
-    @GET("problems/{user_id}/daily")
+    @GET("problems/daily")
     suspend fun getDailyProblem(
-        @Path("user_id") userId: String
     ): List<Problem>
 
     // 특정 데이터가 들어간 문제 조회

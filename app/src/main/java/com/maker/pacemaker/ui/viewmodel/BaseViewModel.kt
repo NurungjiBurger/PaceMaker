@@ -128,11 +128,19 @@ open class BaseViewModel @Inject constructor(
             putInt("exp", userInfo.exp)
             putInt("level", userInfo.level)
             putInt("myDailyCount", userInfo.daily_cnt)
-            //putString("preferred_categories", userInfo.preferred_categories.toSet())
+            // List<Int> -> String 변환하여
+            // 직렬화
+            val categoriesString = userInfo.preferred_categories.joinToString(",")
+            putString("preferred_categories", categoriesString)
             putInt("followers_count", userInfo.followers_count)
             apply()
         }
     }
+
+    // 역직렬화
+    // List<Int> -> String 변환하여 저장
+//    val categoriesString = userInfo.preferred_categories.joinToString(",")
+//    putString("preferred_categories", categoriesString)
 
     fun restate() {
         _activityNavigationTo.postValue(null)

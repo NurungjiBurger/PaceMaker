@@ -125,8 +125,7 @@ class MainProblemSolveScreenViewModel @Inject constructor(
             baseViewModel.setLoading(true)
             try {
                 // 서버에서 데일리 문제를 가져옵니다.
-                val userId = baseViewModel.sharedPreferences.getString("fireBaseUID", "")!!
-                val problems = repository.getDailyProblem(userId)
+                val problems = repository.getDailyProblem()
 
                 Log.d("MainProblemSolveScreenViewModel", "Fetched daily problems: $problems")
 
