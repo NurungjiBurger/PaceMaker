@@ -83,7 +83,10 @@ class MainActivity : BaseActivity() {
                 composable("mainScreen") { MainScreen(mainScreenViewModel) }
                 composable("alarmScreen") { MainAlarmScreen(mainAlarmScreenViewModel) }
                 composable("menuScreen") { MainMenuScreen(mainMenuScreenViewModel) }
-                composable("levelTestScreen") { MainLevelTestScreen(mainLevelTestScreenViewModel) }
+                composable("levelTestScreen") {
+                    mainLevelTestScreenViewModel.restate()
+                    MainLevelTestScreen(mainLevelTestScreenViewModel)
+                }
                 composable("problemAddScreen") { MainProblemAddScreen(mainProblemAddScreenViewModel) }
                 composable("problemSearchScreen") {
                     mainProblemSearchScreenViewModel.restate()

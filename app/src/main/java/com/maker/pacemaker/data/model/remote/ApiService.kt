@@ -101,7 +101,7 @@ interface ApiService {
     // 유저 레벨 설정
     @PATCH("users/me/level")
     suspend fun updateLevel(
-        @Body levelResult: Int
+        @Body levelResult: LevelRequest
     ): LevelResponse
 
     // 유저 닉네임 설정
@@ -147,6 +147,15 @@ interface ApiService {
     @GET("categories/")
     suspend fun getCategories(
     ): getCategoriesResponse
+
+
+    //////////////////////////////////////////////////////
+
+    // 레벨 테스트 문제 조회
+    @GET("/level-test/{level}")
+    suspend fun getLevelTestProblemsByLevel(
+        @Path("level") level: Int
+    ): List<Problem>
 }
 
 // 선호 카테고리 수정 요청
@@ -259,6 +268,11 @@ data class DailyCntResponse(
     val daily_cnt: Int,
     val level: Int,
     val exp: Int
+)
+
+// 유저 레벨 설정 요청
+data class LevelRequest(
+    val levelResult: Int
 )
 
 // 유저 레벨 설정 응답

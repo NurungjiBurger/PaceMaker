@@ -332,6 +332,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(screenHeight / 2)
                     .padding(30.dp)
                     .constrainAs(contentBox) {
                         top.linkTo(topBar.bottom, margin = 70.dp)

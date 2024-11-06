@@ -10,6 +10,7 @@ import com.maker.pacemaker.data.model.remote.CreateProblemRequest
 import com.maker.pacemaker.data.model.remote.CreateProblemResponse
 import com.maker.pacemaker.data.model.remote.DailyCntRequest
 import com.maker.pacemaker.data.model.remote.DailyCntResponse
+import com.maker.pacemaker.data.model.remote.LevelRequest
 import com.maker.pacemaker.data.model.remote.LevelResponse
 import com.maker.pacemaker.data.model.remote.NicknameResponse
 import com.maker.pacemaker.data.model.remote.Problem
@@ -99,8 +100,8 @@ class UserRepository(private val apiService: ApiService) {
     }
 
     // 내 유저 레벨 설정
-    suspend fun updateLevel(level: Int): LevelResponse {
-        return apiService.updateLevel(level)
+    suspend fun updateLevel(request: LevelRequest): LevelResponse {
+        return apiService.updateLevel(request)
     }
 
     // 유저 카테고리 설정
@@ -146,5 +147,12 @@ class UserRepository(private val apiService: ApiService) {
     // 카테고리 조회
     suspend fun getCategories(): getCategoriesResponse {
         return apiService.getCategories()
+    }
+
+    //////////////////////////////////////////////////////////////////////
+
+    // 레벨 테스트 문제 조회
+    suspend fun getLevelTestProblemsByLevel(level: Int): List<Problem> {
+        return apiService.getLevelTestProblemsByLevel(level)
     }
 }
