@@ -205,7 +205,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
         Box(
             modifier = Modifier
                 .width(screenWidth - 60.dp)
-                .height(50.dp)
+                .height(70.dp)
                 .background(Color(0xFFEFF4FE), shape = RoundedCornerShape(10.dp))
                 .constrainAs(topBar) {
                     top.linkTo(parent.top, margin = 40.dp)
@@ -335,9 +335,9 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
             ConstraintLayout(
                 modifier = Modifier
                     .padding(20.dp)
-                    .background(color = Color(0xFFFAFAFA))
+                    .background(color = Color(0xFFDFE9FE))
                     .constrainAs(contentBox) {
-                        top.linkTo(topBar.bottom, margin = 70.dp)
+                        top.linkTo(topBar.bottom, margin = 30.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }
@@ -362,7 +362,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                     onValueChange = { viewModel.onAnswerChanged(it) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.White)
+                        .background(Color.Transparent, shape = RoundedCornerShape(10.dp))
                         .border(2.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
                         .constrainAs(answerPart) {
                             top.linkTo(problemPart.bottom, margin = 10.dp)
@@ -474,7 +474,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(30.dp)
+                    .height(50.dp)
                     .background(Color.White)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
@@ -484,16 +484,19 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                         showReportDialog = true // 다이얼로그 열기
                     }
                     .constrainAs(reportButton) {
-                        end.linkTo(parent.end, margin = 15.dp)
-                        bottom.linkTo(parent.bottom, margin = 15.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
                     },
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Text(
                     text = "> 신고하기",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFFFF1111)
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color(0xFFFF1111),
+                    modifier = Modifier
+                        .padding(end = 20.dp)
                 )
             }
 
