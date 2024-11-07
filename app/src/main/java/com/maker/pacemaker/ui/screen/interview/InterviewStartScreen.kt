@@ -35,7 +35,7 @@ fun InterviewStartScreen(viewModel: InterviewStartScreenViewModel) {
     val baseViewModel = viewModel.baseViewModel
     val interviewViewModel = viewModel.interviewViewModel
 
-    val text by viewModel.text.collectAsState()
+    val text by interviewViewModel.text.collectAsState()
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp

@@ -21,16 +21,13 @@ open class InterviewStartScreenViewModel @Inject constructor(
     val baseViewModel = base.baseViewModel
     val interviewViewModel = base
 
-    private val _text = MutableStateFlow("")
-    val text = _text
-
     fun onTextChanged(text: String) {
         if (text.length > 3000) {
             baseViewModel.triggerToast("더이상 입력하실 수 없습니다.")
             baseViewModel.triggerVibration()
             return
         }
-        _text.value = text
+        interviewViewModel.setText(text)
     }
 
     fun onSubmit() {
@@ -44,7 +41,7 @@ open class InterviewStartScreenViewModel @Inject constructor(
 
 
     fun canNotSubmit() {
-        baseViewModel.triggerToast("${500 - _text.value.length}자 더 입력해주세요.")
+        baseViewModel.triggerToast("${500 - interviewViewModel.text.value.length}자 더 입력해주세요.")
         baseViewModel.triggerVibration()
     }
 

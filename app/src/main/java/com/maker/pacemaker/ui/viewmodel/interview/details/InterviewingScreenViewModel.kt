@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maker.pacemaker.data.model.remote.OpenAIRequest
+import com.maker.pacemaker.data.model.remote.OpenAIService
 import com.maker.pacemaker.ui.viewmodel.interview.InterviewBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class InterviewingScreenViewModel @Inject constructor(
-    private val base: InterviewBaseViewModel
+    private val base: InterviewBaseViewModel,
+    private val openAIService: OpenAIService
 ): ViewModel() {
 
     val baseViewModel = base.baseViewModel
@@ -65,18 +68,30 @@ open class InterviewingScreenViewModel @Inject constructor(
 
     private fun fetchQuestionsFromAI() {
         viewModelScope.launch {
-            delay(2000)  // 예시로 2초 대기
-            val generatedQuestions = listOf(
-                "첫 번째 질문입니다.",
-                "두 번째 질문입니다.",
-                "세 번째 질문입니다."
-            )
-            _questions.value = generatedQuestions
-            _answers.value = List(generatedQuestions.size) { "" } // 빈 답변 생성
+            try {
+// OpenAI API 호출
+                val promptText = """
+                "${interviewViewModel.text.value}" 을 바탕으로 나올 수 있는 기술 면접 질문 5개를 생성해주세요.
+                질문은 가능한 한 면접 대상자의 기술적 능력을 평가할 수 있는 내용으로 작성해 주세요.
+            """.trimIndent()
 
-            interviewViewModel.setLoading(false)
+                val response = openAIService.getQuestions(
+                    OpenAIRequest(
+                        prompt = promptText,
+                        max_tokens = 150, // 질문이 길어질 수 있으므로 토큰 제한 조정
+                        n = 5             // 원하는 질문 개수
+                    )
+                )
 
-            startInterview()
+                if (response.isSuccessful) {
+                    val generatedQuestions = response.body()?.choices?.map { it.text.trim() } ?: listOf()
+                    _questions.value = generatedQuestions
+                } else {
+                    Log.e("InterviewViewModel", "API Error: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("InterviewViewModel", "Error fetching questions: ${e.message}")
+            }
         }
     }
 

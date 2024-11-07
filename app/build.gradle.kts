@@ -21,6 +21,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "BASE_URL", "\"${project.findProperty("BASE_URL")}\"")
+        buildConfigField("String", "OPEN_API_KEY", "\"${project.findProperty("OPEN_API_KEY")}\"")
+        buildConfigField("String", "TEST_BASE_URL", "\"${project.findProperty("TEST_BASE_URL")}\"")
+
     }
 
     buildTypes {
@@ -30,6 +35,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "BASE_URL", "\"http://release-api-url.com\"")
+            buildConfigField("String", "OPEN_API_KEY", "\"release-api-key\"")
         }
     }
     compileOptions {
@@ -41,6 +48,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1" // Compose Compiler 버전도 확인
