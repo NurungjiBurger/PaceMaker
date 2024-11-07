@@ -197,14 +197,15 @@ open class MainLevelTestScreenViewModel @Inject constructor(
         val pivot = testProblems.value.size / 2.0f
 
         if (_level.value == 5) finishLevelTest()
-
-        if (testSolvedCount.value >= pivot) {
-            // 레벨 업
-            _level.value += 1
-            _nowProblemIndex.value = 0
-            restate()
-        } else {
-            finishLevelTest()
+        else {
+            if (testSolvedCount.value >= pivot) {
+                // 레벨 업
+                _level.value += 1
+                _nowProblemIndex.value = 0
+                restate()
+            } else {
+                finishLevelTest()
+            }
         }
     }
 
@@ -216,6 +217,16 @@ open class MainLevelTestScreenViewModel @Inject constructor(
     private fun finishLevelTest() {
         baseViewModel.editor.putString("leveltestdate", getCurrentDate())
         baseViewModel.editor.apply()
+        pauseTimer()
+
+        val correctedLevel = when {
+            _level.value < 1 -> 1
+            _level.value > 5 -> 5
+            else -> _level.value
+        }
+
+        _level.value = correctedLevel
+
         // 레벨 패치
         viewModelScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main){

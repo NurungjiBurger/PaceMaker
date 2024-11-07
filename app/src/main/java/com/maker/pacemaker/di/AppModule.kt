@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 import com.maker.pacemaker.ui.viewmodel.boot.BootBaseViewModel
+import com.maker.pacemaker.ui.viewmodel.interview.InterviewBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.setting.SettingBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.signin.SignInBaseViewModel
@@ -47,6 +48,11 @@ class AppModule { // abstract를 제거하고 비추상 클래스
     @Provides
     fun provideBootBaseViewModel(baseViewModel: BaseViewModel): BootBaseViewModel {
         return BootBaseViewModel(baseViewModel) // MainBaseViewModel 생성
+    }
+
+    @Provides
+    fun provideInterviewBaseViewModel(baseViewModel: BaseViewModel): InterviewBaseViewModel {
+        return InterviewBaseViewModel(baseViewModel) // MainBaseViewModel 생성
     }
 
 }
