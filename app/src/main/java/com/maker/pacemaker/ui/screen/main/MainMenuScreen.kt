@@ -47,9 +47,9 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
     val baseViewModel = viewModel.baseViewModel
     val mainViewModel = viewModel.mainViewModel
 
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
-    val boxHeight = screenHeight - (40.dp) // 위아래 20.dp씩 빼기
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val boxHeight = screenHeight - (40.dp)
     val boxWidth = ( screenWidth / 3 ) * 2
 
     val user by baseViewModel.userInfo.collectAsState()
