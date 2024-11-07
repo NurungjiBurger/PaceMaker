@@ -26,31 +26,37 @@ class AppModule { // abstract를 제거하고 비추상 클래스
     }
 
     @Provides
+    @Singleton
     fun provideMainBaseViewModel(baseViewModel: BaseViewModel): MainBaseViewModel {
         return MainBaseViewModel(baseViewModel) // MainBaseViewModel 생성
     }
 
     @Provides
+    @Singleton
     fun provideSettingBaseViewModel(baseViewModel: BaseViewModel): SettingBaseViewModel {
         return SettingBaseViewModel(baseViewModel) // MainBaseViewModel 생성
     }
 
     @Provides
+    @Singleton
     fun provideSignInBaseViewModel(baseViewModel: BaseViewModel): SignInBaseViewModel {
         return SignInBaseViewModel(baseViewModel) // MainBaseViewModel 생성
     }
 
     @Provides
+    @Singleton
     fun provideSignUpBaseViewModel(baseViewModel: BaseViewModel): SignUpBaseViewModel {
         return SignUpBaseViewModel(baseViewModel) // MainBaseViewModel 생성
     }
 
     @Provides
+    @Singleton
     fun provideBootBaseViewModel(baseViewModel: BaseViewModel): BootBaseViewModel {
         return BootBaseViewModel(baseViewModel) // MainBaseViewModel 생성
     }
 
     @Provides
+    @Singleton
     fun provideInterviewBaseViewModel(baseViewModel: BaseViewModel): InterviewBaseViewModel {
         return InterviewBaseViewModel(baseViewModel) // MainBaseViewModel 생성
     }

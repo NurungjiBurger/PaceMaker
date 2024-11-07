@@ -33,6 +33,7 @@
         <activity android:name=".ui.activity.signup.SignUpActivity" />
         <activity android:name=".ui.activity.main.MainActivity" />
         <activity android:name=".ui.activity.setting.SettingActivity"/>
+        <activity android:name=".ui.activity.interview.InterviewActivity"/>
 
         <service
             android:name=".data.network.PaceMakerFirebaseMessagingService"
