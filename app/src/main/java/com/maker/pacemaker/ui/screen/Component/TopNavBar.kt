@@ -55,7 +55,7 @@ fun TopNavBar(baseViewModel: BaseViewModel) {
                 painter = painterResource(id = R.drawable.usermenu),
                 contentDescription = "usermenu",
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(30.dp)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
@@ -66,7 +66,7 @@ fun TopNavBar(baseViewModel: BaseViewModel) {
                 painter = painterResource(id = R.drawable.alarm),
                 contentDescription = "alarm",
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(30.dp)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
