@@ -45,6 +45,7 @@ import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
+import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.ui.screen.Component.BottomNavBar
 import com.maker.pacemaker.ui.screen.Component.Loading
 import com.maker.pacemaker.ui.screen.Component.Logo
@@ -164,6 +165,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                 }
             }
 
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -177,6 +179,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier.padding(horizontal = 16.dp)
+
                 ) {
                     // 왼쪽 이미지
                     Image(

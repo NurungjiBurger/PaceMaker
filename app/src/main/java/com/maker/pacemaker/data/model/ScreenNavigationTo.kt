@@ -38,4 +38,10 @@ enum class ScreenType(val navigateTo: (NavController) -> Unit) {
     LEVELTEST({ navController -> navController.navigate("levelTestScreen") }),
     PROBLEMSOLVE({ navController -> navController.navigate("problemSolveScreen") }),
 
+
+    // 면접
+    INTERVIEWSTART({ navController -> navController.navigate("startScreen") }),
+    INTERVIEWING({ navController -> navController.navigate("interviewingScreen") }),
+    INTERVIEWRESULT({ navController -> navController.navigate("resultScreen") }),
+
 }
