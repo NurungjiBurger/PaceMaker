@@ -50,6 +50,8 @@ fun InterviewingScreen(viewModel: InterviewingScreenViewModel) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
+    val timerActive by viewModel.timerActive.collectAsState()
+
     LaunchedEffect(isLoading) {
         Log.d("InterviewingScreen", "Loading status changed: $isLoading")
     }
@@ -152,7 +154,7 @@ fun InterviewingScreen(viewModel: InterviewingScreenViewModel) {
                 )
 
                 Text(
-                    text = timer.toString(),
+                    text = if (timer < 0) "0" else timer.toString(),
                     fontSize = 40.sp,
                     color = Color.Black,
                 )

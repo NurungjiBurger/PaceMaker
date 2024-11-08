@@ -12,7 +12,8 @@ object PermissionsHelper {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private val requiredPermissions =
         arrayOf(
-            Manifest.permission.POST_NOTIFICATIONS
+            Manifest.permission.POST_NOTIFICATIONS,
+            Manifest.permission.RECORD_AUDIO,
         )
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)

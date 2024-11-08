@@ -25,10 +25,10 @@ android {
         buildConfigField("String", "BASE_URL", "\"${project.findProperty("BASE_URL")}\"")
         buildConfigField("String", "OPEN_API_KEY", "\"${project.findProperty("OPEN_API_KEY")}\"")
         buildConfigField("String", "TEST_BASE_URL", "\"${project.findProperty("TEST_BASE_URL")}\"")
-        buildConfigField("String", "CLOVA_API_URL", "\"${project.findProperty("CLOVA_API_URL")}\"")
+        buildConfigField("String", "CLOVA_TTS_API_URL", "\"${project.findProperty("CLOVA_TTS_API_URL")}\"")
+        buildConfigField("String", "CLOVA_STT_API_URL", "\"${project.findProperty("CLOVA_STT_API_URL")}\"")
         buildConfigField("String", "CLOVA_API_CLIENT_ID", "\"${project.findProperty("CLOVA_API_CLIENT_ID")}\"")
         buildConfigField("String", "CLOVA_API_CLIENT_SECRET", "\"${project.findProperty("CLOVA_API_CLIENT_SECRET")}\"")
-
     }
 
     buildTypes {

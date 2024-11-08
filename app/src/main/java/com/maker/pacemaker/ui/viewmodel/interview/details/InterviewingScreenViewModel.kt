@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import android.content.Context
 import android.media.MediaPlayer
+import android.media.MediaRecorder
+import com.maker.pacemaker.data.model.remote.AudioData
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -64,11 +66,16 @@ open class InterviewingScreenViewModel @Inject constructor(
     private val _timerActive = MutableStateFlow(false)
     val timerActive = _timerActive
 
+    // STT인지 TTS인지 구별하는 변수
+    private val _state = MutableStateFlow("")
+    val state = _state
+
+    private var mediaRecorder: MediaRecorder? = null
+    private var audioFile: File? = null
+
     init {
         // AI 질문 생성 요청 (예시)
         fetchQuestionsFromAI()
-        _timerActive.value = false
-        startTimer()
     }
 
     fun restate() {
@@ -89,7 +96,6 @@ open class InterviewingScreenViewModel @Inject constructor(
 
             _answers.value = List(_questions.value.size) { "" }
 
-
             startInterview()
         }
     }
@@ -106,67 +112,165 @@ open class InterviewingScreenViewModel @Inject constructor(
         _index.value = 0
 
         viewModelScope.launch {
-            for (i in 0 until _questions.value.size) {
+            //for (i in 0 until _questions.value.size) {
                 // 초기화
                 initialisze()
                 // 질문 읽어주기
-                //questionTTS()
+                //clovaTTS(_questions.value[_index.value])
+
                 // 10초 대기 후 답변 안내 TTS
-                clova("10초 후 답변을 시작해주세요.")
-                delay(10000)
+                notifyTTS("10초 후 답변을 시작해주세요.")
+
+                delay(3000)
                 // 답변 시작 100초
-                //startAnsweringProcess()
+                startAnsweringProcess()
                 // 재답변 안내 후 10초 대기, 버튼이 눌린다면 다시 startAnsweringProcess()
                 //clova("재답변을 원하시면 10초 내에 버튼을 눌러주세요.")
                 //notifyTTS()
                 delay(10000)
-            }
+           // }
         }
     }
 
-    // 질문 읽어주기 (TTS)
-    private fun questionTTS() {
-        val questionText = _questions.value[_index.value]
-        clova(questionText)  // 클로바 TTS 호출
+    private fun notifyTTS(text: String) {
+        //clovaTTS(text)
+        _state.value = "TTS"
+        _timer.value = 2
+        resumeTimer()
     }
 
-    private fun answerSTT() {
+    // 녹음 시작
+    private fun startRecording() {
+        try {
+            // 녹음할 파일 경로 설정
+            audioFile = File(context.cacheDir, "audio_recording.mp4")
 
+            // MediaRecorder 설정
+            mediaRecorder = MediaRecorder().apply {
+                setAudioSource(MediaRecorder.AudioSource.MIC)
+                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+                setOutputFile(audioFile?.absolutePath)
+
+                prepare()
+                start()
+            }
+
+            Log.d("InterviewingScreenViewModel", "Recording started.")
+        } catch (e: IOException) {
+            Log.e("InterviewingScreenViewModel", "Error starting recording: ${e.message}")
+        }
+    }
+
+    // 녹음 종료
+    private fun stopRecording() {
+        try {
+            mediaRecorder?.apply {
+                stop()
+                release()
+            }
+            mediaRecorder = null
+            Log.d("InterviewingScreenViewModel", "Recording stopped.")
+
+            // 녹음이 끝난 후 STT 호출
+            audioFile?.let { file ->
+                val audioBytes = file.readBytes() // 녹음된 음성 파일을 바이트 배열로 읽기
+                recognizeSpeech(audioBytes) // STT 처리
+            }
+        } catch (e: Exception) {
+            Log.e("InterviewingScreenViewModel", "Error stopping recording: ${e.message}")
+        }
     }
 
     private fun startAnsweringProcess() {
         viewModelScope.launch {
             _turn.value = true
-            _timer.value = 100
-            _timerActive.value = true
+            //_timer.value = 100
+            _timer.value = 5
+            _state.value = "STT"
             // 면접자에게 답변을 받기 시작
-            answerSTT()
+            startRecording()
+            resumeTimer()
         }
     }
 
     private fun resumeTimer() {
-        _timerActive.value = true
+        viewModelScope.launch {
+            _timerActive.value = true
+            startTimer()
+        }
     }
 
     private fun pauseTimer() {
-        _timerActive.value = false
+        viewModelScope.launch {
+            _timerActive.value = false
+        }
     }
 
+    // Timer 함수 수정
     private fun startTimer() {
         viewModelScope.launch {
-            if (_timerActive.value) {
-                while (_timer.value > 0) {
-                    delay(1000)
-                    _timer.value -= 1
-                }
+            // 타이머가 활성화될 때만 실행하도록 설정
+            Log.d("InterviewingScreenViewModel", "Timer started.")
 
-                // 시간이 다 되었을 경우, startInterview()의 startAnsweringProcess()다음으로 넘어가야 함.
+            while (_timer.value > 0 && _timerActive.value) {  // 타이머가 활성화된 상태에서만 계속 실행
+                delay(1000)  // 1초 간격으로 반복
+                _timer.value -= 1  // 타이머 감소
+
+                // 1초마다 타이머 값 확인 로그 출력
+                Log.d("Timer", "Timer value: ${_timer.value}")
+
+                if (_timer.value <= 0) {
+                    if (_state.value == "STT") stopRecording()  // 타이머가 끝나면 녹음을 중지
+                }
+            }
+
+            // 타이머가 비활성화되었을 때는 종료
+            if (!_timerActive.value) {
+                Log.d("InterviewingScreenViewModel", "Timer paused.")
             }
         }
     }
 
-    fun clova(textForSpeach: String) {
-        val retrofit = ClovaNetworkClient.getRetrofitClient(context)
+    private fun recognizeSpeech(audioBytes: ByteArray) {
+        val retrofit = ClovaNetworkClient.getSTTRetrofitClient(context)
+        val api = retrofit.create(ClovaVoiceService::class.java)
+
+        val audioData = AudioData(audioBytes)
+
+        // 음성 인식 API 호출
+        val call = api.recognizeSpeech(audioData)
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    try {
+                        val recognizedText = response.body()?.string() // 변환된 텍스트
+                        Log.d("ClovaSTT", "Recognized text: $recognizedText")
+
+                        // 텍스트로 변환된 결과를 현재 인덱스에 저장
+                        val updatedAnswers = _answers.value.toMutableList()
+                        if (recognizedText != null) {
+                            updatedAnswers[_index.value] = recognizedText
+                            _answers.value = updatedAnswers
+                        }
+                    } catch (e: Exception) {
+                        Log.e("ClovaSTT", "Error processing STT response: ${e.message}")
+                    }
+                } else {
+                    Log.e("ClovaSTT", "STT API failed: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.e("ClovaSTT", "STT API call failed: ${t.message}")
+            }
+        })
+    }
+
+
+
+    fun clovaTTS(textForSpeach: String) {
+        val retrofit = ClovaNetworkClient.getTTSRetrofitClient(context)
         val api = retrofit.create(ClovaVoiceService::class.java)
 
         val call = api.synthesize(
