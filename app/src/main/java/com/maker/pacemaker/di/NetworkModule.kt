@@ -1,7 +1,7 @@
 package com.maker.pacemaker.di
 
-import com.google.android.datatransport.runtime.dagger.Module
-import com.google.android.datatransport.runtime.dagger.Provides
+import dagger.Module  // 수정된 임포트 경로
+import dagger.Provides  // 수정된 임포트 경로
 import com.maker.pacemaker.data.model.remote.OpenAIService
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent

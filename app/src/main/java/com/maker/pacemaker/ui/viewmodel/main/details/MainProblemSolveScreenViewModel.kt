@@ -138,6 +138,7 @@ class MainProblemSolveScreenViewModel @Inject constructor(
 
                 // 문제 ID와 날짜를 저장합니다.
                 saveProblemData(currentDate, problemIds)
+                saveCnts()
             } catch (e: Exception) {
                 Log.e("MainProblemSolveScreenViewModel", "Error fetching daily problems", e)
             } finally {

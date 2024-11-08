@@ -1,12 +1,13 @@
 package com.maker.pacemaker.data.model.remote
 
+import com.maker.pacemaker.BuildConfig
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface OpenAIService {
-    @Headers("Authorization: Bearer YOUR_API_KEY", "Content-Type: application/json")
+    @Headers("Authorization: Bearer ${BuildConfig.OPEN_API_KEY}", "Content-Type: application/json")
     @POST("v1/completions")
     suspend fun getQuestions(@Body request: OpenAIRequest): Response<OpenAIResponse>
 }
