@@ -132,7 +132,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             // 콘텐츠 Box 영역
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(0.8f) // 너비를 90%로 설정
+                    .fillMaxWidth(0.9f) // 너비를 90%로 설정
                     .padding(horizontal = 16.dp)
                     .constrainAs(contentBox) {
                         top.linkTo(rating.bottom, margin = 16.dp)

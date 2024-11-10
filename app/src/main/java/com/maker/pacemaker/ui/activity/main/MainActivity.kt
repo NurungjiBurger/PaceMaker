@@ -20,6 +20,7 @@ import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.activity.BaseActivity
 import com.maker.pacemaker.ui.screen.main.MainAlarmScreen
 import com.maker.pacemaker.ui.screen.main.MainCSMantleScreen
+import com.maker.pacemaker.ui.screen.main.MainDoneScreen
 import com.maker.pacemaker.ui.screen.main.MainLabScreen
 import com.maker.pacemaker.ui.screen.main.MainLevelTestScreen
 import com.maker.pacemaker.ui.screen.main.MainMenuScreen
@@ -31,6 +32,7 @@ import com.maker.pacemaker.ui.screen.main.MainScreen
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainCSMantleScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.main.details.MainDoneScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainLabScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainLevelTestScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainMenuScreenViewModel
@@ -54,6 +56,7 @@ class MainActivity : BaseActivity() {
     private val mainRankingScreenViewModel: MainRankingScreenViewModel by viewModels()
     private val mainLabScreenViewModel: MainLabScreenViewModel by viewModels()
     private val mainCSMantleScreenViewModel: MainCSMantleScreenViewModel by viewModels()
+    private val mainDoneScreenViewModel: MainDoneScreenViewModel by viewModels()
 
     private val alarmUpdateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -93,16 +96,21 @@ class MainActivity : BaseActivity() {
                     mainProblemSearchScreenViewModel.restate()
                     MainProblemSearchScreen(mainProblemSearchScreenViewModel)
                 }
-                composable("problemSolveScreen") { MainProblemSolveScreen(mainProblemSolveScreenViewModel) }
+                composable("problemSolveScreen") {
+                    MainProblemSolveScreen(
+                        mainProblemSolveScreenViewModel
+                    )
+                }
                 composable("rankingScreen") {
                     mainRankingScreenViewModel.restate()
                     MainRankingScreen(mainRankingScreenViewModel)
                 }
                 composable("labScreen") { MainLabScreen(mainLabScreenViewModel) }
                 composable("csMantleScreen") { MainCSMantleScreen(mainCSMantleScreenViewModel) }
-                }
+                composable("doneScreen") { MainDoneScreen(mainDoneScreenViewModel)}
             }
         }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -131,6 +139,7 @@ class MainActivity : BaseActivity() {
             ScreenType.RANKING -> "rankingScreen"
             ScreenType.LAB -> "labScreen"
             ScreenType.CSMANTLE -> "csMantleScreen"
+            ScreenType.DONE -> "doneScreen"
             else -> return
         }
 
