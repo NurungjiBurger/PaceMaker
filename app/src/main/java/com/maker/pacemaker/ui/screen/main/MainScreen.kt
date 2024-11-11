@@ -188,8 +188,8 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
                         ) {
-                            baseViewModel.goActivity(ActivityType.INTERVIEW)
-                            //baseViewModel.goScreen(ScreenType.LAB)
+                            //baseViewModel.goActivity(ActivityType.INTERVIEW)
+                            baseViewModel.goScreen(ScreenType.LAB)
                             },
                     contentAlignment = Alignment.Center
                 ) {
