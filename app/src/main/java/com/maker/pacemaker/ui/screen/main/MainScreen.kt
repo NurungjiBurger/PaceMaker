@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,7 +30,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,225 +46,230 @@ import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
-import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.ui.screen.Component.BottomNavBar
 import com.maker.pacemaker.ui.screen.Component.Loading
 import com.maker.pacemaker.ui.screen.Component.Logo
 import com.maker.pacemaker.ui.screen.Component.Rating
 import com.maker.pacemaker.ui.screen.Component.TopNavBar
-
-
 @Composable
 fun MainScreen(viewModel: MainScreenViewModel) {
 
-
     val baseViewModel = viewModel.baseViewModel
-    val mainViewModel = viewModel.mainViewModel
-
     val user by baseViewModel.userInfo.collectAsState()
-    val userName by baseViewModel.userName.collectAsState()
-
     val isLoading by baseViewModel.isLoading.collectAsState()
 
-
-    ConstraintLayout(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFFFAFAFA))
     ) {
-        // Constraints 정의
-        val (upBar, logo, script, ranking, contentBox, bottomBar) = createRefs()
+        Image(
+            painter = painterResource(id = R.drawable.mainbg),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
-        // 상단바
-        Box(
+        ConstraintLayout(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-                .constrainAs(upBar) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                }
+                .fillMaxSize()
         ) {
-            TopNavBar(baseViewModel)
-        }
+            val (upBar, greeting, rating, contentBox, bottomBar) = createRefs()
 
-        // 로고
-        Box(
-            modifier = Modifier
-                .size(60.dp)
-                .constrainAs(logo) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(upBar.bottom, margin = 30.dp)
-                }
-        ) {
-            Logo(baseViewModel)
-        }
+            // 상단바
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f) // 너비를 90%로 설정
+                    .height(60.dp)
+                    .constrainAs(upBar) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start) // 수평 중앙에 배치
+                        end.linkTo(parent.end)
+                    }
+            ) {
+                TopNavBar(baseViewModel)
+            }
 
-        // 스크립트
-        Box(
-            modifier = Modifier
-                .constrainAs(script) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(logo.bottom, margin = 20.dp)
-                }
-        ) {
+            // 환영 메시지와 사용자 이름
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth(0.9f) // 너비를 90%로 설정
+                    .padding(horizontal = 16.dp)
+                    .constrainAs(greeting) {
+                        top.linkTo(upBar.bottom, margin = 16.dp)
+                        start.linkTo(parent.start) // 수평 중앙에 배치
+                        end.linkTo(parent.end)
+                    },
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "안녕하세요",
-                    fontSize = 25.sp,
+                    text = "안녕하세요 ${user.nickname}님",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
                 )
-
                 Text(
-                    text = "${user.nickname}님",
-                    fontSize = 40.sp,
-
+                    text = "오늘도 재밌는 퀴즈 풀어요~",
+                    fontSize = 16.sp,
+                    color = Color.Gray
                 )
             }
-        }
 
-        // 랭킹
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .constrainAs(ranking) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(script.bottom, margin = 20.dp)
-                }
-        )
-        {
-            Rating(baseViewModel)
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(360.dp)
-                .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
-                .constrainAs(contentBox) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(ranking.bottom)
-                    bottom.linkTo(bottomBar.top)
-                },
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+            // 랭킹 정보
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxWidth(0.9f) // 너비를 90%로 설정
+                    .padding(horizontal = 16.dp)
+                    .constrainAs(rating) {
+                        top.linkTo(greeting.bottom, margin = 16.dp)
+                        start.linkTo(parent.start) // 수평 중앙에 배치
+                        end.linkTo(parent.end)
+                    },
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                Text(text = "Rating", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text(text = "상위 1%", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            }
+
+            // 콘텐츠 Box 영역
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f) // 너비를 90%로 설정
+                    .padding(horizontal = 16.dp)
+                    .constrainAs(contentBox) {
+                        top.linkTo(rating.bottom, margin = 16.dp)
+                        bottom.linkTo(bottomBar.top, margin = 16.dp)
+                        start.linkTo(parent.start) // 수평 중앙에 배치
+                        end.linkTo(parent.end)
+                    },
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // "오늘의 학습" Box
                 Box(
                     modifier = Modifier
-                        .size(150.dp)
-                        .background(Color(0xFF1429A0), RoundedCornerShape(10.dp))
-                        .border(BorderStroke(2.dp, Color.Blue), shape = RoundedCornerShape(10.dp))
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) { baseViewModel.goScreen(ScreenType.PROBLEMSOLVE) },
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFF1429A0))
+                        .clickable { baseViewModel.goScreen(ScreenType.PROBLEMSOLVE) },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.light1),
+                            contentDescription = "Icon 1",
+                            modifier = Modifier.size(55.dp)
+                        )
+                        Text(
+                            text = "오늘의 학습",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.light2),
+                            contentDescription = "Icon 2",
+                            modifier = Modifier.size(55.dp)
+                        )
+                    }
+                }
+
+                // "CS 면접" Box
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFFDFE9FE))
+                        .clickable { baseViewModel.goScreen(ScreenType.LAB) },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.padding(horizontal = 35.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.interviewer1),
+                            contentDescription = "Icon 1",
+                            modifier = Modifier.size(48.dp)
+                        )
+                        Text(
+                            text = "CS 면접",
+                            color = Color(0xFF1429A0),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 12.dp)
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.interviewer2),
+                            contentDescription = "Icon 2",
+                            modifier = Modifier.size(48.dp)
+                        )
+                    }
+                }
+
+                // "싸 맨 틀" Box
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFF5387F7).copy(alpha = 0.3f))
+                        .clickable { baseViewModel.goScreen(ScreenType.LAB) },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "오늘의 학습",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
+                        text = "싸 맨 틀",
+                        color = Color(0xFF1429A0),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
                     )
                 }
 
+                // "문제 추가하기" Box
                 Box(
                     modifier = Modifier
-                        .size(150.dp)
-                        .background(Color(0xFF1429A0), RoundedCornerShape(10.dp))
-                        .border(BorderStroke(2.dp, Color.Blue), shape = RoundedCornerShape(10.dp))
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
                         ) {
                             //baseViewModel.goActivity(ActivityType.INTERVIEW)
                             baseViewModel.goScreen(ScreenType.LAB)
-                            },
+                            }
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFFFFFFFF))
+                        .border(BorderStroke(2.dp, Color(0xFFECECEC)), shape = RoundedCornerShape(12.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "CS 면접",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
+                        text = "문제 추가하기",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
                     )
                 }
             }
 
+            // 하단바
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
-                    .background(Color(0xFFFEFEFF).copy(alpha = 0.3f), RoundedCornerShape(10.dp))
-                    .border(BorderStroke(2.dp, Color.Gray), shape = RoundedCornerShape(10.dp))
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) { baseViewModel.goScreen(ScreenType.LAB) }
-                ,
-                contentAlignment = Alignment.Center
+                    .height(60.dp)
+                    .constrainAs(bottomBar) {
+                        bottom.linkTo(parent.bottom)
+                    }
             ) {
-                Text(
-                    text = "문제 추가하기",
-                    fontSize = 20.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
-                )
+                BottomNavBar(baseViewModel)
             }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .background(Color(0xFFFEFEFF).copy(alpha = 0.3f), RoundedCornerShape(10.dp))
-                    .border(BorderStroke(2.dp, Color.Gray), shape = RoundedCornerShape(10.dp))
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) { baseViewModel.goScreen(ScreenType.LAB) },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "싸맨틀",
-                    fontSize = 20.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
-
-
-        // 하단바
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-                .constrainAs(bottomBar) {
-                    top.linkTo(contentBox.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                }
-        ) {
-            BottomNavBar(baseViewModel)
         }
     }
 
     // 로딩 다이얼로그
     isLoading?.let { Loading("로딩 중...", isLoading = it, onDismiss = { /* Dismiss Logic */ }) }
 }
-
