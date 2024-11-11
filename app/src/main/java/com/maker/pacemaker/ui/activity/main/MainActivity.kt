@@ -75,6 +75,8 @@ class MainActivity : BaseActivity() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(alarmUpdateReceiver)
     }
 
+    private val mainViewModel: MainBaseViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -96,11 +98,7 @@ class MainActivity : BaseActivity() {
                     mainProblemSearchScreenViewModel.restate()
                     MainProblemSearchScreen(mainProblemSearchScreenViewModel)
                 }
-                composable("problemSolveScreen") {
-                    MainProblemSolveScreen(
-                        mainProblemSolveScreenViewModel
-                    )
-                }
+                composable("problemSolveScreen") { MainProblemSolveScreen(mainProblemSolveScreenViewModel) }
                 composable("rankingScreen") {
                     mainRankingScreenViewModel.restate()
                     MainRankingScreen(mainRankingScreenViewModel)
@@ -108,6 +106,7 @@ class MainActivity : BaseActivity() {
                 composable("labScreen") { MainLabScreen(mainLabScreenViewModel) }
                 composable("csMantleScreen") { MainCSMantleScreen(mainCSMantleScreenViewModel) }
                 composable("doneScreen") { MainDoneScreen(mainDoneScreenViewModel)}
+                composable("csRankingScreen") { MainRankingScreen(mainRankingScreenViewModel) }
             }
         }
     }
@@ -140,6 +139,7 @@ class MainActivity : BaseActivity() {
             ScreenType.LAB -> "labScreen"
             ScreenType.CSMANTLE -> "csMantleScreen"
             ScreenType.DONE -> "doneScreen"
+            ScreenType.CSRANKING -> "csRankingScreen"
             else -> return
         }
 

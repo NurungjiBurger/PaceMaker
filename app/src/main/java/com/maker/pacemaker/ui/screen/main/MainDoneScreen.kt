@@ -18,10 +18,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.maker.pacemaker.R
+import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.viewmodel.main.details.MainDoneScreenViewModel
 
 @Composable
 fun MainDoneScreen(viewModel: MainDoneScreenViewModel) {
+
+
+    val baseViewModel = viewModel.baseViewModel
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -38,7 +43,7 @@ fun MainDoneScreen(viewModel: MainDoneScreenViewModel) {
         ) {
             // 닫기 버튼
             IconButton(
-                onClick = { /* Dismiss Logic */ },
+                onClick = { baseViewModel.goScreen(ScreenType.MAIN) },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(8.dp)

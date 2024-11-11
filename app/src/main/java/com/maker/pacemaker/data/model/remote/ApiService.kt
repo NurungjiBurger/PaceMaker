@@ -369,10 +369,12 @@ data class ProblemHint(
     val hint: String
 )
 
-
-
 data class SimilarityWord(
     val word: String,
     val similarity: Double,
     val similarityRank: Int,
 )
+
+//싸맨틀
+
+//싸맨틀 랭킹
