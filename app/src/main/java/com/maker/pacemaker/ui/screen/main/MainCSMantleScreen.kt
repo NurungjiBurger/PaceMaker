@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -247,13 +248,13 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(screenHeight/2)
+                .height(screenHeight / 2)
                 .padding(start = 15.dp)
                 .constrainAs(contentBox) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    top.linkTo(contentBoxBorder.bottom        ) // contentBoxBorder 아래에 위치
-                    bottom.linkTo(parent.bottom) // 화면의 남은 공간을 채울 수 있도록 설정
+                    top.linkTo(contentBoxBorder.bottom)
+                    bottom.linkTo(parent.bottom)
                 }
         ) {
             // 유사도 순으로 내림차순 정렬
@@ -267,25 +268,44 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        .width(searchBoxWidth)
+                        .fillMaxWidth()
                         .padding(start = 20.dp, end = 20.dp)
+                        .height(IntrinsicSize.Min) // 텍스트 길이에 따라 최소 높이 설정
                 ) {
                     Text(
-                        text = "${index}", // 기존 입력 순서 인덱스
+                        text = "${index + 1}",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.width(30.dp)
                     )
+
                     Text(
                         text = word.word,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        maxLines = 2, // 최대 줄 수 제한
+                        softWrap = true, // 텍스트 줄바꿈 허용
+                        modifier = Modifier
+                            .width(IntrinsicSize.Max) // 텍스트 길이에 맞춰 확장
+                            .weight(1f) // Row에서 남은 공간 사용
+                            .padding(start = 8.dp) // 유사도 텍스트와 간격
                     )
+
                     Text(
-                        text = "${(word.similarity * 100)}",
-                        fontSize = 18.sp
+                        text = "${word.similarity}",
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .width(100.dp) // 필요한 경우 너비 조절
+                            .padding(end = 40.dp) // 텍스트를 왼쪽으로 이동시키기 위해 끝 쪽에 패딩 추가
+                            .alignBy { it.measuredHeight / 2 } // 부모 기준 위치 정렬
                     )
+
                     Text(
                         text = "${word.similarityRank}",
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .width(100.dp)
+                            .padding(end = 52.dp)
+                            .alignBy { it.measuredHeight / 2 } // 부모 기준 위치 정렬
                     )
                 }
             }
