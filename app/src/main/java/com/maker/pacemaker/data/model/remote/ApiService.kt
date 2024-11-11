@@ -156,6 +156,18 @@ interface ApiService {
     suspend fun getLevelTestProblemsByLevel(
         @Path("level") level: Int
     ): List<Problem>
+
+    //싸맨틀 게임
+    @POST("ssamantle/attempt")
+    suspend fun checkWordSimilarity(
+        @Body request: SimilarityWordRequest
+    ): SimilarityWordResponse
+
+    //싸맨틀 랭킹 조회
+    @GET("ssamantle/solved_users")
+    suspend fun getSolvedUsers(): List<SolvedUser>
+
+
 }
 
 // 선호 카테고리 수정 요청
@@ -371,10 +383,27 @@ data class ProblemHint(
 
 data class SimilarityWord(
     val word: String,
-    val similarity: Double,
+    val similarity: Float,
     val similarityRank: Int,
 )
 
 //싸맨틀
+// 유사도 요청 데이터 클래스
+data class SimilarityWordRequest(
+    val word: String
+)
+
+// 유사도 응답 데이터 클래스
+data class SimilarityWordResponse(
+    val try_cnt: Int,
+    val similarity: Float,
+    val ranking: Int
+)
 
 //싸맨틀 랭킹
+data class SolvedUser(
+    val uid: String,
+    val nickname: String,
+    val try_cnt: Int
+)
+

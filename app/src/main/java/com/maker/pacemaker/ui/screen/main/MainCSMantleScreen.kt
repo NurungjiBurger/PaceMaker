@@ -110,17 +110,8 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
 
         Text(
             text = buildAnnotatedString {
-                append("정답 단어와 가장 유사한 단어의\n유사도는 ")
-                withStyle(
-                    style = SpanStyle(
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                ) {
-                    append(similarity.toString())
-                }
-                append(" 입니다.\n")
+                append("단어를 입력해주세요\n ")
+                append("유사도를 보며 단어를 유추해주세요\n")
                 withStyle(
                     style = SpanStyle(
                         fontSize = 30.sp,

@@ -19,6 +19,7 @@ import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.ui.activity.BaseActivity
 import com.maker.pacemaker.ui.screen.main.MainAlarmScreen
+import com.maker.pacemaker.ui.screen.main.MainCSMantleRankingScreen
 import com.maker.pacemaker.ui.screen.main.MainCSMantleScreen
 import com.maker.pacemaker.ui.screen.main.MainDoneScreen
 import com.maker.pacemaker.ui.screen.main.MainLabScreen
@@ -31,6 +32,7 @@ import com.maker.pacemaker.ui.screen.main.MainRankingScreen
 import com.maker.pacemaker.ui.screen.main.MainScreen
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainAlarmScreenViewModel
+import com.maker.pacemaker.ui.viewmodel.main.details.MainCSMantleRankingScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainCSMantleScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainDoneScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainLabScreenViewModel
@@ -57,6 +59,7 @@ class MainActivity : BaseActivity() {
     private val mainLabScreenViewModel: MainLabScreenViewModel by viewModels()
     private val mainCSMantleScreenViewModel: MainCSMantleScreenViewModel by viewModels()
     private val mainDoneScreenViewModel: MainDoneScreenViewModel by viewModels()
+    private val mainCSMantleRankingScreenViewModel: MainCSMantleRankingScreenViewModel by viewModels()
 
     private val alarmUpdateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -106,7 +109,7 @@ class MainActivity : BaseActivity() {
                 composable("labScreen") { MainLabScreen(mainLabScreenViewModel) }
                 composable("csMantleScreen") { MainCSMantleScreen(mainCSMantleScreenViewModel) }
                 composable("doneScreen") { MainDoneScreen(mainDoneScreenViewModel)}
-                composable("csRankingScreen") { MainRankingScreen(mainRankingScreenViewModel) }
+                composable("csRankingScreen") {MainCSMantleRankingScreen(mainCSMantleRankingScreenViewModel)}
             }
         }
     }
