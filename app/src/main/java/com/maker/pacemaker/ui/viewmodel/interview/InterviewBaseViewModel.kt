@@ -16,6 +16,9 @@ open class InterviewBaseViewModel @Inject constructor(
 
     val baseViewModel = base
 
+    private val _text = MutableStateFlow("")
+    val text = _text
+
     private val _interviewing = MutableStateFlow(false)
     val interviewing = _interviewing
 
@@ -37,5 +40,8 @@ open class InterviewBaseViewModel @Inject constructor(
         Log.d("InterviewBaseViewModel", "isLoading: ${isLoading.value}")
     }
 
+    fun setText(text: String) {
+        _text.value = text
+    }
 
 }

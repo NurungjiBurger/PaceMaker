@@ -233,12 +233,18 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                 // "문제 추가하기" Box
                 Box(
                     modifier = Modifier
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            //baseViewModel.goActivity(ActivityType.INTERVIEW)
+                            baseViewModel.goScreen(ScreenType.LAB)
+                            }
                         .fillMaxWidth()
                         .height(100.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(Color(0xFFFFFFFF))
-                        .border(BorderStroke(2.dp, Color(0xFFECECEC)), shape = RoundedCornerShape(12.dp))
-                        .clickable { baseViewModel.goScreen(ScreenType.LAB) },
+                        .border(BorderStroke(2.dp, Color(0xFFECECEC)), shape = RoundedCornerShape(12.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

@@ -1,6 +1,7 @@
 package com.maker.pacemaker.data.model.remote
 
 import android.content.Context
+import com.maker.pacemaker.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -8,12 +9,6 @@ import java.util.concurrent.TimeUnit
 
 
 object RetrofitClient {
-
-    // real server
-    // private const val BASE_URL = "http://k11a406.p.ssafy.io/"
-
-    // test server
-    private const val BASE_URL = "http://k11a406.p.ssafy.io:8000/"
 
     private lateinit var retrofit: Retrofit
 
@@ -28,7 +23,8 @@ object RetrofitClient {
                 .build()
 
             retrofit = Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                // now test server
+                .baseUrl(BuildConfig.TEST_BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

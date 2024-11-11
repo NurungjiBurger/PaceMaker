@@ -21,6 +21,14 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "BASE_URL", "\"${project.findProperty("BASE_URL")}\"")
+        buildConfigField("String", "OPEN_API_KEY", "\"${project.findProperty("OPEN_API_KEY")}\"")
+        buildConfigField("String", "TEST_BASE_URL", "\"${project.findProperty("TEST_BASE_URL")}\"")
+        buildConfigField("String", "CLOVA_TTS_API_URL", "\"${project.findProperty("CLOVA_TTS_API_URL")}\"")
+        buildConfigField("String", "CLOVA_STT_API_URL", "\"${project.findProperty("CLOVA_STT_API_URL")}\"")
+        buildConfigField("String", "CLOVA_API_CLIENT_ID", "\"${project.findProperty("CLOVA_API_CLIENT_ID")}\"")
+        buildConfigField("String", "CLOVA_API_CLIENT_SECRET", "\"${project.findProperty("CLOVA_API_CLIENT_SECRET")}\"")
     }
 
     buildTypes {
@@ -30,6 +38,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "BASE_URL", "\"http://release-api-url.com\"")
+            buildConfigField("String", "OPEN_API_KEY", "\"release-api-key\"")
         }
     }
     compileOptions {
@@ -41,6 +51,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1" // Compose Compiler 버전도 확인
@@ -89,6 +100,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.logging.interceptor)
 
     // firebase cloud messaging
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
