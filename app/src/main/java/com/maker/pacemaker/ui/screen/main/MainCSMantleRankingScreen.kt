@@ -1,6 +1,7 @@
 package com.maker.pacemaker.ui.screen.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,6 +25,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
 import com.maker.pacemaker.ui.viewmodel.main.details.MainCSMantleRankingScreenViewModel
 
+
 @Composable
 fun MainCSMantleRankingScreen(viewModel: MainCSMantleRankingScreenViewModel) {
 
@@ -31,17 +33,17 @@ fun MainCSMantleRankingScreen(viewModel: MainCSMantleRankingScreenViewModel) {
     val userRank by viewModel.userRanks.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.showRanking() // 화면 표시 시 실행하고자 하는 함수 호출
+        viewModel.showRanking()
     }
 
     ConstraintLayout(
-
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color(0xFFFAFAFA))
     ) {
 
-        val (contentBoxBorder, contentBox) = createRefs()
+        val (contentBox, bottomBox) = createRefs()
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -71,16 +73,40 @@ fun MainCSMantleRankingScreen(viewModel: MainCSMantleRankingScreenViewModel) {
         // LazyColumn을 ConstraintLayout 내에서 직접 사용
         LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
+                .width(330.dp)
                 .height(screenHeight / 2)
-                .padding(start = 15.dp)
+                .padding(horizontal = 16.dp)
+                .clip(RoundedCornerShape(15.dp))
+                .background(Color(0xFFDFE9FE))
                 .constrainAs(contentBox) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    top.linkTo(parent.top, margin = 100.dp) // Column과 LazyColumn 사이의 여백을 지정
+                    top.linkTo(parent.top, margin = 50.dp)
                     bottom.linkTo(parent.bottom)
                 }
         ) {
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "이름",
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                    )
+                    Text(
+                        text = "시도 횟수",
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                }
+            }
+
             // 유사도 순으로 내림차순 정렬
             val sortedRanks = userRank.sortedBy { it.try_cnt } ?: emptyList()
 
@@ -92,37 +118,94 @@ fun MainCSMantleRankingScreen(viewModel: MainCSMantleRankingScreenViewModel) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 20.dp, end = 20.dp)
-                        .height(IntrinsicSize.Min)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .clip(RoundedCornerShape(25.dp))
+                        .height(40.dp)
+                        .background(Color.White)
                 ) {
                     Text(
                         text = "${index + 1}",
-                        fontSize = 18.sp,
+                        fontSize = 25.sp,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.width(30.dp)
+                        modifier = Modifier
+                            .width(30.dp)
+                            .padding(start = 8.dp)
                     )
 
                     Text(
                         text = rank.nickname,
                         fontSize = 18.sp,
-                        maxLines = 2,
+                        maxLines = 1,
                         softWrap = true,
                         modifier = Modifier
-                            .width(IntrinsicSize.Max)
                             .weight(1f)
-                            .padding(start = 8.dp)
+                            .padding(horizontal = 8.dp)
                     )
 
                     Text(
-                        text = "${rank.try_cnt}",
+                        text = "${rank.try_cnt}회",
                         fontSize = 18.sp,
-                        modifier = Modifier
-                            .width(100.dp)
-                            .padding(end = 52.dp)
-                            .alignBy { it.measuredHeight / 2 }
+                        modifier = Modifier.width(50.dp)
                     )
                 }
             }
         }
+
+
+        // 하단 UI 추가
+        Row(
+            modifier = Modifier
+                .width(330.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(Color(0xFFFAFAFA))
+                .border(
+                    width = 1.dp,
+                    color = Color.Gray,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .constrainAs(bottomBox) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom, margin = 16.dp)
+                }
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "나의 랭킹",
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
+                Text(
+                    text = "327", // 예시 랭킹 숫자
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+            }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .width(120.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .padding(8.dp)
+            ) {
+                Text(
+                    text = "도전 횟수",
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
+                Text(
+                    text = "57회", // 예시 도전 횟수
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+            }
+        }
     }
 }
+
