@@ -29,16 +29,22 @@ open class MainCSMantleRankingScreenViewModel @Inject constructor(
             val response = repository.getSolvedUsers()
 
             Log.d("MainCSMantleScreenViewModel", "Response: $response")
+
+            // newRank 초기화
+            var newRank = emptyList<SolvedUser>()
+
             response.forEach { user ->
                 Log.d("MainCSMantleScreenViewModel", "Try_cnt: ${user.try_cnt}, Nickname: ${user.nickname}, UID: ${user.uid}")
                 val try_cnt = user.try_cnt
                 val name = user.nickname
                 val userid = user.uid
 
-                val newRank = _userRanks.value + SolvedUser(userid, name, try_cnt)
-                _userRanks.value = newRank.sortedByDescending { try_cnt }
-
+                // newRank에 사용자 추가
+                newRank = newRank + SolvedUser(userid, name, try_cnt)
             }
+
+            // 내림차순으로 정렬 후 _userRanks에 업데이트
+            _userRanks.value = newRank.sortedByDescending { it.try_cnt }
         }
     }
 }

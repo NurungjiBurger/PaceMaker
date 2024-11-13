@@ -25,8 +25,12 @@ open class MainCSMantleScreenViewModel @Inject constructor(
     private val _words = MutableStateFlow("")
     val words = _words
 
-    private val _correct = MutableStateFlow(false)
-    val correct = _correct
+//    private val _correct = MutableStateFlow(false)
+//    val correct = _correct
+
+    private val _showModal = MutableStateFlow(false)
+    val showModal = _showModal
+
 
     private val _submitedWords = MutableStateFlow<List<SimilarityWord>>(emptyList())
     val submitedWords = _submitedWords
@@ -52,7 +56,7 @@ open class MainCSMantleScreenViewModel @Inject constructor(
                 Log.d("MainCSMantleScreenViewModel", "Response: $response")
                 Log.d("MainCSMantleScreenViewModel", "Try_cnt: ${response.try_cnt}, Similarity: ${response.similarity}, Rank: ${response.ranking}")
                 if (response.similarity == 100.0f){
-                    _correct.value = true // 상태 변경
+                    _showModal.value = true
                 }
                 if (!isDuplicate) {
                     val similarity = response.similarity
@@ -78,18 +82,17 @@ open class MainCSMantleScreenViewModel @Inject constructor(
                 baseViewModel.triggerToast("예기치 않은 오류가 발생했습니다.")
             }
         }
-        checkCorrect()
     }
 
     fun onSearchWordsChanged(words: String) {
         _words.value = words
     }
 
-    fun checkCorrect() {
-        if (_correct.value) {
-            baseViewModel.goScreen(ScreenType.CSRANKING)
-            // 정답 맞췄다는 화면 하나 넣을까?
-        }
+    fun hideModal() {
+        _showModal.value = false
+        baseViewModel.goScreen(ScreenType.CSRANKING)
     }
+
+
 
 }

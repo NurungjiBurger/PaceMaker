@@ -226,7 +226,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                         .height(100.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(Color(0xFF5387F7).copy(alpha = 0.3f))
-                        .clickable { baseViewModel.goScreen(ScreenType.CSRANKING) },
+                        .clickable { baseViewModel.goScreen(ScreenType.CSMANTLE) },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

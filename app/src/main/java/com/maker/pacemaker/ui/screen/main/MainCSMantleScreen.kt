@@ -20,9 +20,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -63,6 +65,7 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
     val words = viewModel.words.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val showModal by viewModel.showModal.collectAsState()
     val submitedWords by viewModel.submitedWords.collectAsState()
 
     // 유사도
@@ -310,5 +313,18 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
                 }
             }
         }
+    }
+
+    if (showModal) {
+        AlertDialog(
+            onDismissRequest = { viewModel.hideModal() },
+            title = { Text("정답!") },
+            text = { Text("축하합니다! 정답을 맞추셨습니다.") },
+            confirmButton = {
+                TextButton(onClick = { viewModel.hideModal() }) {
+                    Text("확인")
+                }
+            }
+        )
     }
 }
