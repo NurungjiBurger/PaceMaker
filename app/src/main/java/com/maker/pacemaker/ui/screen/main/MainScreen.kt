@@ -58,10 +58,14 @@ fun MainScreen(viewModel: MainScreenViewModel) {
     val baseViewModel = viewModel.baseViewModel
     val user by baseViewModel.userInfo.collectAsState()
     val isLoading by baseViewModel.isLoading.collectAsState()
-    val allSolved by viewModel.mainViewModel.allSolved.collectAsState()
+    val allSolved by baseViewModel.allQuizSolved.collectAsState()
+    val allCSMantleSolved by baseViewModel.CSMantleSolved.collectAsState()
 
     LaunchedEffect(Unit) {
         Log.d("MainScreen", "allSolved initial value: $allSolved")
+        val currentCSMantleSolved = baseViewModel.sharedPreferences.getBoolean("CSMantleSolved", false)
+        Log.d("MainProblemSolveScreenViewModel", "CSMantleSolved 값: $allCSMantleSolved")
+
 
     }
 
@@ -225,13 +229,13 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                         .fillMaxWidth()
                         .height(100.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFF5387F7).copy(alpha = 0.3f))
-                        .clickable { baseViewModel.goScreen(ScreenType.CSMANTLE) },
+                        .background(if (allCSMantleSolved) Color(0xFF737CAE) else Color(0xFF5387F7).copy(alpha = 0.3f))
+                        .clickable {if (allCSMantleSolved) baseViewModel.goScreen(ScreenType.DONE) else baseViewModel.goScreen(ScreenType.CSMANTLE)},
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "싸 맨 틀",
-                        color = Color(0xFF1429A0),
+                        color = if (allCSMantleSolved) Color(0xFFE2E2E2) else Color(0xFF1429A0),
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
                     )

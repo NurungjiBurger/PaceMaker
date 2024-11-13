@@ -32,6 +32,7 @@ class MainProblemSolveScreenViewModel @Inject constructor(
     val baseViewModel = base.baseViewModel
     val mainViewModel = base
     val repository = baseViewModel.repository
+    val allQuizSolved: StateFlow<Boolean> get() = baseViewModel.allQuizSolved
 
 
      //오늘의 문제
@@ -121,7 +122,8 @@ class MainProblemSolveScreenViewModel @Inject constructor(
 
         if (problemIds.isNotEmpty()) {
             fetchProblemsByIds(problemIds)
-            mainViewModel.setAllSolved(false)
+            baseViewModel.setAllQuizSolved(false)
+
         }
     }
 

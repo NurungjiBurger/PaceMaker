@@ -56,6 +56,9 @@ open class MainCSMantleScreenViewModel @Inject constructor(
                 Log.d("MainCSMantleScreenViewModel", "Response: $response")
                 Log.d("MainCSMantleScreenViewModel", "Try_cnt: ${response.try_cnt}, Similarity: ${response.similarity}, Rank: ${response.ranking}")
                 if (response.similarity == 100.0f){
+                    baseViewModel.setCSMantleSolved(true)
+                    val currentCSMantleSolved = baseViewModel.sharedPreferences.getBoolean("CSMantleSolved", false)
+                    Log.d("MainProblemSolveScreenViewModel", "CSMantleSolved 값: $currentCSMantleSolved")
                     _showModal.value = true
                 }
                 if (!isDuplicate) {

@@ -226,7 +226,6 @@ data class userResponse(
     val message: String
 )
 
-
 data class User(
     val uid: String,
     val nickname: String,
@@ -236,7 +235,6 @@ data class User(
     val preferred_categories: List<Int>,
     val followers_count: Int
 )
-
 
 // idToken 서버로 전송 요청
 data class loginRequest(

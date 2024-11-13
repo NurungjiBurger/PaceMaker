@@ -1,5 +1,6 @@
 package com.maker.pacemaker.ui.screen.main
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +29,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -70,6 +72,10 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
 
     // 유사도
     val similarity = 55.55
+    LaunchedEffect(Unit) {
+        baseViewModel.setCSMantleSolved(false)
+
+    }
 
     ConstraintLayout(
         modifier = Modifier

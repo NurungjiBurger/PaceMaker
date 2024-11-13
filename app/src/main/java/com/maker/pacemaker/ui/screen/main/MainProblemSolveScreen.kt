@@ -71,7 +71,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     val mainViewModel = viewModel.mainViewModel
 
     val isLoading by baseViewModel.isLoading.collectAsState()
-
+    val allQuizSolved by viewModel.allQuizSolved.collectAsState()
 
     val nowProblemIndex by viewModel.nowProblemIndex.collectAsState()
     val todaySolvedCount by viewModel.todaySolvedCount.collectAsState()
@@ -81,7 +81,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     val answer by viewModel.answer.collectAsState()
     val wrongCnt by viewModel.wrongCnt.collectAsState()
     val report by viewModel.report.collectAsState()
-    val allSolved by viewModel.mainViewModel.allSolved.collectAsState()
+    //val allSolved by viewModel.mainViewModel.allQuizSolved.collectAsState()
 
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
@@ -331,7 +331,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
         }
 
         if (todayProblems.size == nowProblemIndex && todayProblems.isNotEmpty()) {
-            viewModel.mainViewModel.setAllSolved(true)
+            baseViewModel.setAllQuizSolved(true)
 
             Log.d("MainProblemSolveScreen", "todayProblems: $todayProblems")
 

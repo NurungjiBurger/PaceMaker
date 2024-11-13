@@ -15,13 +15,4 @@ open class MainBaseViewModel @Inject constructor(
 
     val baseViewModel = base
 
-    // `allSolved` 상태를 관리하는 StateFlow 선언
-    private val _allSolved = MutableStateFlow(false)
-    val allSolved: StateFlow<Boolean> get() = _allSolved
-
-
-    // `allSolved` 값을 변경할 함수
-    fun setAllSolved(value: Boolean) {
-        _allSolved.value = value
-    }
 }
