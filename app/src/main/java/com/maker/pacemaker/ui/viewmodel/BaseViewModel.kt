@@ -30,6 +30,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -166,11 +169,25 @@ open class BaseViewModel @Inject constructor(
 
             putInt("followers_count", userInfo.followers_count)
 
-            putBoolean("allQuizSolved", _allQuizSolved.value)
-            putBoolean("CSMantleSolved", _CSMantleSolved.value)
+
+            val currentDate = getCurrentDate()
+            val savedDate = sharedPreferences.getString("date", "")
+
+            if (currentDate != savedDate) {
+                putInt("problemIndex", 0)
+                putInt("todaySolvedCount", 0)
+                putInt("todayWrongCount", 0)
+                putBoolean("allQuizSolved", false)
+                putBoolean("CSMantleSolved", false)
+            }
 
             apply()
         }
+    }
+
+    private fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(Date())
     }
 
     fun restate() {
