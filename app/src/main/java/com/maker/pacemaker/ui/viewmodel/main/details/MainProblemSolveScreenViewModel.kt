@@ -1,6 +1,8 @@
 package com.maker.pacemaker.ui.viewmodel.main.details
 
 import android.util.Log
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -14,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
@@ -29,27 +32,29 @@ class MainProblemSolveScreenViewModel @Inject constructor(
     val baseViewModel = base.baseViewModel
     val mainViewModel = base
     val repository = baseViewModel.repository
+    val allQuizSolved: StateFlow<Boolean> get() = baseViewModel.allQuizSolved
 
-    // 오늘의 문제
+
+     //오늘의 문제
     private val _todayProblems = MutableStateFlow<List<Problem>>(emptyList())
     val todayProblems = _todayProblems
 
     // 오늘의 문제들 힌트
     private val _problemHints = MutableStateFlow<Map<Int, List<String>>>(emptyMap())
     val problemHints = _problemHints
-    
-    // 풀어야 하는 문제 번호
+
+     //풀어야 하는 문제 번호
     private val _nowProblemIndex = MutableStateFlow(
         baseViewModel.sharedPreferences.getInt("problemIndex", 0)
     )
     val nowProblemIndex = _nowProblemIndex
 
-    // 푼 문제 수
+    // 맞춘 문제 수
     private val _todaySolvedCount = MutableStateFlow(
         baseViewModel.sharedPreferences.getInt("todaySolvedCount", 0)
     )
     val todaySolvedCount: MutableStateFlow<Int> get() = _todaySolvedCount
-    
+
     // 틀린 문제 수
     private val _todayWrongCount = MutableStateFlow(
         baseViewModel.sharedPreferences.getInt("todayWrongCount", 0)
@@ -117,6 +122,8 @@ class MainProblemSolveScreenViewModel @Inject constructor(
 
         if (problemIds.isNotEmpty()) {
             fetchProblemsByIds(problemIds)
+            baseViewModel.setAllQuizSolved(false)
+
         }
     }
 

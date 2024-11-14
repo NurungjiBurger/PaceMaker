@@ -51,12 +51,23 @@ import com.maker.pacemaker.ui.screen.Component.Loading
 import com.maker.pacemaker.ui.screen.Component.Logo
 import com.maker.pacemaker.ui.screen.Component.Rating
 import com.maker.pacemaker.ui.screen.Component.TopNavBar
+
 @Composable
 fun MainScreen(viewModel: MainScreenViewModel) {
 
     val baseViewModel = viewModel.baseViewModel
     val user by baseViewModel.userInfo.collectAsState()
     val isLoading by baseViewModel.isLoading.collectAsState()
+    val allSolved by baseViewModel.allQuizSolved.collectAsState()
+    val allCSMantleSolved by baseViewModel.CSMantleSolved.collectAsState()
+
+    LaunchedEffect(Unit) {
+        Log.d("MainScreen", "allSolved initial value: $allSolved")
+        val currentCSMantleSolved = baseViewModel.sharedPreferences.getBoolean("CSMantleSolved", false)
+        Log.d("MainProblemSolveScreenViewModel", "CSMantleSolved 값: $allCSMantleSolved")
+
+
+    }
 
     Box(
         modifier = Modifier
@@ -132,7 +143,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             // 콘텐츠 Box 영역
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(0.8f) // 너비를 90%로 설정
+                    .fillMaxWidth(0.9f) // 너비를 90%로 설정
                     .padding(horizontal = 16.dp)
                     .constrainAs(contentBox) {
                         top.linkTo(rating.bottom, margin = 16.dp)
@@ -148,8 +159,8 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                         .fillMaxWidth()
                         .height(100.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFF1429A0))
-                        .clickable { baseViewModel.goScreen(ScreenType.PROBLEMSOLVE) },
+                        .background(if (allSolved) Color(0xFF737CAE) else Color(0xFF1429A0))
+                        .clickable {if (allSolved) baseViewModel.goScreen(ScreenType.DONE) else baseViewModel.goScreen(ScreenType.PROBLEMSOLVE)},
                     contentAlignment = Alignment.Center
                 ) {
                     Row(
@@ -158,20 +169,20 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                         modifier = Modifier.padding(horizontal = 16.dp)
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.light1),
-                            contentDescription = "Icon 1",
+                            painter = painterResource(id = if (allSolved) R.drawable.lightoff1 else R.drawable.light1),
+                            contentDescription = null,
                             modifier = Modifier.size(55.dp)
                         )
                         Text(
                             text = "오늘의 학습",
-                            color = Color.White,
+                            color = (if (allSolved) Color(0xFFE2E2E2) else Color.White),
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(horizontal = 8.dp)
                         )
                         Image(
-                            painter = painterResource(id = R.drawable.light2),
-                            contentDescription = "Icon 2",
+                            painter = painterResource(id = if (allSolved) R.drawable.lightoff2 else R.drawable.light2),
+                            contentDescription = null,
                             modifier = Modifier.size(55.dp)
                         )
                     }
@@ -218,13 +229,13 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                         .fillMaxWidth()
                         .height(100.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFF5387F7).copy(alpha = 0.3f))
-                        .clickable { baseViewModel.goScreen(ScreenType.LAB) },
+                        .background(if (allCSMantleSolved) Color(0xFF737CAE) else Color(0xFF5387F7).copy(alpha = 0.3f))
+                        .clickable {if (allCSMantleSolved) baseViewModel.goScreen(ScreenType.DONE) else baseViewModel.goScreen(ScreenType.CSMANTLE)},
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "싸 맨 틀",
-                        color = Color(0xFF1429A0),
+                        color = if (allCSMantleSolved) Color(0xFFE2E2E2) else Color(0xFF1429A0),
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
                     )

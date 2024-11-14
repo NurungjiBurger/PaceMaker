@@ -20,6 +20,9 @@ import com.maker.pacemaker.data.model.remote.loginResponse
 //import com.maker.pacemaker.data.model.remote.ServerRequest
 //import com.maker.pacemaker.data.model.remote.ServerResponse
 import com.maker.pacemaker.data.model.remote.SearchUserResponse
+import com.maker.pacemaker.data.model.remote.SimilarityWordRequest
+import com.maker.pacemaker.data.model.remote.SimilarityWordResponse
+import com.maker.pacemaker.data.model.remote.SolvedUser
 import com.maker.pacemaker.data.model.remote.User
 import com.maker.pacemaker.data.model.remote.getCategoriesResponse
 import com.maker.pacemaker.data.model.remote.getFcmTokenResponse
@@ -155,4 +158,17 @@ class UserRepository(private val apiService: ApiService) {
     suspend fun getLevelTestProblemsByLevel(level: Int): List<Problem> {
         return apiService.getLevelTestProblemsByLevel(level)
     }
+
+    //////////////////////////////////////////////////////////////////////
+    //싸맨틀 게임
+    suspend fun checkWordSimilarity(request: SimilarityWordRequest): SimilarityWordResponse {
+        return apiService.checkWordSimilarity(request)
+    }
+
+    // 싸맨틀 랭킹 조회
+    suspend fun getSolvedUsers(): List<SolvedUser> {
+        return apiService.getSolvedUsers()
+    }
+
+
 }

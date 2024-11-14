@@ -1,73 +1,101 @@
 package com.maker.pacemaker.ui.viewmodel.main.details
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maker.pacemaker.data.model.ScreenType
 import com.maker.pacemaker.data.model.remote.SimilarityWord
+import com.maker.pacemaker.data.model.remote.SimilarityWordRequest
 import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
 open class MainCSMantleScreenViewModel @Inject constructor(
     private val base: MainBaseViewModel
-): ViewModel() {
+) : ViewModel() {
 
     val baseViewModel = base.baseViewModel
     val mainViewModel = base
+    val repository = baseViewModel.repository
 
     private val _words = MutableStateFlow("")
     val words = _words
 
+//    private val _correct = MutableStateFlow(false)
+//    val correct = _correct
+
+    private val _showModal = MutableStateFlow(false)
+    val showModal = _showModal
+
+
     private val _submitedWords = MutableStateFlow<List<SimilarityWord>>(emptyList())
     val submitedWords = _submitedWords
 
-    init {
-        _submitedWords.value = listOf(
-            SimilarityWord("사과", 0.9, 1),
-            SimilarityWord("바나나", 0.8, 2),
-            SimilarityWord("포도", 0.7, 3),
-            SimilarityWord("딸기", 0.6, 4),
-            SimilarityWord("수박", 0.5, 5),
-            SimilarityWord("참외", 0.4, 6),
-            SimilarityWord("키위", 0.3, 7),
-            SimilarityWord("망고", 0.2, 8),
-            SimilarityWord("복숭아", 0.1, 9),
-            SimilarityWord("자두", 0.0, 10),
-        )
-    }
 
     fun onSearchButtonClicked() {
-        
+
         val searchKeyword = _words.value.trim()
+
         if (searchKeyword.isEmpty()) {
-            println("검색어가 비어 있습니다.") // 필요에 따라 메시지를 출력하거나 별도 처리
+            baseViewModel.triggerToast("검색어가 비어 있습니다.") // Toast로 알림
             return
         }
 
-        // 이미 존재하는 단어인지 확인
         val isDuplicate = _submitedWords.value.any { it.word == searchKeyword }
 
+        viewModelScope.launch {
+            val request = SimilarityWordRequest(word = searchKeyword)
 
-        if (!isDuplicate) {
-            // 유사도를 0.0에서 1.0 사이로 임의로 설정
-            val similarity = (0..100).random() / 100.0
-            val rank = _submitedWords.value.size + 1 // 새로운 단어의 순위를 임의로 설정
+            try {
+                val response = repository.checkWordSimilarity(request)
 
-            // 새로운 단어를 추가하고 유사도 순으로 내림차순 정렬하여 업데이트
-            val newWords = _submitedWords.value + SimilarityWord(searchKeyword, similarity, rank)
-            _submitedWords.value = newWords.sortedBy { it.similarity }
+                Log.d("MainCSMantleScreenViewModel", "Response: $response")
+                Log.d("MainCSMantleScreenViewModel", "Try_cnt: ${response.try_cnt}, Similarity: ${response.similarity}, Rank: ${response.ranking}")
+                if (response.similarity == 100.0f){
+                    baseViewModel.setCSMantleSolved(true)
+                    val currentCSMantleSolved = baseViewModel.sharedPreferences.getBoolean("CSMantleSolved", false)
+                    Log.d("MainProblemSolveScreenViewModel", "CSMantleSolved 값: $currentCSMantleSolved")
+                    _showModal.value = true
+                }
+                if (!isDuplicate) {
+                    val similarity = response.similarity
+                    val rank = response.ranking
 
-            _words.value = "" // 입력 초기화
-        } else {
-            // 중복일 경우, 알림을 추가하거나 별도의 처리를 할 수 있습니다.
-            println("중복된 단어입니다.")
+                    val newWords = _submitedWords.value + SimilarityWord(searchKeyword, similarity, rank)
+                    _submitedWords.value = newWords.sortedByDescending { it.similarity }
+
+                    _words.value = ""
+                } else {
+                    baseViewModel.triggerToast("중복된 단어입니다.") // 중복 알림
+                }
+            } catch (e: HttpException) {
+                if (e.code() == 404) {
+                    Log.e("MainCSMantleScreenViewModel", "Error: 단어를 찾을 수 없습니다.")
+                    baseViewModel.triggerToast("단어를 찾을 수 없습니다.")
+                } else {
+                    Log.e("MainCSMantleScreenViewModel", "Error checking word similarity", e)
+                    baseViewModel.triggerToast("단어 유사도를 확인하는 중 오류가 발생했습니다.")
+                }
+            } catch (e: Exception) {
+                Log.e("MainCSMantleScreenViewModel", "Unexpected error checking word similarity", e)
+                baseViewModel.triggerToast("예기치 않은 오류가 발생했습니다.")
+            }
         }
     }
-
 
     fun onSearchWordsChanged(words: String) {
         _words.value = words
     }
+
+    fun hideModal() {
+        _showModal.value = false
+        baseViewModel.goScreen(ScreenType.CSRANKING)
+    }
+
+
+
 }

@@ -30,6 +30,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -100,6 +103,37 @@ open class BaseViewModel @Inject constructor(
     private val _userInfo = MutableStateFlow<User>(User("","",0,0,0,emptyList(),0))
     val userInfo: StateFlow<User> get() = _userInfo
 
+    // allQuizSolved와 CSMantleSolved 상태를 관리하는 StateFlow
+    private val _allQuizSolved = MutableStateFlow(loadAllQuizSolved())
+    val allQuizSolved: StateFlow<Boolean> get() = _allQuizSolved
+
+    private val _CSMantleSolved = MutableStateFlow(loadCSMantleSolved())
+    val CSMantleSolved: StateFlow<Boolean> get() = _CSMantleSolved
+
+    // allQuizSolved 값을 SharedPreferences에서 불러오는 함수
+    private fun loadAllQuizSolved(): Boolean {
+        return sharedPreferences.getBoolean("allQuizSolved", false)
+    }
+
+    // CSMantleSolved 값을 SharedPreferences에서 불러오는 함수
+    private fun loadCSMantleSolved(): Boolean {
+        return sharedPreferences.getBoolean("CSMantleSolved", false)
+    }
+
+    // allQuizSolved 값을 변경하고 SharedPreferences에 저장하는 함수
+    fun setAllQuizSolved(value: Boolean) {
+        _allQuizSolved.value = value
+        sharedPreferences.edit().putBoolean("allQuizSolved", value).apply()
+    }
+
+    // CSMantleSolved 값을 변경하고 SharedPreferences에 저장하는 함수
+    fun setCSMantleSolved(value: Boolean) {
+        _CSMantleSolved.value = value
+        sharedPreferences.edit().putBoolean("CSMantleSolved", value).apply()
+    }
+
+
+
     fun setLoading(isLoading: Boolean) {
         Log.d("isLoading", _isLoading.value.toString())
         _isLoading.value = isLoading
@@ -134,8 +168,26 @@ open class BaseViewModel @Inject constructor(
             putStringSet("preferred_categories", categoriesStringSet)
 
             putInt("followers_count", userInfo.followers_count)
+
+
+            val currentDate = getCurrentDate()
+            val savedDate = sharedPreferences.getString("date", "")
+
+            if (currentDate != savedDate) {
+                putInt("problemIndex", 0)
+                putInt("todaySolvedCount", 0)
+                putInt("todayWrongCount", 0)
+                putBoolean("allQuizSolved", false)
+                putBoolean("CSMantleSolved", false)
+            }
+
             apply()
         }
+    }
+
+    private fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(Date())
     }
 
     fun restate() {

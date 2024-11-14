@@ -1,5 +1,6 @@
 package com.maker.pacemaker.ui.screen.main
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -7,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,12 +21,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -62,10 +67,15 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
     val words = viewModel.words.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val showModal by viewModel.showModal.collectAsState()
     val submitedWords by viewModel.submitedWords.collectAsState()
 
     // 유사도
     val similarity = 55.55
+    LaunchedEffect(Unit) {
+        baseViewModel.setCSMantleSolved(false)
+
+    }
 
     ConstraintLayout(
         modifier = Modifier
@@ -110,17 +120,8 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
 
         Text(
             text = buildAnnotatedString {
-                append("정답 단어와 가장 유사한 단어의\n유사도는 ")
-                withStyle(
-                    style = SpanStyle(
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                ) {
-                    append(similarity.toString())
-                }
-                append(" 입니다.\n")
+                append("단어를 입력해주세요\n ")
+                append("유사도를 보며 단어를 유추해주세요\n")
                 withStyle(
                     style = SpanStyle(
                         fontSize = 30.sp,
@@ -256,13 +257,13 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(screenHeight/2)
+                .height(screenHeight / 2)
                 .padding(start = 15.dp)
                 .constrainAs(contentBox) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    top.linkTo(contentBoxBorder.bottom        ) // contentBoxBorder 아래에 위치
-                    bottom.linkTo(parent.bottom) // 화면의 남은 공간을 채울 수 있도록 설정
+                    top.linkTo(contentBoxBorder.bottom)
+                    bottom.linkTo(parent.bottom)
                 }
         ) {
             // 유사도 순으로 내림차순 정렬
@@ -276,28 +277,60 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        .width(searchBoxWidth)
+                        .fillMaxWidth()
                         .padding(start = 20.dp, end = 20.dp)
+                        .height(IntrinsicSize.Min) // 텍스트 길이에 따라 최소 높이 설정
                 ) {
                     Text(
-                        text = "${index}", // 기존 입력 순서 인덱스
+                        text = "${index + 1}",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.width(30.dp)
                     )
+
                     Text(
                         text = word.word,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        maxLines = 2, // 최대 줄 수 제한
+                        softWrap = true, // 텍스트 줄바꿈 허용
+                        modifier = Modifier
+                            .width(IntrinsicSize.Max) // 텍스트 길이에 맞춰 확장
+                            .weight(1f) // Row에서 남은 공간 사용
+                            .padding(start = 8.dp) // 유사도 텍스트와 간격
                     )
+
                     Text(
-                        text = "${(word.similarity * 100)}",
-                        fontSize = 18.sp
+                        text = "${word.similarity}",
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .width(100.dp) // 필요한 경우 너비 조절
+                            .padding(end = 40.dp) // 텍스트를 왼쪽으로 이동시키기 위해 끝 쪽에 패딩 추가
+                            .alignBy { it.measuredHeight / 2 } // 부모 기준 위치 정렬
                     )
+
                     Text(
                         text = "${word.similarityRank}",
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .width(100.dp)
+                            .padding(end = 52.dp)
+                            .alignBy { it.measuredHeight / 2 } // 부모 기준 위치 정렬
                     )
                 }
             }
         }
+    }
+
+    if (showModal) {
+        AlertDialog(
+            onDismissRequest = { viewModel.hideModal() },
+            title = { Text("정답!") },
+            text = { Text("축하합니다! 정답을 맞추셨습니다.") },
+            confirmButton = {
+                TextButton(onClick = { viewModel.hideModal() }) {
+                    Text("확인")
+                }
+            }
+        )
     }
 }

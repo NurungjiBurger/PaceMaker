@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
+
     private lateinit var retrofit: Retrofit
 
     fun getRetrofitInstance(context: Context): Retrofit {

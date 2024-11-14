@@ -60,6 +60,7 @@ import com.maker.pacemaker.data.model.remote.Problem
 import com.maker.pacemaker.ui.screen.Component.HintCard
 import com.maker.pacemaker.ui.screen.Component.Loading
 import com.maker.pacemaker.ui.screen.Component.ProblemCard
+import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSearchScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSolveScreenViewModel
 
@@ -70,6 +71,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     val mainViewModel = viewModel.mainViewModel
 
     val isLoading by baseViewModel.isLoading.collectAsState()
+    val allQuizSolved by viewModel.allQuizSolved.collectAsState()
 
     val nowProblemIndex by viewModel.nowProblemIndex.collectAsState()
     val todaySolvedCount by viewModel.todaySolvedCount.collectAsState()
@@ -79,6 +81,8 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     val answer by viewModel.answer.collectAsState()
     val wrongCnt by viewModel.wrongCnt.collectAsState()
     val report by viewModel.report.collectAsState()
+    //val allSolved by viewModel.mainViewModel.allQuizSolved.collectAsState()
+
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
@@ -327,6 +331,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
         }
 
         if (todayProblems.size == nowProblemIndex && todayProblems.isNotEmpty()) {
+            baseViewModel.setAllQuizSolved(true)
 
             Log.d("MainProblemSolveScreen", "todayProblems: $todayProblems")
 

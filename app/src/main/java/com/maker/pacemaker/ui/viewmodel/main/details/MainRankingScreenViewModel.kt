@@ -42,6 +42,8 @@ open class MainRankingScreenViewModel @Inject constructor(
 
             if (response.users.isNotEmpty()) {
                 _userList.value = response.users
+
+
             } else {
                 _userList.value = emptyList()
             }

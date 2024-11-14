@@ -25,6 +25,8 @@ enum class ScreenType(val navigateTo: (NavController) -> Unit) {
     RANKING({ navController -> navController.navigate("rankingScreen") }),
     CSMANTLE({ navController -> navController.navigate("csMantleScreen") }),
     LAB({ navController -> navController.navigate("labScreen") }),
+    DONE({ navController -> navController.navigate("doneScreen") }),
+    CSRANKING({ navController -> navController.navigate("csRankingScreen") }),
 
     // 로그인
     SIGNIN({ navController -> navController.navigate("signInScreen") }),
