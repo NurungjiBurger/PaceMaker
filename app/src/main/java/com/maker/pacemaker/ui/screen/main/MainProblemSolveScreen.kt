@@ -102,9 +102,6 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     val solved = baseViewModel.allQuizSolved.value
     var solvedDialog by remember { mutableStateOf(solved) }
 
-    Log.d("MainProblemSolveScreen", "solved: $solved")
-    Log.d("MainProblemSolveScreen", "solvedDialog: $solvedDialog")
-
     if (solvedDialog) {
         AlertDialog(
             onDismissRequest = {
