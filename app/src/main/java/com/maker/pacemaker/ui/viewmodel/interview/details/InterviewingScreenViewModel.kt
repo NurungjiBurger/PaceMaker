@@ -172,8 +172,15 @@ open class InterviewingScreenViewModel @Inject constructor(
             mediaRecorder = null
             Log.d("InterviewingScreenViewModel", "Recording stopped.")
 
-            // 녹음이 끝난 후 STT 호출
+            // 파일 존재 여부 확인
             audioFile?.let { file ->
+                if (file.exists()) {
+                    Log.d("InterviewingScreenViewModel", "Recording file exists: ${file.absolutePath}")
+                } else {
+                    Log.d("InterviewingScreenViewModel", "Recording file does not exist.")
+                }
+
+                // 녹음이 끝난 후 STT 호출
                 val audioBytes = file.readBytes() // 녹음된 음성 파일을 바이트 배열로 읽기
                 recognizeSpeech(audioBytes) // STT 처리
             }
@@ -181,6 +188,7 @@ open class InterviewingScreenViewModel @Inject constructor(
             Log.e("InterviewingScreenViewModel", "Error stopping recording: ${e.message}")
         }
     }
+
 
     private fun startAnsweringProcess() {
         viewModelScope.launch {

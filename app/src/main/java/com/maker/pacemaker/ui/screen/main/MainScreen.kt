@@ -46,6 +46,7 @@ import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
+import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.ui.screen.Component.BottomNavBar
 import com.maker.pacemaker.ui.screen.Component.Loading
 import com.maker.pacemaker.ui.screen.Component.Logo
@@ -195,7 +196,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                         .height(100.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(Color(0xFFDFE9FE))
-                        .clickable { baseViewModel.goScreen(ScreenType.LAB) },
+                        .clickable { baseViewModel.goActivity(ActivityType.INTERVIEW) },
                     contentAlignment = Alignment.Center
                 ) {
                     Row(

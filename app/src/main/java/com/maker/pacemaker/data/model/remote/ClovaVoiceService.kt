@@ -8,6 +8,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ClovaVoiceService {
 
@@ -35,11 +36,17 @@ interface ClovaVoiceService {
         "Content-Type: application/octet-stream",
         "X-NCP-APIGW-API-KEY-ID: ${BuildConfig.CLOVA_API_CLIENT_ID}",
         "X-NCP-APIGW-API-KEY: ${BuildConfig.CLOVA_API_CLIENT_SECRET}",
-        "X-Language: ko-KR"
     )
-    fun recognizeSpeech(@Body audioData: AudioData): Call<ResponseBody>
+    fun recognizeSpeech(
+        @Body audioData: AudioData,
+        @Query("lang") lang: String = "Kor"
+    ): ClovaSTTResponse //: Call<ResponseBody>
 }
 
 data class AudioData(
     val audioFile: ByteArray // 음성 파일의 바이트 배열
+)
+
+data class ClovaSTTResponse(
+    val text: String // 변환된 텍스트
 )

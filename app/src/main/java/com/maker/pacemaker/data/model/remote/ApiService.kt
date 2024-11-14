@@ -167,8 +167,29 @@ interface ApiService {
     @GET("ssamantle/solved_users")
     suspend fun getSolvedUsers(): List<SolvedUser>
 
+    //////////////////////////////////////////////////////////////
+
+
+    @POST("cvs/")
+    suspend fun sendCV(
+        @Body sendCVRequest: sendCVRequest
+    ): sendCVResponse
+
 
 }
+
+// CV 전송 요청
+data class sendCVRequest(
+    val cv_text: String
+)
+
+// cv 전송 응답
+data class sendCVResponse(
+    val cv_id: Int,
+    val user_id: String,
+    val cv_text: String,
+    val created_at: String
+)
 
 // 선호 카테고리 수정 요청
 data class updateCategoriesRequest(
