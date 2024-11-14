@@ -3,7 +3,9 @@ package com.maker.pacemaker.ui.screen.interview
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -46,6 +49,8 @@ fun InterviewingScreen(viewModel: InterviewingScreenViewModel) {
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
+    val timerActive by viewModel.timerActive.collectAsState()
 
     LaunchedEffect(isLoading) {
         Log.d("InterviewingScreen", "Loading status changed: $isLoading")
@@ -92,7 +97,7 @@ fun InterviewingScreen(viewModel: InterviewingScreenViewModel) {
                 .fillMaxSize()
                 .background(color = Color(0xFFFAFAFA))
         ) {
-            val (upBar, divider, description, timerbox, interviewer, question, interviewee, answer) = createRefs()
+            val (upBar, divider, description, contentBox) = createRefs()
 
             Box(
                 contentAlignment = Alignment.Center,
@@ -128,73 +133,61 @@ fun InterviewingScreen(viewModel: InterviewingScreenViewModel) {
                     }
             )
 
-            Text(
-                text = if (turn) "답변 녹음 중 ..." else "AI 면접관이 질문 중 ...",
-                fontSize = 20.sp,
-                color = if (turn) Color.Gray else Color.Black,
-                modifier = Modifier.constrainAs(description) {
-                    start.linkTo(parent.start, margin = 20.dp)
-                    end.linkTo(parent.end, margin = 20.dp)
-                    top.linkTo(divider.bottom, margin = 20.dp)
-                }
-            )
-
-            Text(
-                text = timer.toString(),
-                fontSize = 40.sp,
-                color = Color.Black,
-                modifier = Modifier.constrainAs(timerbox) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(description.bottom, margin = 20.dp)
-                }
-            )
-
-            Image(
-                painter = if (turn) painterResource(id = R.drawable.intervieweroff) else painterResource(id = R.drawable.intervieweron),
-                contentDescription = "Interviewer",
+            Column(
+                verticalArrangement = Arrangement.SpaceAround,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .width(100.dp)
-                    .height(100.dp)
-                    .constrainAs(interviewer) {
-                        start.linkTo(parent.start, margin = 20.dp)
-                        top.linkTo(divider.bottom, margin = 20.dp)
+                    .fillMaxWidth()
+                    .height(screenHeight - 50.dp)
+                    .padding(start = 15.dp, end = 15.dp)
+                    .constrainAs(contentBox) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(divider.bottom)
+                        bottom.linkTo(parent.bottom)
                     }
-            )
+            ) {
+                Text(
+                    text = if (turn) "답변 녹음 중 ..." else "AI 면접관이 질문 중 ...",
+                    fontSize = 20.sp,
+                    color = if (turn) Color.Gray else Color.Black,
+                )
 
-            Text(
-                text = questions[index],
-                fontSize = 20.sp,
-                color = if (turn) Color.Black else Color.Gray,
-                modifier = Modifier.constrainAs(question) {
-                    start.linkTo(parent.start, margin = 20.dp)
-                    end.linkTo(parent.end, margin = 20.dp)
-                    top.linkTo(interviewer.bottom, margin = 20.dp)
-                }
-            )
+                Text(
+                    text = if (timer < 0) "0" else timer.toString(),
+                    fontSize = 40.sp,
+                    color = Color.Black,
+                )
 
-            Image(
-                painter = if (turn) painterResource(id = R.drawable.intervieweeon) else painterResource(id = R.drawable.intervieweeoff),
-                contentDescription = "Interviewee",
-                modifier = Modifier
-                    .width(100.dp)
-                    .height(100.dp)
-                    .constrainAs(interviewee) {
-                        end.linkTo(parent.end, margin = 20.dp)
-                        top.linkTo(divider.bottom, margin = 20.dp)
-                    }
-            )
+                Image(
+                    painter = if (turn) painterResource(id = R.drawable.intervieweroff) else painterResource(id = R.drawable.intervieweron),
+                    contentDescription = "Interviewer",
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(100.dp)
+                )
 
-            Text(
-                text = answers[index],
-                fontSize = 20.sp,
-                color = if (turn) Color.Black else Color.Gray,
-                modifier = Modifier.constrainAs(answer) {
-                    start.linkTo(parent.start, margin = 20.dp)
-                    end.linkTo(parent.end, margin = 20.dp)
-                    top.linkTo(interviewee.bottom, margin = 20.dp)
-                }
-            )
+                Text(
+                    text = questions[index],
+                    fontSize = 20.sp,
+                    color = if (turn) Color.Black else Color.Gray,
+                    textAlign = TextAlign.Center
+                )
+
+                Image(
+                    painter = if (turn) painterResource(id = R.drawable.intervieweeon) else painterResource(id = R.drawable.intervieweeoff),
+                    contentDescription = "Interviewee",
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(100.dp)
+                )
+
+                Text(
+                    text = answers[index],
+                    fontSize = 20.sp,
+                    color = if (turn) Color.Black else Color.Gray,
+                )
+            }
 
         }
     }
