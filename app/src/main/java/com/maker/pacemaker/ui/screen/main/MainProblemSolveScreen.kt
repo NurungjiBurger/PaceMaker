@@ -149,6 +149,17 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                     Text("닫기", color = Color.Black)
                 }
             },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        // "더 풀기" 버튼 클릭 시 실행할 동작 추가
+                        solvedDialog = false
+                        viewModel.restartProblemSolve()
+                    }
+                ) {
+                    Text("더 풀기", color = Color.Black)
+                }
+            },
             containerColor = Color.White
         )
     }

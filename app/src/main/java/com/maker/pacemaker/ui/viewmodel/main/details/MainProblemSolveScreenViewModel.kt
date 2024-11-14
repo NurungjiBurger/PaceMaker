@@ -77,6 +77,25 @@ class MainProblemSolveScreenViewModel @Inject constructor(
         handleDailyProblemLoad()
     }
 
+    fun restartProblemSolve() {
+        with(baseViewModel.editor) {
+            putString("date", "")
+            putInt("problemIndex", 0)
+            putInt("todaySolvedCount", 0)
+            putInt("todayWrongCount", 0)
+
+            apply()
+        }
+
+        _nowProblemIndex.value = 0
+        _todaySolvedCount.value = 0
+        _todayWrongCount.value = 0
+
+        baseViewModel.setAllQuizSolved(false)
+
+        handleDailyProblemLoad()
+    }
+
     /**
      * 오늘의 문제를 로드하는 초기화 로직.
      * 날짜를 비교하여 새로운 문제를 가져올지, 저장된 문제를 사용할지 결정합니다.

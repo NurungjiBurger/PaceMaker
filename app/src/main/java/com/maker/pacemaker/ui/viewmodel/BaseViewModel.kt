@@ -123,7 +123,6 @@ open class BaseViewModel @Inject constructor(
 
     // allQuizSolved 값을 변경하고 SharedPreferences에 저장하는 함수
     fun setAllQuizSolved(value: Boolean) {
-        Log.d("setAllQuizSolved", "setAllQuiz ${value}")
         _allQuizSolved.value = value
         editor.putBoolean("allQuizSolved", value).apply()
     }
@@ -179,9 +178,9 @@ open class BaseViewModel @Inject constructor(
                 putInt("problemIndex", 0)
                 putInt("todaySolvedCount", 0)
                 putInt("todayWrongCount", 0)
-                putBoolean("allQuizSolved", false)
-                putBoolean("CSMantleSolved", false)
-                Log.d("UserInfo", "New Date: $currentDate")
+
+                setAllQuizSolved(false)
+                setCSMantleSolved(false)
             }
 
             apply()
