@@ -1,5 +1,6 @@
 package com.maker.pacemaker.ui.screen.main
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,14 +22,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -40,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -64,6 +70,7 @@ import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSearchScreenViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainProblemSolveScreenViewModel
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
 
@@ -91,6 +98,64 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
     val hintHeight = screenHeight / 9
 
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    val solved = baseViewModel.allQuizSolved.value
+    var solvedDialog by remember { mutableStateOf(solved) }
+
+    Log.d("MainProblemSolveScreen", "solved: $solved")
+    Log.d("MainProblemSolveScreen", "solvedDialog: $solvedDialog")
+
+    if (solvedDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                solvedDialog = false
+            },
+            title = {
+                Text(
+                    text = "오늘의 문제는 모두 풀었어요.",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+            },
+            text = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.done), // 엄지 척 아이콘 리소스
+                        contentDescription = "Thumb Up",
+                        tint = Color(0xFFFFCC00),
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "문제는 한국 표준(KST) 기준 자정에 바뀝니다.",
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        solvedDialog = false
+                    },
+                ) {
+                    Text("닫기", color = Color.Black)
+                }
+            },
+            containerColor = Color.White
+        )
+    }
+
 
     // 다이얼로그 상태 관리
     var selectedProblem by remember { mutableStateOf<Problem?>(null) }

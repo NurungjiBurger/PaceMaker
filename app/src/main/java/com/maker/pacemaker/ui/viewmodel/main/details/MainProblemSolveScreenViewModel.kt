@@ -122,8 +122,6 @@ class MainProblemSolveScreenViewModel @Inject constructor(
 
         if (problemIds.isNotEmpty()) {
             fetchProblemsByIds(problemIds)
-            baseViewModel.setAllQuizSolved(false)
-
         }
     }
 

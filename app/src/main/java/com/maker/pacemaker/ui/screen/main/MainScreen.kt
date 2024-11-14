@@ -160,7 +160,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                         .height(100.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(if (allSolved) Color(0xFF737CAE) else Color(0xFF1429A0))
-                        .clickable {if (allSolved) baseViewModel.goScreen(ScreenType.DONE) else baseViewModel.goScreen(ScreenType.PROBLEMSOLVE)},
+                        .clickable {baseViewModel.goScreen(ScreenType.PROBLEMSOLVE)},
                     contentAlignment = Alignment.Center
                 ) {
                     Row(
@@ -230,7 +230,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                         .height(100.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(if (allCSMantleSolved) Color(0xFF737CAE) else Color(0xFF5387F7).copy(alpha = 0.3f))
-                        .clickable {if (allCSMantleSolved) baseViewModel.goScreen(ScreenType.DONE) else baseViewModel.goScreen(ScreenType.CSMANTLE)},
+                        .clickable {baseViewModel.goScreen(ScreenType.CSMANTLE)},
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
