@@ -25,7 +25,7 @@ object RetrofitClient {
 
             retrofit = Retrofit.Builder()
                 // now test server
-                .baseUrl(BuildConfig.TEST_BASE_URL)
+                .baseUrl(BuildConfig.BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

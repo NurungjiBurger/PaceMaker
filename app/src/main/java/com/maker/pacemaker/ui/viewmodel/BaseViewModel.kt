@@ -112,6 +112,7 @@ open class BaseViewModel @Inject constructor(
 
     // allQuizSolved 값을 SharedPreferences에서 불러오는 함수
     private fun loadAllQuizSolved(): Boolean {
+        Log.d("loadAllQuizSolved", sharedPreferences.getBoolean("allQuizSolved", false).toString())
         return sharedPreferences.getBoolean("allQuizSolved", false)
     }
 
@@ -123,7 +124,7 @@ open class BaseViewModel @Inject constructor(
     // allQuizSolved 값을 변경하고 SharedPreferences에 저장하는 함수
     fun setAllQuizSolved(value: Boolean) {
         _allQuizSolved.value = value
-        sharedPreferences.edit().putBoolean("allQuizSolved", value).apply()
+        editor.putBoolean("allQuizSolved", value).apply()
     }
 
     // CSMantleSolved 값을 변경하고 SharedPreferences에 저장하는 함수
@@ -177,8 +178,9 @@ open class BaseViewModel @Inject constructor(
                 putInt("problemIndex", 0)
                 putInt("todaySolvedCount", 0)
                 putInt("todayWrongCount", 0)
-                putBoolean("allQuizSolved", false)
-                putBoolean("CSMantleSolved", false)
+
+                setAllQuizSolved(false)
+                setCSMantleSolved(false)
             }
 
             apply()
