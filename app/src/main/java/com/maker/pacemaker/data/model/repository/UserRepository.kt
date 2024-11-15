@@ -4,12 +4,16 @@ import android.util.Log
 import com.maker.pacemaker.data.model.remote.AnswerRequest
 import com.maker.pacemaker.data.model.remote.AnswerResponse
 import com.maker.pacemaker.data.model.remote.ApiService
+import com.maker.pacemaker.data.model.remote.CV
+import com.maker.pacemaker.data.model.remote.CVReadyResponse
 import com.maker.pacemaker.data.model.remote.CommentRequest
 import com.maker.pacemaker.data.model.remote.CommentResponse
 import com.maker.pacemaker.data.model.remote.CreateProblemRequest
 import com.maker.pacemaker.data.model.remote.CreateProblemResponse
 import com.maker.pacemaker.data.model.remote.DailyCntRequest
 import com.maker.pacemaker.data.model.remote.DailyCntResponse
+import com.maker.pacemaker.data.model.remote.Interview
+import com.maker.pacemaker.data.model.remote.InterviewAnswerRequest
 import com.maker.pacemaker.data.model.remote.LevelRequest
 import com.maker.pacemaker.data.model.remote.LevelResponse
 import com.maker.pacemaker.data.model.remote.NicknameResponse
@@ -28,6 +32,7 @@ import com.maker.pacemaker.data.model.remote.getCategoriesResponse
 import com.maker.pacemaker.data.model.remote.getFcmTokenResponse
 import com.maker.pacemaker.data.model.remote.reportRequest
 import com.maker.pacemaker.data.model.remote.reportResponse
+import com.maker.pacemaker.data.model.remote.sendCVResponse
 import com.maker.pacemaker.data.model.remote.sendFcmToken
 import com.maker.pacemaker.data.model.remote.updateCategoriesRequest
 import com.maker.pacemaker.data.model.remote.updateCategoriesResponse
@@ -170,5 +175,36 @@ class UserRepository(private val apiService: ApiService) {
         return apiService.getSolvedUsers()
     }
 
+    //////////////////////////////////////////////////////////////////////
+
+    // 질문번호로 질문 받아오기
+    suspend fun getInterviewById(interviewId: Int): Interview {
+        return apiService.getInterviewById(interviewId)
+    }
+
+    // 이력서 번호로 질문 리스트 받아오기
+    suspend fun getInterviewsByCVId(cvId: Int): List<Interview> {
+        return apiService.getInterviewsByCVId(cvId)
+    }
+
+    // 답변 전송하기
+    suspend fun sendInterviewAnswer(interviewId: Int, answer: InterviewAnswerRequest): Interview {
+        return apiService.sendInterviewAnswer(interviewId, answer)
+    }
+
+    // cv 전송
+    suspend fun sendCV(request: CV): sendCVResponse {
+        return apiService.sendCV(request)
+    }
+
+    // cv id로 cv 가져오기
+    suspend fun getCVById(cvId: Int): CV {
+        return apiService.getCVById(cvId)
+    }
+
+    // cv id로 준비되었는지 확인
+    suspend fun checkCVReady(cvId: Int): CVReadyResponse {
+        return apiService.checkCVReady(cvId)
+    }
 
 }

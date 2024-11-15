@@ -169,26 +169,78 @@ interface ApiService {
 
     //////////////////////////////////////////////////////////////
 
+    // 질문번호로 질문 받아오기
+    @GET("interviews/{interview_id}")
+    suspend fun getInterviewById(
+        @Path("interview_id") interviewId: Int
+    ): Interview
 
+    // 이력서 번호로 질문 리스트 받아오기
+    @GET("interviews/cv/{cv_id}")
+    suspend fun getInterviewsByCVId(
+        @Path("cv_id") cvId: Int
+    ): List<Interview>
+
+    // 답변 전송하기
+    @POST("interviews/{interview_id}/answers")
+    suspend fun sendInterviewAnswer(
+        @Path("interview_id") interviewId: Int,
+        @Body answer: InterviewAnswerRequest
+    ): Interview
+
+    // cv 보내기
     @POST("cvs/")
     suspend fun sendCV(
-        @Body sendCVRequest: sendCVRequest
+        @Body sendCVRequest: CV
     ): sendCVResponse
 
+    // cv id로 cv 가져오기
+    @GET("cvs/{cv_id}")
+    suspend fun getCVById(
+        @Path("cv_id") cvId: Int
+    ): CV
+
+    // cv id로 준비되었는지 확인
+    @GET("cvs/{cv_id}/ready")
+    suspend fun checkCVReady(
+        @Path("cv_id") cvId: Int
+    ): CVReadyResponse
 
 }
 
+data class CVReadyResponse(
+    val ready: Boolean
+)
+
+data class InterviewAnswerRequest(
+    val answer: String
+)
+
+// 질문
+data class Interview(
+    val interview_id: Int,
+    val cv_id: Int,
+    val question: String,
+    val answer: String,
+    val time: String,
+    val score1: Int,
+    val score2: Int,
+    val score3: Int,
+    val score4: Int,
+    val score5: Int
+)
+
 // CV 전송 요청
-data class sendCVRequest(
+data class CV(
     val cv_text: String
 )
 
 // cv 전송 응답
 data class sendCVResponse(
     val cv_id: Int,
-    val user_id: String,
-    val cv_text: String,
-    val created_at: String
+    val uid: String,
+    val cv: String,
+    val time: String
 )
 
 // 선호 카테고리 수정 요청

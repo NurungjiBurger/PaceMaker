@@ -72,6 +72,9 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
 
+    // 파일 포맷 변경
+    implementation("com.arthenica:ffmpeg-kit-full:6.0-2")
+
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
     implementation(libs.firebase.storage.ktx)
