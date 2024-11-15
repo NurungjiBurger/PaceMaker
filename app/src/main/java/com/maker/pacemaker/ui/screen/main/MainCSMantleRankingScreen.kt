@@ -3,7 +3,6 @@ package com.maker.pacemaker.ui.screen.main
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -13,7 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,17 +20,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
 import com.maker.pacemaker.R
 import com.maker.pacemaker.ui.viewmodel.main.details.MainCSMantleRankingScreenViewModel
-
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -50,9 +52,7 @@ fun MainCSMantleRankingScreen(viewModel: MainCSMantleRankingScreenViewModel) {
 
     if (solvedDialog) {
         AlertDialog(
-            onDismissRequest = {
-                solvedDialog = false
-            },
+            onDismissRequest = { solvedDialog = false },
             title = {
                 Text(
                     text = "오늘의 문제는 모두 풀었어요.",
@@ -69,12 +69,10 @@ fun MainCSMantleRankingScreen(viewModel: MainCSMantleRankingScreenViewModel) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Icon(
-                        painter = painterResource(id = R.drawable.done), // 엄지 척 아이콘 리소스
+                        painter = painterResource(id = R.drawable.done),
                         contentDescription = "Thumb Up",
                         tint = Color(0xFFFFCC00),
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CircleShape)
+                        modifier = Modifier.size(64.dp).clip(CircleShape)
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -88,9 +86,7 @@ fun MainCSMantleRankingScreen(viewModel: MainCSMantleRankingScreenViewModel) {
             },
             confirmButton = {
                 TextButton(
-                    onClick = {
-                        solvedDialog = false
-                    },
+                    onClick = { solvedDialog = false },
                 ) {
                     Text("닫기", color = Color.Black)
                 }
@@ -102,126 +98,132 @@ fun MainCSMantleRankingScreen(viewModel: MainCSMantleRankingScreenViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFFFAFAFA))
+            .background(color = Color(0xFFDFE9FE))
     ) {
+        val (happyImage, profileBox, rankingHeader, rankingListBox) = createRefs()
 
-        val (upBar, contentBox, myBox) = createRefs()
-
-            // 상단 메달과 텍스트
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-                    .constrainAs(upBar) {
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        top.linkTo(parent.top, margin = 16.dp)
-                    }
-            ) {
-                Text(
-                    text = "순위를\n확인해볼까요?",
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f)
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.medal),
-                    contentDescription = "Medal",
-                    modifier = Modifier.size(100.dp)
-                )
-            }
-
-        // 하단 UI 추가
-        Column(
+        // Happy 이미지 상단 중앙에 배치
+        Image(
+            painter = painterResource(id = R.drawable.happy),
+            contentDescription = "User Avatar",
             modifier = Modifier
-                .width(330.dp)
-                .background(Color(0xFFFAFAFA))
-                .constrainAs(myBox) {
+                .size(150.dp)
+                .clip(CircleShape)
+                .constrainAs(happyImage) {
+                    top.linkTo(parent.top, margin = 15.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    top.linkTo(upBar.bottom, margin = 15.dp)
-                    bottom.linkTo(contentBox.top)
                 }
-                .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                text = "나의 랭킹",
-                fontSize = 25.sp,
-                color = Color.Gray
-            )
+                .zIndex(1f) // 이미지를 앞으로 오게 설정
+        )
 
+        // Profile, Ranking, and Attempts Section
+        Column(
+            modifier = Modifier
+                .width(350.dp)
+                .padding(20.dp)
+                .clip(RoundedCornerShape(15.dp))
+                .background(Color(0xFF768AFF))
+                .constrainAs(profileBox) {
+                    top.linkTo(parent.top, margin = 105.dp)
+                    //top.linkTo(happyImage.bottom, margin = (-40).dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                },
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Text(
-                    text = "${myUserInfo?.index?.plus(1)}", // 예시 랭킹 숫자
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontSize = 50.sp, fontWeight = FontWeight.Bold, color = Color.White)) {
+                            append("${myUserInfo?.index?.plus(1)}") // 등수 부분
+                        }
+                        withStyle(style = SpanStyle(fontSize = 24.sp, fontWeight = FontWeight.Normal, color = Color.White)) {
+                            append("등") // "등" 부분
+                        }
+                    },
+                    modifier = Modifier.padding(end = 40.dp) // 텍스트 주위에 패딩 추가
                 )
-
                 Text(
-                    text = "${myUserInfo?.nickname}",
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-
-                Text(
-                    text = "${myUserInfo?.try_cnt}회", // 예시 도전 횟수
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontSize = 48.sp, fontWeight = FontWeight.Bold, color = Color.White)) {
+                            append("${myUserInfo?.try_cnt}") // 시도 횟수 부분
+                        }
+                        withStyle(style = SpanStyle(fontSize = 24.sp, fontWeight = FontWeight.Normal, color = Color.White)) {
+                            append("회") // "회" 부분
+                        }
+                    },
+                    modifier = Modifier.padding(start = 40.dp) // 텍스트 주위에 패딩 추가
                 )
             }
+            Text(
+                text = "00:00:00",
+                fontSize = 24.sp,
+                color = Color.White,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
+        // Ranking Header Section
+        Row(
+            modifier = Modifier
+                .width(350.dp)
+                .padding(horizontal = 16.dp, vertical = 2.dp)
+                .clip(RoundedCornerShape(25.dp))
+                .background(Color(0x66FFFFFF)) // 40% 투명한 흰색 배경
+                .padding(8.dp)
+                .constrainAs(rankingHeader) {
+                    top.linkTo(profileBox.bottom, margin = 20.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                },
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "등수",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.Gray,
+                modifier = Modifier.padding(start = 10.dp) // "등수" 텍스트에 오른쪽 패딩 추가
+            )
+            Text(
+                text = "닉네임",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.Gray,
+                modifier = Modifier.padding(horizontal = 8.dp) // "닉네임" 텍스트에 좌우 패딩 추가
+            )
+            Text(
+                text = "시도횟수",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.Gray,
+                modifier = Modifier.padding(end = 10.dp) // "시도횟수" 텍스트에 왼쪽 패딩 추가
+            )
         }
 
 
-        // LazyColumn을 ConstraintLayout 내에서 직접 사용
+        // Rankings List Section
         LazyColumn(
             modifier = Modifier
-                .width(330.dp)
-                .height(screenHeight / 2)
+                .width(350.dp)
+                .height(450.dp)
+                //.height(screenHeight / 2)
                 .padding(16.dp)
                 .clip(RoundedCornerShape(15.dp))
-                .background(Color(0xFFDFE9FE))
-                .constrainAs(contentBox) {
+                .background(Color.White)
+                .constrainAs(rankingListBox) {
+                    top.linkTo(rankingHeader.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    top.linkTo(myBox.bottom, margin = 15.dp)
-                    bottom.linkTo(parent.bottom)
                 }
         ) {
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "이름",
-                        fontSize = 12.sp,
-                        color = Color.Gray,
-                        modifier = Modifier
-                            .padding(start = 16.dp)
-                    )
-                    Text(
-                        text = "시도 횟수",
-                        fontSize = 12.sp,
-                        color = Color.Gray
-                    )
-                }
-            }
-
             items(userRank.size) { index ->
                 val rank = userRank[index]
 
@@ -230,25 +232,26 @@ fun MainCSMantleRankingScreen(viewModel: MainCSMantleRankingScreenViewModel) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .clip(RoundedCornerShape(25.dp))
-                        .height(40.dp)
+                        .padding(horizontal = 16.dp, vertical = 15.dp)
+                        .clip(RoundedCornerShape(15.dp))
                         .background(Color.White)
                 ) {
                     Text(
                         text = "${index + 1}",
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .width(30.dp)
-                            .padding(start = 8.dp)
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.ExtraBold, // 최대한 굵게 설정
+                        fontStyle = FontStyle.Italic, // 기울임 효과 적용
+                        color = Color.Black,
+                        modifier = Modifier.padding(start = 10.dp)
                     )
+                    Spacer(modifier = Modifier.width(60.dp)) // 인덱스와 닉네임 사이 간격 추가
 
                     Text(
                         text = rank.nickname,
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         maxLines = 1,
                         softWrap = true,
+                        color = Color.Black,
                         modifier = Modifier
                             .weight(1f)
                             .padding(horizontal = 8.dp)
@@ -256,15 +259,14 @@ fun MainCSMantleRankingScreen(viewModel: MainCSMantleRankingScreenViewModel) {
 
                     Text(
                         text = "${rank.try_cnt}회",
-                        fontSize = 18.sp,
-                        modifier = Modifier.width(50.dp)
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(end = 10.dp)
                     )
+
+                    Spacer(modifier = Modifier.width(20.dp))
                 }
             }
         }
-
-
-
     }
 }
-
