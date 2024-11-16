@@ -174,7 +174,7 @@ fun InterviewStartScreen(viewModel: InterviewStartScreenViewModel) {
                         .background(Color(0xFF14299F), shape = RoundedCornerShape(10.dp))
                         .padding(5.dp)
                         .clickable {
-                            baseViewModel.goScreen(ScreenType.INTERVIEWRESULT)
+                            viewModel.onResult()
                         },
                     contentAlignment = Alignment.Center
                 ){

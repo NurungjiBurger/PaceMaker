@@ -194,6 +194,11 @@ interface ApiService {
         @Body sendCVRequest: CV
     ): sendCVResponse
 
+    // 내 cv 가져오기
+    @GET("cvs/me")
+    suspend fun getMyCVs(
+    ): List<sendCVResponse>
+
     // cv id로 cv 가져오기
     @GET("cvs/{cv_id}")
     suspend fun getCVById(

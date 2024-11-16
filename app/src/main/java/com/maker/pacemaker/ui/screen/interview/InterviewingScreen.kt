@@ -51,10 +51,6 @@ fun InterviewingScreen(viewModel: InterviewingScreenViewModel) {
 
     val timerActive by viewModel.timerActive.collectAsState()
 
-    LaunchedEffect(isLoading) {
-        Log.d("InterviewingScreen", "Loading status changed: $isLoading")
-    }
-
     if (isLoading) {
 
         ConstraintLayout(

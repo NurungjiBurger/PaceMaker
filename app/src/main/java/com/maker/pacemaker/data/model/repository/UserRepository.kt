@@ -196,6 +196,11 @@ class UserRepository(private val apiService: ApiService) {
         return apiService.sendCV(request)
     }
 
+    // 내 cv 가져오기
+    suspend fun getMyCVs(): List<sendCVResponse> {
+        return apiService.getMyCVs()
+    }
+
     // cv id로 cv 가져오기
     suspend fun getCVById(cvId: Int): CV {
         return apiService.getCVById(cvId)

@@ -66,7 +66,10 @@ class InterviewActivity : BaseActivity() {
             NavHost(navController as NavHostController, startDestination = "interviewStartScreen") {
                 composable("interviewStartScreen") { InterviewStartScreen(interviewStartScreenViewModel) }
                 composable("interviewingScreen") { InterviewingScreen(interviewingScreenViewModel) }
-                composable("interviewResultScreen") { InterviewResultScreen(interviewResultScreenViewModel) }
+                composable("interviewResultScreen") {
+                    interviewResultScreenViewModel.onRefresh()
+                    InterviewResultScreen(interviewResultScreenViewModel)
+                }
             }
         }
     }
