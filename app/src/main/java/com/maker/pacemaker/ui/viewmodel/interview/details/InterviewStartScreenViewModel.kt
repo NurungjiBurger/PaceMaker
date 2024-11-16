@@ -30,10 +30,22 @@ open class InterviewStartScreenViewModel @Inject constructor(
         interviewViewModel.setText(text)
     }
 
+    fun setting(interview: Boolean, loading: Boolean) {
+        interviewViewModel.setInterviewing(interview)
+        interviewViewModel.setLoading(loading)
+    }
+
+    fun onResult() {
+        viewModelScope.launch {
+            setting(false, true)
+
+            baseViewModel.goScreen(ScreenType.INTERVIEWRESULT)
+        }
+    }
+
     fun onSubmit() {
         viewModelScope.launch {
-            interviewViewModel.setInterviewing(true)
-            interviewViewModel.setLoading(true)
+            setting(true, true)
 
             baseViewModel.goScreen(ScreenType.INTERVIEWING)
         }

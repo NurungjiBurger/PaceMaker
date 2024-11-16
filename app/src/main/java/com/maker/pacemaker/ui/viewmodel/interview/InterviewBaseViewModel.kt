@@ -16,6 +16,10 @@ open class InterviewBaseViewModel @Inject constructor(
 
     val baseViewModel = base
 
+    // 자기소개서 번호
+    private val _cvId = MutableStateFlow(-1)
+    val cvId = _cvId
+
     private val _text = MutableStateFlow("")
     val text = _text
 
@@ -25,19 +29,16 @@ open class InterviewBaseViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading
 
+    fun setCVId(cvId: Int) {
+        _cvId.value = cvId
+    }
+
     fun setInterviewing(setInterviewing: Boolean) {
-        Log.d("InterviewBaseViewModel", "setInterviewing: ${interviewing.value}")
         _interviewing.value = setInterviewing
-        Log.d("InterviewBaseViewModel", "interviewing: ${interviewing.value}")
     }
 
     fun setLoading(setLoad: Boolean) {
-
-        Log.d("InterviewBaseViewModel", "setLoading: ${isLoading}")
-
-        Log.d("InterviewBaseViewModel", "setLoading: ${isLoading.value}")
         _isLoading.value = setLoad
-        Log.d("InterviewBaseViewModel", "isLoading: ${isLoading.value}")
     }
 
     fun setText(text: String) {

@@ -1,6 +1,7 @@
 package com.maker.pacemaker.data.model.remote
 
 import com.maker.pacemaker.BuildConfig
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -8,6 +9,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ClovaVoiceService {
 
@@ -29,17 +31,14 @@ interface ClovaVoiceService {
         @Field("text") text: String        // 변환할 텍스트
     ): Call<ResponseBody>
 
-    // STT 서비스 호출
     @POST("stt")
     @Headers(
         "Content-Type: application/octet-stream",
         "X-NCP-APIGW-API-KEY-ID: ${BuildConfig.CLOVA_API_CLIENT_ID}",
         "X-NCP-APIGW-API-KEY: ${BuildConfig.CLOVA_API_CLIENT_SECRET}",
-        "X-Language: ko-KR"
     )
-    fun recognizeSpeech(@Body audioData: AudioData): Call<ResponseBody>
+    fun recognizeSpeech(
+        @Body audioData: RequestBody,
+        @Query("lang") lang: String = "Kor"
+    ): Call<ResponseBody>
 }
-
-data class AudioData(
-    val audioFile: ByteArray // 음성 파일의 바이트 배열
-)
