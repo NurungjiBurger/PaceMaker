@@ -84,7 +84,7 @@ open class InterviewingScreenViewModel @Inject constructor(
         _index.value = 0
         _reAnswerCnt.value = 1
         _turn.value = false
-        _timer.value = 100
+        _timer.value = -1
         _timerActive.value = false
         fetchQuestionsFromAI()
     }
@@ -178,7 +178,7 @@ open class InterviewingScreenViewModel @Inject constructor(
     private fun initialisze() {
         _reAnswerCnt.value = 1
         _turn.value = false
-        _timer.value = 100
+        _timer.value = -1
         _timerActive.value = false
     }
 
@@ -263,7 +263,7 @@ open class InterviewingScreenViewModel @Inject constructor(
 
         // 녹음 시작
         startRecording()
-        _timer.value = 10
+        _timer.value = 40
         _state.value = "STT"
         _turn.value = true
 
