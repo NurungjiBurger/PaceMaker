@@ -40,8 +40,7 @@ fun InterviewingScreen(viewModel: InterviewingScreenViewModel) {
     val isLoading by interviewViewModel.isLoading.collectAsState()
 
     val turn by viewModel.turn.collectAsState()
-    val questions by viewModel.questions.collectAsState()
-    val answers by viewModel.answers.collectAsState()
+    val interviews by viewModel.interviews.collectAsState()
     val index by viewModel.index.collectAsState()
     val reAnswerCnt by viewModel.reAnswerCnt.collectAsState()
 
@@ -154,7 +153,7 @@ fun InterviewingScreen(viewModel: InterviewingScreenViewModel) {
                 )
 
                 Text(
-                    text = if (timer < 0) "0" else timer.toString(),
+                    text = if (timer < 0) "" else timer.toString(),
                     fontSize = 40.sp,
                     color = Color.Black,
                 )
@@ -168,9 +167,9 @@ fun InterviewingScreen(viewModel: InterviewingScreenViewModel) {
                 )
 
                 Text(
-                    text = questions[index],
+                    text = interviews[index].question,
                     fontSize = 20.sp,
-                    color = if (turn) Color.Black else Color.Gray,
+                    color = if (!turn) Color.Black else Color.Gray,
                     textAlign = TextAlign.Center
                 )
 
@@ -182,11 +181,6 @@ fun InterviewingScreen(viewModel: InterviewingScreenViewModel) {
                         .height(100.dp)
                 )
 
-                Text(
-                    text = answers[index],
-                    fontSize = 20.sp,
-                    color = if (turn) Color.Black else Color.Gray,
-                )
             }
 
         }

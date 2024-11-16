@@ -5,7 +5,6 @@ import com.maker.pacemaker.data.model.remote.AnswerRequest
 import com.maker.pacemaker.data.model.remote.AnswerResponse
 import com.maker.pacemaker.data.model.remote.ApiService
 import com.maker.pacemaker.data.model.remote.CV
-import com.maker.pacemaker.data.model.remote.CVReadyResponse
 import com.maker.pacemaker.data.model.remote.CommentRequest
 import com.maker.pacemaker.data.model.remote.CommentResponse
 import com.maker.pacemaker.data.model.remote.CreateProblemRequest
@@ -203,7 +202,7 @@ class UserRepository(private val apiService: ApiService) {
     }
 
     // cv id로 준비되었는지 확인
-    suspend fun checkCVReady(cvId: Int): CVReadyResponse {
+    suspend fun checkCVReady(cvId: Int): Boolean {
         return apiService.checkCVReady(cvId)
     }
 

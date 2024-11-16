@@ -182,7 +182,7 @@ interface ApiService {
     ): List<Interview>
 
     // 답변 전송하기
-    @POST("interviews/{interview_id}/answers")
+    @POST("interviews/{interview_id}/answer")
     suspend fun sendInterviewAnswer(
         @Path("interview_id") interviewId: Int,
         @Body answer: InterviewAnswerRequest
@@ -204,13 +204,9 @@ interface ApiService {
     @GET("cvs/{cv_id}/ready")
     suspend fun checkCVReady(
         @Path("cv_id") cvId: Int
-    ): CVReadyResponse
+    ): Boolean
 
 }
-
-data class CVReadyResponse(
-    val ready: Boolean
-)
 
 data class InterviewAnswerRequest(
     val answer: String
@@ -221,7 +217,7 @@ data class Interview(
     val interview_id: Int,
     val cv_id: Int,
     val question: String,
-    val answer: String,
+    var answer: String,
     val time: String,
     val score1: Int,
     val score2: Int,
