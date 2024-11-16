@@ -72,6 +72,9 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
 
+    // 레이더 차트(점수 시각화)
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
     // 파일 포맷 변경
     implementation("com.arthenica:ffmpeg-kit-full:6.0-2")
 

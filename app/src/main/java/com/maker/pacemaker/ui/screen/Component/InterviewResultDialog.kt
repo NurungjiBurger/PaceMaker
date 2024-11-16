@@ -1,11 +1,14 @@
 package com.maker.pacemaker.ui.screen.Component
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -25,6 +28,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.github.mikephil.charting.charts.RadarChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.RadarData
+import com.github.mikephil.charting.data.RadarDataSet
+import com.github.mikephil.charting.data.RadarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.maker.pacemaker.data.model.remote.Interview
 import com.maker.pacemaker.data.model.remote.sendCVResponse
 import java.time.LocalDateTime
@@ -41,6 +52,30 @@ fun InterviewResultDialog(
     // 선택된 인터뷰를 저장할 상태
     val selectedInterview = remember { mutableStateOf<Interview?>(null) }
 
+    // 각 점수 (score1, score2, score3, score4, score5)의 평균을 계산
+    val score1Sum = interviews.filterNotNull().sumOf { it.score1 }
+    val score2Sum = interviews.filterNotNull().sumOf { it.score2 }
+    val score3Sum = interviews.filterNotNull().sumOf { it.score3 }
+    val score4Sum = interviews.filterNotNull().sumOf { it.score4 }
+    val score5Sum = interviews.filterNotNull().sumOf { it.score5 }
+
+    // 점수의 평균 계산 (질문 개수로 나누기)
+    val interviewCount = interviews.filterNotNull().size
+    val averageScore1 = if (interviewCount > 0) score1Sum / interviewCount else 0f
+    val averageScore2 = if (interviewCount > 0) score2Sum / interviewCount else 0f
+    val averageScore3 = if (interviewCount > 0) score3Sum / interviewCount else 0f
+    val averageScore4 = if (interviewCount > 0) score4Sum / interviewCount else 0f
+    val averageScore5 = if (interviewCount > 0) score5Sum / interviewCount else 0f
+
+    // 평균 점수를 리스트로 묶어서 레이더 차트에 전달
+    val averageScores = listOf(
+        averageScore1.toFloat(),
+        averageScore2.toFloat(),
+        averageScore3.toFloat(),
+        averageScore4.toFloat(),
+        averageScore5.toFloat()
+    )
+
     AlertDialog(
         modifier = Modifier
             .heightIn(max = height), // 다이얼로그의 최대 높이 제한
@@ -52,6 +87,11 @@ fun InterviewResultDialog(
             LazyColumn(
             ) {
                 item {
+                    // 여기에 레이더 차트를 추가
+                    RadarChartView(scores = averageScores)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     Text("면접 번호: ${interviewResult.cv_id}", fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
                     Text("자기소개서: ${interviewResult.cv}")
@@ -92,6 +132,53 @@ fun InterviewResultDialog(
     }
 }
 
+
+@Composable
+fun RadarChartView(scores: List<Float>) {
+    AndroidView(
+        factory = { context ->
+            RadarChart(context).apply {
+                // 레이블 정의
+                val labels = listOf("기술적 깊이", "문제 해결 능력", "논리적 사고력", "학습 능력", "커뮤니케이션 능력")
+
+                // 레이더 차트 설정
+                val entries = scores.mapIndexed { index, score ->
+                    RadarEntry(score, index.toFloat()) // x 값을 인덱스로 설정
+                }
+
+                val dataSet = RadarDataSet(entries, "평가 점수").apply {
+                    color = ColorTemplate.VORDIPLOM_COLORS[0]  // 차트 선 색상
+                    fillColor = ColorTemplate.VORDIPLOM_COLORS[0]  // 채우기 색상
+                    setDrawFilled(true)  // 차트 안을 색으로 채우기
+                }
+
+                // Y축 점수 숨기기
+                this.yAxis.apply {
+                    setDrawLabels(false) // 점수 레이블 숨기기
+                }
+
+                // X축 레이블 설정
+                this.xAxis.apply {
+                    valueFormatter = IndexAxisValueFormatter(labels) // 레이블 설정
+                    textSize = 9f  // 레이블 텍스트 크기
+                    yOffset = 5f // 레이블 위치를 그래프에서 살짝 떨어뜨림
+                }
+
+                val radarData = RadarData(dataSet)
+                this.setExtraOffsets(0f, 0f, 0f, 0f) // 그래프 외부 여백 조정
+                this.webLineWidth = 1f // 그래프 선 두께
+                this.webLineWidthInner = 0.5f // 내부 선 두께
+                this.setWebAlpha(100) // 투명도 설정
+                this.data = radarData  // 데이터 설정
+                this.description.isEnabled = false // 설명 비활성화
+                this.invalidate()  // 뷰 갱신
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp),
+    )
+}
 
 // 면접 시간을 변환하기 위한 함수
 fun formatTime(time: String): String {
