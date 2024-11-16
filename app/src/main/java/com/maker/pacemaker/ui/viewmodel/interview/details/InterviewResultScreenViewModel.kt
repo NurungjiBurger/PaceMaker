@@ -13,7 +13,8 @@ open class InterviewResultScreenViewModel @Inject constructor(
     val baseViewModel = base.baseViewModel
     val interviewViewModel = base
 
-    private fun finishInterviewing() {
-        interviewViewModel.interviewing.value = false
+    init{
+        interviewViewModel.setLoading(false)
+        interviewViewModel.setInterviewing(false)
     }
 }

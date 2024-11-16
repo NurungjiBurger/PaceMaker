@@ -30,6 +30,8 @@ fun InterviewResultScreen(viewModel: InterviewResultScreenViewModel) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
+    val interviewing by interviewViewModel.interviewing.collectAsState()
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()

@@ -44,10 +44,6 @@ open class InterviewingScreenViewModel @Inject constructor(
 
     val repository = baseViewModel.repository
 
-    // 자기소개서 번호
-    private val _cvId = MutableStateFlow(0)
-    val cvId = _cvId
-
     // 질문 리스트 (AI 생성 질문)
     private val _interviews = MutableStateFlow(listOf<Interview>())
     val interviews = _interviews
@@ -101,6 +97,8 @@ open class InterviewingScreenViewModel @Inject constructor(
                 // 1. 자기소개서 전송
                 val sanitizedText = sanitizeText(interviewViewModel.text.value)
                 val cvId = sendCVAndGetId(sanitizedText)
+
+                interviewViewModel.setCVId(cvId)
 
                 // 2. CV 준비 상태 확인
                 val isReady = waitForCVReady(cvId)
