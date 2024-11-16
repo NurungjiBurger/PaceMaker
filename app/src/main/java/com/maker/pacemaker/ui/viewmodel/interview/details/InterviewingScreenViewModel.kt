@@ -182,12 +182,35 @@ open class InterviewingScreenViewModel @Inject constructor(
         _timerActive.value = false
     }
 
+    private fun IndexString(index: Int): String {
+        var text = when(index)
+        {
+            0 -> "첫 번째"
+            1 -> "두 번째"
+            2 -> "세 번째"
+            3 -> "네 번째"
+            4 -> "다섯 번째"
+            5 -> "여섯 번째"
+            6 -> "일곱 번째"
+            7 -> "여덟 번째"
+            8 -> "아홉 번째"
+            9 -> "열 번째"
+            else -> ""
+        }
+        return text + " 질문입니다."
+    }
+
     private fun startInterview() {
         viewModelScope.launch {
-            for (i in 0 until 2) { //_interviews.value.size) {
+            // 질문 목록의 크기만큼 반복
+            for (i in 0 until _interviews.value.size) {
+
                 _index.value = i
                 _reAnswerCnt.value = 1
                 _turn.value = false
+
+                // 질문 순서 안내
+                playTTSAndWait(IndexString(i))
 
                 // 질문 읽기 (TTS 완료 대기)
                 val question = _interviews.value[_index.value].question
@@ -200,7 +223,7 @@ open class InterviewingScreenViewModel @Inject constructor(
                 _timer.value = 10
                 // 타이머 대기
                 startTimer {
-
+                    // 타이머 종료 후 실행되는 작업
                 }
 
                 // 녹음 및 STT 처리
@@ -209,8 +232,14 @@ open class InterviewingScreenViewModel @Inject constructor(
                 // 서버로 전송
                 sendAnswerToServer(i, recordedText)
 
-                // 다음 질문으로 이동하기 전에 잠시 대기
-                delay(2000)
+                // 답변 후 "5초 후에 다음 질문으로 넘어갑니다" 안내
+                if (i < _interviews.value.size - 1) playTTSAndWait("5초 후에 다음 질문으로 넘어갑니다.")
+                else playTTSAndWait("면접이 종료되었습니다. 5초후 결과를 확인하러 이동합니다.")
+                _timer.value = 5
+                // 타이머 대기
+                startTimer {
+                    // 타이머 종료 후 실행되는 작업
+                }
             }
 
             // 면접 종료
