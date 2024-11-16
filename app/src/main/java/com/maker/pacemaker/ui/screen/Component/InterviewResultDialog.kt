@@ -43,7 +43,6 @@ fun InterviewResultDialog(
 
     AlertDialog(
         modifier = Modifier
-            .width(width) // 다이얼로그의 너비 제한
             .heightIn(max = height), // 다이얼로그의 최대 높이 제한
         onDismissRequest = onDismiss,
         title = {
@@ -144,20 +143,30 @@ fun InterviewDetailDialog(interview: Interview, onDismiss: () -> Unit) {
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = "${interview.answer}" ?: "상세 내용 없음",
+                    text = if (interview.answer.isNullOrEmpty()) "상세 내용 없음" else interview.answer,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Normal,
                 )
                 Spacer(modifier = Modifier.height(15.dp))
-                Text(text = "기술적 깊이 : ${interview.score1}")
+                Text(
+                    text = if (interview.score1 == 0) "기술적 깊이 : 답변 길이가 너무 짧습니다." else "기술적 깊이 : ${interview.score1}"
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "문제 해결 능력 : ${interview.score2}")
+                Text(
+                    text = if (interview.score2 == 0) "문제 해결 능력 : 답변 길이가 너무 짧습니다." else "문제 해결 능력 : ${interview.score2}"
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "논리적 사고력 : ${interview.score3}")
+                Text(
+                    text = if (interview.score3 == 0) "논리적 사고력 : 답변 길이가 너무 짧습니다." else "논리적 사고력 : ${interview.score3}"
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "학습 능력 : ${interview.score4}")
+                Text(
+                    text = if (interview.score4 == 0) "학습 능력 : 답변 길이가 너무 짧습니다." else "학습 능력 : ${interview.score4}"
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "커뮤니케이션 능력 : ${interview.score5}")
+                Text(
+                    text = if (interview.score5 == 0) "커뮤니케이션 능력 : 답변 길이가 너무 짧습니다." else "커뮤니케이션 능력 : ${interview.score5}"
+                )
             }
         },
         confirmButton = {
