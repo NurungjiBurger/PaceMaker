@@ -72,6 +72,8 @@ open class InterviewingScreenViewModel @Inject constructor(
     private val _state = MutableStateFlow("")
     val state = _state
 
+    // TTS 관련 멤버 변수 추가
+    private var mediaPlayer: MediaPlayer? = null
     private var mediaRecorder: MediaRecorder? = null
     private var audioFile: File? = null
 
@@ -87,6 +89,36 @@ open class InterviewingScreenViewModel @Inject constructor(
         _timer.value = -1
         _timerActive.value = false
         fetchQuestionsFromAI()
+    }
+
+    // TTS 및 STT 중단 메서드
+    fun pauseOperations() {
+        // TTS 중단
+        mediaPlayer?.pause()
+
+        // STT 녹음 중단
+        if (_state.value == "STT") {
+            stopRecording()
+            Log.d("InterviewingScreenViewModel", "Paused: TTS and STT operations.")
+        }
+    }
+
+    fun stopOperations() {
+        // TTS 정지
+        mediaPlayer?.stop()
+        mediaPlayer?.release()
+        mediaPlayer = null
+
+        // STT 녹음 정지
+        if (_state.value == "STT") {
+            stopRecording()
+            Log.d("InterviewingScreenViewModel", "Stopped: TTS and STT operations.")
+        }
+    }
+
+    fun resumeOperations() {
+        if (interviewViewModel.interviewing.value) mediaPlayer?.start() // TTS 재생 재개
+        Log.d("InterviewingScreenViewModel", "Resumed: TTS operation.")
     }
 
     private fun fetchQuestionsFromAI() {
@@ -324,17 +356,10 @@ open class InterviewingScreenViewModel @Inject constructor(
             }
             mediaRecorder = null
             Log.d("InterviewingScreenViewModel", "Recording stopped.")
-
-            // 파일 존재 여부 확인
-            audioFile?.let { file ->
-                if (file.exists()) {
-                    Log.d("InterviewingScreenViewModel", "Recording file exists: ${file.absolutePath}")
-                } else {
-                    Log.d("InterviewingScreenViewModel", "Recording file does not exist.")
-                }
-            }
         } catch (e: Exception) {
             Log.e("InterviewingScreenViewModel", "Error stopping recording: ${e.message}")
+        } finally {
+            audioFile?.delete() // 불필요한 녹음 파일 삭제
         }
     }
 
@@ -459,7 +484,7 @@ open class InterviewingScreenViewModel @Inject constructor(
                         }
 
                         // MediaPlayer를 사용해 음성 파일 재생
-                        val mediaPlayer = MediaPlayer().apply {
+                        mediaPlayer = MediaPlayer().apply {
                             setDataSource(tempMp3.path)
                             prepare()
                             start()

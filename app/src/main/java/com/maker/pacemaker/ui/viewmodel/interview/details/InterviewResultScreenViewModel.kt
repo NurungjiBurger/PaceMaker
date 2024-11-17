@@ -77,7 +77,6 @@ open class InterviewResultScreenViewModel @Inject constructor(
                 _interviews.value = interviewMap
             } catch (e: Exception) {
                 Log.e("InterviewResultScreenViewModel", "fetchInterviews: $e")
-                baseViewModel.triggerToast("면접 질문을 가져오는 데 실패했습니다.")
             }
         }
     }
