@@ -58,7 +58,7 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
             painter = painterResource(id = R.drawable.medal), // 메달 이미지 리소스
             contentDescription = "Medal",
             modifier = Modifier
-                .size(80.dp)
+                .size(120.dp)
                 .constrainAs(medalImage) {
                     top.linkTo(parent.top, margin = 20.dp)
                     start.linkTo(parent.start)
@@ -105,7 +105,7 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier
                 .width(340.dp)
-                .height(600.dp)
+                .height(550.dp)
                 .background(color = Color(0xFFFFFFFF),shape = RoundedCornerShape(10.dp))
                 //.padding(horizontal = 50.dp)
                 .constrainAs(userListBox) {

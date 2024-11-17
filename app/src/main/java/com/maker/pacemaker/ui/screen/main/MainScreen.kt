@@ -11,6 +11,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -60,6 +63,17 @@ fun MainScreen(viewModel: MainScreenViewModel) {
     val isLoading by baseViewModel.isLoading.collectAsState()
     val allSolved by baseViewModel.allQuizSolved.collectAsState()
     val allCSMantleSolved by baseViewModel.CSMantleSolved.collectAsState()
+    val context = LocalContext.current
+    // 레벨 값을 1에서 6 사이로 보정
+    val correctedLevel = when {
+        user.level < 1 -> 1
+        user.level > 6 -> 6
+        else -> user.level
+    }
+
+    val resourceId = context.resources.getIdentifier(
+        "level_$correctedLevel", "drawable", context.packageName
+    )
 
     LaunchedEffect(Unit) {
         Log.d("MainScreen", "allSolved initial value: $allSolved")
@@ -106,168 +120,181 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                     .fillMaxWidth(0.9f) // 너비를 90%로 설정
                     .padding(horizontal = 16.dp)
                     .constrainAs(greeting) {
-                        top.linkTo(upBar.bottom, margin = 16.dp)
+                        top.linkTo(upBar.bottom, margin = 25.dp)
                         start.linkTo(parent.start) // 수평 중앙에 배치
                         end.linkTo(parent.end)
                     },
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(
-                    text = "안녕하세요 ${user.nickname}님",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "오늘도 재밌는 퀴즈 풀어요~",
-                    fontSize = 16.sp,
-                    color = Color.Gray
-                )
-            }
-
-            // 랭킹 정보
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(0.9f) // 너비를 90%로 설정
-                    .padding(horizontal = 16.dp)
-                    .constrainAs(rating) {
-                        top.linkTo(greeting.bottom, margin = 16.dp)
-                        start.linkTo(parent.start) // 수평 중앙에 배치
-                        end.linkTo(parent.end)
-                    },
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = "Rating", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                Text(text = "상위 1%", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                // 첫 번째 Row: "안녕하세요 [닉네임]"
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "안녕하세요",
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.Normal
+                    )
+                    Spacer(modifier = Modifier.width(8.dp)) // 텍스트 간 여백
+                    Text(
+                        text = "${user.nickname}님",
+                        fontSize = 29.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.weight(1f)) // 오른쪽 정렬용
+                    // XP 표시
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(50)) // 동그란 모양
+                            .background(Color(0xFFE3E7FF)) // 배경색
+                            .padding(horizontal = 12.dp, vertical = 4.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "${user.exp}XP",
+                            fontSize = 16.sp,
+                            color = Color(0xFF2B59C3),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+                // 두 번째 Row: "오늘도 재밌는 퀴즈 풀어요~" + 모자 아이콘
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "오늘도 재밌는 퀴즈 풀어요~",
+                        fontSize = 18.sp,
+                        color = Color.Gray
+                    )
+                    Spacer(modifier = Modifier.width(65.dp)) // 텍스트와 아이콘 간 여백
+                    Image(
+                        painter = painterResource(id = resourceId),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(40.dp)
+                    )
+                }
             }
 
             // 콘텐츠 Box 영역
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth(0.9f) // 너비를 90%로 설정
                     .padding(horizontal = 16.dp)
                     .constrainAs(contentBox) {
-                        top.linkTo(rating.bottom, margin = 16.dp)
+                        top.linkTo(greeting.bottom, margin = 16.dp)
                         bottom.linkTo(bottomBar.top, margin = 16.dp)
                         start.linkTo(parent.start) // 수평 중앙에 배치
                         end.linkTo(parent.end)
                     },
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(25.dp),
+                contentPadding = PaddingValues(vertical = 16.dp) // 상하단 패딩 설정
             ) {
                 // "오늘의 학습" Box
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(if (allSolved) Color(0xFF737CAE) else Color(0xFF1429A0))
-                        .clickable {baseViewModel.goScreen(ScreenType.PROBLEMSOLVE)},
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(if (allSolved) Color(0xFF737CAE) else Color(0xFF1429A0))
+                            .clickable { baseViewModel.goScreen(ScreenType.PROBLEMSOLVE) },
+                        contentAlignment = Alignment.Center
                     ) {
-                        Image(
-                            painter = painterResource(id = if (allSolved) R.drawable.lightoff1 else R.drawable.light1),
-                            contentDescription = null,
-                            modifier = Modifier.size(55.dp)
-                        )
-                        Text(
-                            text = "오늘의 학습",
-                            color = (if (allSolved) Color(0xFFE2E2E2) else Color.White),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 8.dp)
-                        )
-                        Image(
-                            painter = painterResource(id = if (allSolved) R.drawable.lightoff2 else R.drawable.light2),
-                            contentDescription = null,
-                            modifier = Modifier.size(55.dp)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = if (allSolved) R.drawable.lightoff1 else R.drawable.light1),
+                                contentDescription = null,
+                                modifier = Modifier.size(55.dp)
+                            )
+                            Text(
+                                text = "오늘의 학습",
+                                color = if (allSolved) Color(0xFFE2E2E2) else Color.White,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            )
+                            Image(
+                                painter = painterResource(id = if (allSolved) R.drawable.lightoff2 else R.drawable.light2),
+                                contentDescription = null,
+                                modifier = Modifier.size(55.dp)
+                            )
+                        }
                     }
                 }
 
                 // "CS 면접" Box
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFFDFE9FE))
-                        .clickable { baseViewModel.goScreen(ScreenType.LAB) },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.padding(horizontal = 35.dp)
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color(0xFFDFE9FE))
+                            .clickable { baseViewModel.goScreen(ScreenType.LAB) },
+                        contentAlignment = Alignment.Center
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.interviewer1),
-                            contentDescription = "Icon 1",
-                            modifier = Modifier.size(48.dp)
-                        )
-                        Text(
-                            text = "CS 면접",
-                            color = Color(0xFF1429A0),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 12.dp)
-                        )
-                        Image(
-                            painter = painterResource(id = R.drawable.interviewer2),
-                            contentDescription = "Icon 2",
-                            modifier = Modifier.size(48.dp)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.padding(horizontal = 35.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.interviewer1),
+                                contentDescription = "Icon 1",
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Text(
+                                text = "CS 면접",
+                                color = Color(0xFF1429A0),
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(horizontal = 12.dp)
+                            )
+                            Image(
+                                painter = painterResource(id = R.drawable.interviewer2),
+                                contentDescription = "Icon 2",
+                                modifier = Modifier.size(48.dp)
+                            )
+                        }
                     }
                 }
 
                 // "싸 맨 틀" Box
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(if (allCSMantleSolved) Color(0xFF737CAE) else Color(0xFF5387F7).copy(alpha = 0.3f))
-                        .clickable {if (allCSMantleSolved) baseViewModel.goScreen(ScreenType.CSRANKING) else baseViewModel.goScreen(ScreenType.CSMANTLE)},
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "싸 맨 틀",
-                        color = if (allCSMantleSolved) Color(0xFFE2E2E2) else Color(0xFF1429A0),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                }
-
-                // "문제 추가하기" Box
-                Box(
-                    modifier = Modifier
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            //baseViewModel.goActivity(ActivityType.INTERVIEW)
-                            baseViewModel.goScreen(ScreenType.LAB)
-                            }
-                        .fillMaxWidth()
-                        .height(100.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFFFFFFFF))
-                        .border(BorderStroke(2.dp, Color(0xFFECECEC)), shape = RoundedCornerShape(12.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "문제 추가하기",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(
+                                if (allCSMantleSolved) Color(0xFF737CAE) else Color(
+                                    0xFF5387F7
+                                ).copy(alpha = 0.3f)
+                            )
+                            .clickable {
+                                if (allCSMantleSolved) baseViewModel.goScreen(ScreenType.CSRANKING)
+                                else baseViewModel.goScreen(ScreenType.CSMANTLE)
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "싸 맨 틀",
+                            color = if (allCSMantleSolved) Color(0xFFE2E2E2) else Color(0xFF1429A0),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                    }
                 }
             }
-
-            // 하단바
+             // 하단바
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
