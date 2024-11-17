@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -103,6 +104,9 @@ fun MainLabScreen(viewModel: MainLabScreenViewModel) {
                     .height(boxHeight)
                     .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                     .border(0.5.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
+                    .clickable(onClick = {
+                        baseViewModel.goScreen(ScreenType.CSMANTLE)
+                    })
             ) {
                 Text(
                     text = "싸맨틀",
@@ -135,6 +139,9 @@ fun MainLabScreen(viewModel: MainLabScreenViewModel) {
                     .height(boxHeight)
                     .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                     .border(0.5.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
+                    .clickable(onClick = {
+                        baseViewModel.goActivity(ActivityType.INTERVIEW)
+                    })
             ) {
                 Text(
                     text = "CS면접",
