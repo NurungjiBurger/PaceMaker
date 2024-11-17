@@ -154,6 +154,8 @@ fun RadarChartView(scores: List<Float>) {
 
                 // Y축 점수 숨기기
                 this.yAxis.apply {
+                    axisMinimum = 0f // 최소값 0
+                    axisMaximum = 100f // 최대값 100
                     setDrawLabels(false) // 점수 레이블 숨기기
                 }
 
