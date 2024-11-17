@@ -110,7 +110,7 @@ fun InterviewResultDialog(
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                 append("자기소개서: ")
                             }
-                            append("${interviewResult.cv}")
+                            append(unsanitizeText(interviewResult.cv))
                         }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -215,13 +215,22 @@ fun RadarChartView(scores: List<Float>) {
     )
 }
 
+// 특수문자 이스케이프를 원래대로 되돌리는 함수
+fun unsanitizeText(text: String): String {
+    return text
+        .replace("\\n", "\n")  // 줄바꿈을 복원
+        .replace("\\r", "\r")  // 캐리지 리턴 복원
+        .replace("\\\\", "\\") // 백슬래시 복원
+        .replace("\\\"", "\"") // 큰따옴표 복원
+}
+
 // 면접 시간을 변환하기 위한 함수
 fun formatTime(time: String): String {
     return try {
         // T를 공백으로 바꾸고 LocalDateTime으로 변환
-        val dateTime = LocalDateTime.parse(time.replace("T", " "))
+        val dateTime = LocalDateTime.parse(time.replace("T", " ")) // T를 공백으로 변환
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") // 원하는 형식
-        dateTime.format(formatter)
+        dateTime.format(formatter) // 시간 포맷팅
     } catch (e: Exception) {
         time // 변환에 실패하면 원래의 시간을 반환
     }
