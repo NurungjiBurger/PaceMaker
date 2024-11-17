@@ -1,6 +1,7 @@
 package com.maker.pacemaker.ui.screen.Component
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -227,11 +228,16 @@ fun unsanitizeText(text: String): String {
 // 면접 시간을 변환하기 위한 함수
 fun formatTime(time: String): String {
     return try {
-        // T를 공백으로 바꾸고 LocalDateTime으로 변환
-        val dateTime = LocalDateTime.parse(time.replace("T", " ")) // T를 공백으로 변환
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") // 원하는 형식
-        dateTime.format(formatter) // 시간 포맷팅
+        // 날짜 시간 포맷 설정
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+
+        // T를 공백으로 바꾼 뒤 포맷터를 사용해 변환
+        val dateTime = LocalDateTime.parse(time.replace("T", " "), formatter) // T를 공백으로 변환 후 포맷 적용
+
+        // 변환된 시간을 원하는 형식으로 포맷팅
+        dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
     } catch (e: Exception) {
+        println("Error parsing time: $e") // 에러 메시지 출력
         time // 변환에 실패하면 원래의 시간을 반환
     }
 }
