@@ -114,7 +114,6 @@ open class BaseViewModel @Inject constructor(
 
     // allQuizSolved 값을 SharedPreferences에서 불러오는 함수
     private fun loadAllQuizSolved(): Boolean {
-        Log.d("loadAllQuizSolved", sharedPreferences.getBoolean("allQuizSolved", false).toString())
         return sharedPreferences.getBoolean("allQuizSolved", false)
     }
 

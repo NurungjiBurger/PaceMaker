@@ -24,7 +24,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,18 +90,48 @@ fun InterviewResultDialog(
             LazyColumn(
             ) {
                 item {
-                    // 여기에 레이더 차트를 추가
+                    Text("AI 분석 결과입니다.")
+                    Spacer(modifier = Modifier.height(8.dp))
                     RadarChartView(scores = averageScores)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    // 텍스트에서 제목만 Bold처리
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("면접 번호: ")
+                            }
+                            append("${interviewResult.cv_id}")
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("자기소개서: ")
+                            }
+                            append("${interviewResult.cv}")
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                    Text("면접 번호: ${interviewResult.cv_id}", fontWeight = FontWeight.Bold)
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("면접 시간: ")
+                            }
+                            append("${formatTime(interviewResult.time)}") // 시간 포맷팅
+                        }
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("자기소개서: ${interviewResult.cv}")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("면접 시간: ${formatTime(interviewResult.time)}") // 시간 포맷팅
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("면접 질문 리스트")
+
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("면접 질문 리스트")
+                            }
+                        }
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
