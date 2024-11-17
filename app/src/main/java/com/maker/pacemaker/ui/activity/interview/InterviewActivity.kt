@@ -65,7 +65,10 @@ class InterviewActivity : BaseActivity() {
 
             NavHost(navController as NavHostController, startDestination = "interviewStartScreen") {
                 composable("interviewStartScreen") { InterviewStartScreen(interviewStartScreenViewModel) }
-                composable("interviewingScreen") { InterviewingScreen(interviewingScreenViewModel) }
+                composable("interviewingScreen") {
+                    interviewingScreenViewModel.restate()
+                    InterviewingScreen(interviewingScreenViewModel)
+                }
                 composable("interviewResultScreen") {
                     interviewResultScreenViewModel.onRefresh()
                     InterviewResultScreen(interviewResultScreenViewModel)
@@ -89,6 +92,13 @@ class InterviewActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         baseViewModel.restate()
+
+        Log.d("InterviewActivity", "onResume: ${baseViewModel.screenNavigationTo.value?.screenType}")
+
+        //if (baseViewModel.screenNavigationTo.value?.screenType == ScreenType.INTERVIEWING) {
+            interviewingScreenViewModel.resumeOperations()
+            Log.d("InterviewActivity", "onResume: resumeOperations")
+        //}
     }
 
     override fun onBackPressed() {
