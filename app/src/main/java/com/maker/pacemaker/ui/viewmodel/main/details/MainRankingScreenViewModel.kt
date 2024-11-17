@@ -41,9 +41,11 @@ open class MainRankingScreenViewModel @Inject constructor(
             val response = repository.searchUser(searchKeyword)
 
             if (response.users.isNotEmpty()) {
-                _userList.value = response.users
+                // level을 기준으로 내림차순 정렬하고, level이 같으면 experience를 기준으로 내림차순 정렬
+                val userList = response.users.sortedWith(compareByDescending<SearchUser> { it.level }
+                    .thenByDescending { it.exp })
 
-
+                _userList.value = userList
             } else {
                 _userList.value = emptyList()
             }
