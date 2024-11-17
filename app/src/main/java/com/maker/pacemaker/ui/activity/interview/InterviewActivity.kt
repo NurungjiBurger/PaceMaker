@@ -102,13 +102,12 @@ class InterviewActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         // InterviewingScreen에서 뒤로가기 작동 X
         if (navController.currentDestination?.route == "interviewingScreen") {
             Toast.makeText(this, "인터뷰 중에는 뒤로가기를 할 수 없습니다.", Toast.LENGTH_SHORT).show()
         } else {
             // 다른 화면에서 뒤로가기 시 MainActivity로 이동
-            finish()
+            super.onBackPressed()
         }
     }
 
@@ -131,10 +130,24 @@ class InterviewActivity : BaseActivity() {
         }
 
         navController.navigate(route) {
-            popUpTo(route) {
-                inclusive = true // 포함하여 제거
+            when (screenType) {
+                ScreenType.INTERVIEWING -> {
+                    // InterviewingScreen을 스택에서 제거
+                    popUpTo("interviewStartScreen") {
+                        inclusive = false // Start는 유지
+                    }
+                }
+                ScreenType.INTERVIEWRESULT -> {
+                    // InterviewResult는 Start로 돌아갈 수 있도록 설정
+                    popUpTo("interviewStartScreen") {
+                        inclusive = false // Start는 유지
+                    }
+                }
+                else -> {
+                    // 기본 popUpTo 동작 없음
+                }
             }
-            launchSingleTop = true
+            launchSingleTop = true // 중복된 화면 생성 방지
         }
     }
 }

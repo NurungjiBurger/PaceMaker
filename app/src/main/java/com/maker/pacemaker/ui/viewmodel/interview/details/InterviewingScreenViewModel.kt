@@ -281,6 +281,8 @@ open class InterviewingScreenViewModel @Inject constructor(
                 // 서버로 전송
                 sendAnswerToServer(i, recordedText)
 
+                _turn.value = false
+
                 // 답변 후 "5초 후에 다음 질문으로 넘어갑니다" 안내
                 if (i < _interviews.value.size - 1) playTTSAndWait("5초 후에 다음 질문으로 넘어갑니다.")
                 else playTTSAndWait("면접이 종료되었습니다. 5초후 결과를 확인하러 이동합니다.")
