@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +40,8 @@ fun MainLabScreen(viewModel: MainLabScreenViewModel) {
 
     val baseViewModel = viewModel.baseViewModel
     val mainViewModel = viewModel.mainViewModel
+
+    val allCSMantleSolved by baseViewModel.CSMantleSolved.collectAsState()
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp // 전체 화면 높이
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 전체 화면 너비
@@ -104,9 +108,7 @@ fun MainLabScreen(viewModel: MainLabScreenViewModel) {
                     .height(boxHeight)
                     .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                     .border(0.5.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
-                    .clickable(onClick = {
-                        baseViewModel.goScreen(ScreenType.CSMANTLE)
-                    })
+                    .clickable {if (allCSMantleSolved) baseViewModel.goScreen(ScreenType.CSRANKING) else baseViewModel.goScreen(ScreenType.CSMANTLE)},
             ) {
                 Text(
                     text = "싸맨틀",
@@ -123,6 +125,7 @@ fun MainLabScreen(viewModel: MainLabScreenViewModel) {
                     .height(boxHeight)
                     .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                     .border(0.5.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
+                    .clickable{baseViewModel.triggerToast("준비중인 서비스입니다.")},
             ) {
                 Text(
                     text = "문제 추가하기",
@@ -160,7 +163,7 @@ fun MainLabScreen(viewModel: MainLabScreenViewModel) {
             )
 
             Text(
-                text = "아직 준비중인\n서비스들이에요.",
+                text = "테스트 중인 서비스들입니다.",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
