@@ -159,14 +159,3 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
 
     }
 }
-
-@Composable
-@Preview
-fun MainMenuScreenPreview() {
-
-//    val baseViewModel = DummyBaseViewModel()
-//    val mainViewModel = DummyMainBaseViewModel()
-//    val viewModel = DummyMainMenuScreenViewModel()
-//
-//    MainMenuScreen(baseViewModel, mainViewModel, viewModel)
-}

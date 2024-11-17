@@ -262,7 +262,7 @@ class MainProblemSolveScreenViewModel @Inject constructor(
             withContext(Dispatchers.Main) {
                 // 진동과 토스트 메시지를 표시합니다.
                 baseViewModel.triggerVibration()
-                baseViewModel.triggerToast("정답은 $firstAnswer 입니다. 2초 후 다음 문제로 넘어갑니다.")
+                baseViewModel.triggerToast("정답은 $firstAnswer 입니다. 2초 후 다음 문제로 넘어갑니다.", 1000)
                 _answer.value = firstAnswer
             }
 
@@ -331,7 +331,7 @@ class MainProblemSolveScreenViewModel @Inject constructor(
     private suspend fun handleIncorrectAnswer() {
         withContext(Dispatchers.Main) {
             baseViewModel.triggerVibration()
-            baseViewModel.triggerToast("오답입니다. 다시 시도해주세요.")
+            baseViewModel.triggerToast("오답입니다. 다시 시도해주세요.", 300)
         }
     }
 }
