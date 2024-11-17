@@ -41,7 +41,7 @@ open class MainCSMantleScreenViewModel @Inject constructor(
         val searchKeyword = _words.value.trim()
 
         if (searchKeyword.isEmpty()) {
-            baseViewModel.triggerToast("검색어가 비어 있습니다.") // Toast로 알림
+            baseViewModel.triggerToast("검색어가 비어 있습니다.", 1000) // Toast로 알림
             return
         }
 
@@ -53,12 +53,8 @@ open class MainCSMantleScreenViewModel @Inject constructor(
             try {
                 val response = repository.checkWordSimilarity(request)
 
-                Log.d("MainCSMantleScreenViewModel", "Response: $response")
-                Log.d("MainCSMantleScreenViewModel", "Try_cnt: ${response.try_cnt}, Similarity: ${response.similarity}, Rank: ${response.ranking}")
                 if (response.similarity == 100.0f){
                     baseViewModel.setCSMantleSolved(true)
-                    val currentCSMantleSolved = baseViewModel.sharedPreferences.getBoolean("CSMantleSolved", false)
-                    Log.d("MainProblemSolveScreenViewModel", "CSMantleSolved 값: $currentCSMantleSolved")
                     _showModal.value = true
                 }
                 if (!isDuplicate) {
@@ -75,14 +71,14 @@ open class MainCSMantleScreenViewModel @Inject constructor(
             } catch (e: HttpException) {
                 if (e.code() == 404) {
                     Log.e("MainCSMantleScreenViewModel", "Error: 단어를 찾을 수 없습니다.")
-                    baseViewModel.triggerToast("단어를 찾을 수 없습니다.")
+                    baseViewModel.triggerToast("단어를 찾을 수 없습니다.", 500)
                 } else {
                     Log.e("MainCSMantleScreenViewModel", "Error checking word similarity", e)
-                    baseViewModel.triggerToast("단어 유사도를 확인하는 중 오류가 발생했습니다.")
+                    baseViewModel.triggerToast("단어 유사도를 확인하는 중 오류가 발생했습니다.", 500)
                 }
             } catch (e: Exception) {
                 Log.e("MainCSMantleScreenViewModel", "Unexpected error checking word similarity", e)
-                baseViewModel.triggerToast("예기치 않은 오류가 발생했습니다.")
+                baseViewModel.triggerToast("예기치 않은 오류가 발생했습니다.", 500)
             }
         }
     }

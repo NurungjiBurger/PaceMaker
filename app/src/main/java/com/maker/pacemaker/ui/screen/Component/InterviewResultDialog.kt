@@ -1,6 +1,7 @@
 package com.maker.pacemaker.ui.screen.Component
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +25,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,18 +91,48 @@ fun InterviewResultDialog(
             LazyColumn(
             ) {
                 item {
-                    // 여기에 레이더 차트를 추가
+                    Text("AI 분석 결과입니다.")
+                    Spacer(modifier = Modifier.height(8.dp))
                     RadarChartView(scores = averageScores)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    // 텍스트에서 제목만 Bold처리
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("면접 번호: ")
+                            }
+                            append("${interviewResult.cv_id}")
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("자기소개서: ")
+                            }
+                            append(unsanitizeText(interviewResult.cv))
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                    Text("면접 번호: ${interviewResult.cv_id}", fontWeight = FontWeight.Bold)
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("면접 시간: ")
+                            }
+                            append("${formatTime(interviewResult.time)}") // 시간 포맷팅
+                        }
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("자기소개서: ${interviewResult.cv}")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("면접 시간: ${formatTime(interviewResult.time)}") // 시간 포맷팅
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("면접 질문 리스트")
+
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("면접 질문 리스트")
+                            }
+                        }
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
@@ -154,6 +188,8 @@ fun RadarChartView(scores: List<Float>) {
 
                 // Y축 점수 숨기기
                 this.yAxis.apply {
+                    axisMinimum = 0f // 최소값 0
+                    axisMaximum = 100f // 최대값 100
                     setDrawLabels(false) // 점수 레이블 숨기기
                 }
 
@@ -180,14 +216,28 @@ fun RadarChartView(scores: List<Float>) {
     )
 }
 
+// 특수문자 이스케이프를 원래대로 되돌리는 함수
+fun unsanitizeText(text: String): String {
+    return text
+        .replace("\\n", "\n")  // 줄바꿈을 복원
+        .replace("\\r", "\r")  // 캐리지 리턴 복원
+        .replace("\\\\", "\\") // 백슬래시 복원
+        .replace("\\\"", "\"") // 큰따옴표 복원
+}
+
 // 면접 시간을 변환하기 위한 함수
 fun formatTime(time: String): String {
     return try {
-        // T를 공백으로 바꾸고 LocalDateTime으로 변환
-        val dateTime = LocalDateTime.parse(time.replace("T", " "))
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") // 원하는 형식
-        dateTime.format(formatter)
+        // 날짜 시간 포맷 설정
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+
+        // T를 공백으로 바꾼 뒤 포맷터를 사용해 변환
+        val dateTime = LocalDateTime.parse(time.replace("T", " "), formatter) // T를 공백으로 변환 후 포맷 적용
+
+        // 변환된 시간을 원하는 형식으로 포맷팅
+        dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
     } catch (e: Exception) {
+        println("Error parsing time: $e") // 에러 메시지 출력
         time // 변환에 실패하면 원래의 시간을 반환
     }
 }

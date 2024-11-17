@@ -13,6 +13,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import android.media.MediaPlayer
 import android.media.MediaRecorder
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.Session
 import com.google.gson.JsonParser
@@ -72,21 +74,68 @@ open class InterviewingScreenViewModel @Inject constructor(
     private val _state = MutableStateFlow("")
     val state = _state
 
+    private var isQuestionsFetched = false
+
+    // TTS 관련 멤버 변수 추가
+    private var mediaPlayer: MediaPlayer? = null
     private var mediaRecorder: MediaRecorder? = null
     private var audioFile: File? = null
 
-    init {
-        // AI 질문 생성 요청 (예시)
-        fetchQuestionsFromAI()
+    // 현재 화면에서 TTS 재개가 필요한지를 추적하는 변수
+    private val _shouldResumeTTS = MutableLiveData(false)
+    val shouldResumeTTS: LiveData<Boolean> get() = _shouldResumeTTS
+
+    // TTS 재개 필요 여부 설정
+    fun setShouldResumeTTS(shouldResume: Boolean) {
+        _shouldResumeTTS.value = shouldResume
     }
 
     fun restate() {
-        _index.value = 0
-        _reAnswerCnt.value = 1
-        _turn.value = false
-        _timer.value = -1
-        _timerActive.value = false
-        fetchQuestionsFromAI()
+        if (!isQuestionsFetched) { // 데이터를 한 번만 가져오도록 설정
+            _index.value = 0
+            _reAnswerCnt.value = 1
+            _turn.value = false
+            _timer.value = -1
+            _timerActive.value = false
+            fetchQuestionsFromAI()
+            isQuestionsFetched = true // 호출 완료 플래그 설정
+        }
+    }
+
+    // TTS 및 STT 중단 메서드
+    fun pauseOperations() {
+        Log.d("InterviewingScreenViewModel", "Paused: TTS and STT operations.")
+        // TTS 중단
+        mediaPlayer?.pause()
+
+        // STT 녹음 중단
+        if (_state.value == "STT") {
+            stopRecording()
+            Log.d("InterviewingScreenViewModel", "Paused: TTS and STT operations.")
+        }
+
+        _shouldResumeTTS.value = true // TTS를 재개해야 함을 표시
+    }
+
+    fun stopOperations() {
+        Log.d("InterviewingScreenViewModel", "Stopped: TTS and STT operations.")
+        // TTS 정지
+        mediaPlayer?.pause()
+
+        // STT 녹음 정지
+        if (_state.value == "STT") {
+            stopRecording()
+            Log.d("InterviewingScreenViewModel", "Stopped: TTS and STT operations.")
+        }
+    }
+
+    fun resumeOperations() {
+        Log.d("InterviewingScreenViewModel", "Resumed: TTS and STT operations. with ${_shouldResumeTTS.value}")
+        if (_shouldResumeTTS.value == true) {
+            mediaPlayer?.start() // TTS 재생 재개
+            _shouldResumeTTS.value = false
+            Log.d("InterviewingScreenViewModel", "Resumed: TTS operation.")
+        }
     }
 
     private fun fetchQuestionsFromAI() {
@@ -324,17 +373,10 @@ open class InterviewingScreenViewModel @Inject constructor(
             }
             mediaRecorder = null
             Log.d("InterviewingScreenViewModel", "Recording stopped.")
-
-            // 파일 존재 여부 확인
-            audioFile?.let { file ->
-                if (file.exists()) {
-                    Log.d("InterviewingScreenViewModel", "Recording file exists: ${file.absolutePath}")
-                } else {
-                    Log.d("InterviewingScreenViewModel", "Recording file does not exist.")
-                }
-            }
         } catch (e: Exception) {
             Log.e("InterviewingScreenViewModel", "Error stopping recording: ${e.message}")
+        } finally {
+            audioFile?.delete() // 불필요한 녹음 파일 삭제
         }
     }
 
@@ -459,7 +501,7 @@ open class InterviewingScreenViewModel @Inject constructor(
                         }
 
                         // MediaPlayer를 사용해 음성 파일 재생
-                        val mediaPlayer = MediaPlayer().apply {
+                        mediaPlayer = MediaPlayer().apply {
                             setDataSource(tempMp3.path)
                             prepare()
                             start()

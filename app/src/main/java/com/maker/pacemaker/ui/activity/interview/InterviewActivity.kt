@@ -65,7 +65,10 @@ class InterviewActivity : BaseActivity() {
 
             NavHost(navController as NavHostController, startDestination = "interviewStartScreen") {
                 composable("interviewStartScreen") { InterviewStartScreen(interviewStartScreenViewModel) }
-                composable("interviewingScreen") { InterviewingScreen(interviewingScreenViewModel) }
+                composable("interviewingScreen") {
+                    interviewingScreenViewModel.restate()
+                    InterviewingScreen(interviewingScreenViewModel)
+                }
                 composable("interviewResultScreen") {
                     interviewResultScreenViewModel.onRefresh()
                     InterviewResultScreen(interviewResultScreenViewModel)
@@ -74,19 +77,39 @@ class InterviewActivity : BaseActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        // InterviewingScreen에서 뒤로가기 작동 X
-        if (navController.currentDestination?.route == "interviewingScreen") {
-            Toast.makeText(this, "인터뷰 중에는 뒤로가기를 할 수 없습니다.", Toast.LENGTH_SHORT).show()
-        } else {
-            // 다른 화면에서는 기존의 뒤로 가기 동작을 처리
-            super.onBackPressed()
-        }
+    override fun onPause() {
+        super.onPause()
+        // TTS와 STT 관련 작업 중단
+        interviewingScreenViewModel.pauseOperations()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // TTS와 STT 관련 작업 중단
+        interviewingScreenViewModel.stopOperations()
     }
 
     override fun onResume() {
         super.onResume()
         baseViewModel.restate()
+
+        Log.d("InterviewActivity", "onResume: ${baseViewModel.screenNavigationTo.value?.screenType}")
+
+        //if (baseViewModel.screenNavigationTo.value?.screenType == ScreenType.INTERVIEWING) {
+            interviewingScreenViewModel.resumeOperations()
+            Log.d("InterviewActivity", "onResume: resumeOperations")
+        //}
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        // InterviewingScreen에서 뒤로가기 작동 X
+        if (navController.currentDestination?.route == "interviewingScreen") {
+            Toast.makeText(this, "인터뷰 중에는 뒤로가기를 할 수 없습니다.", Toast.LENGTH_SHORT).show()
+        } else {
+            // 다른 화면에서 뒤로가기 시 MainActivity로 이동
+            finish()
+        }
     }
 
     override fun navigateToActivity(activityType: ActivityType) {

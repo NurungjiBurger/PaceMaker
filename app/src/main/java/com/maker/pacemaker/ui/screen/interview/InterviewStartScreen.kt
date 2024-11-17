@@ -154,9 +154,8 @@ fun InterviewStartScreen(viewModel: InterviewStartScreenViewModel) {
                         .background(Color(0xFF14299F), shape = RoundedCornerShape(10.dp))
                         .padding(5.dp)
                         .clickable {
-                            viewModel.onSubmit()
-                            //if (text.length > 500) viewModel.onSubmit()
-                            //else viewModel.canNotSubmit()
+                            if (text.length > 350) viewModel.onSubmit()
+                            else viewModel.canNotSubmit()
                         },
                     contentAlignment = Alignment.Center
                 ){

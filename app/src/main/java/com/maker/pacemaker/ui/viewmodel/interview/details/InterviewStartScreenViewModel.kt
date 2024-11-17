@@ -53,7 +53,7 @@ open class InterviewStartScreenViewModel @Inject constructor(
 
 
     fun canNotSubmit() {
-        baseViewModel.triggerToast("${500 - interviewViewModel.text.value.length}자 더 입력해주세요.")
+        baseViewModel.triggerToast("최소 ${350 - interviewViewModel.text.value.length}자 더 입력해주세요.")
         baseViewModel.triggerVibration()
     }
 
