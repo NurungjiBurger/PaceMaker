@@ -288,12 +288,30 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                             },
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = "싸 맨 틀",
-                            color = if (allCSMantleSolved) Color(0xFFE2E2E2) else Color(0xFF1429A0),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = if (allCSMantleSolved) R.drawable.penciloff1 else R.drawable.pencil1),
+                                contentDescription = null,
+                                modifier = Modifier.size(55.dp)
+                            )
+                            Text(
+                                text = "싸 맨 틀",
+                                color = if (allCSMantleSolved) Color(0xFFE2E2E2) else Color(
+                                    0xFF1429A0
+                                ),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                            Image(
+                                painter = painterResource(id = if (allCSMantleSolved) R.drawable.penciloff2 else R.drawable.pencil2),
+                                contentDescription = null,
+                                modifier = Modifier.size(55.dp)
+                            )
+                        }
                     }
                 }
             }

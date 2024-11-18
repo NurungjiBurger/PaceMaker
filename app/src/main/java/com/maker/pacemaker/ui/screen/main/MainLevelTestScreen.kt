@@ -236,7 +236,7 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
             ConstraintLayout(
                 modifier = Modifier
                     .padding(20.dp)
-                    .background(color = Color(0xFFFAFAFA))
+                    .background(color = Color(0xFFDFE9FE))
                     .constrainAs(contentBox) {
                         top.linkTo(step.bottom, margin = 30.dp)
                         start.linkTo(parent.start)
