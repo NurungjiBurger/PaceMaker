@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -67,7 +68,7 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .constrainAs(dialog) {
-                    top.linkTo(parent.top, margin = 100.dp)
+                    top.linkTo(parent.top, margin = 60.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
@@ -80,32 +81,45 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .constrainAs(description) {
-                    top.linkTo(dialog.bottom, margin = 100.dp)
+                    top.linkTo(dialog.bottom, margin = 60.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
         )
 
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
+                //.height(screenHeight / 3  )
                 .constrainAs(contentBox) {
                     top.linkTo(description.bottom, margin = 50.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
+                    bottom.linkTo(selectBox.top)
                 }
         ) {
+            item{
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceAround
             ){
-                BoxCard(baseViewModel, 100.dp, 100.dp, "여유롭게", 20,"20개",  30, (dailySetting == "여유롭게"), onClick = { viewModel.selectDailySetting("여유롭게", 20) })
-                BoxCard(baseViewModel, 100.dp, 100.dp, "적당하게", 20,"30개", 30, (dailySetting == "적당하게"), onClick = { viewModel.selectDailySetting("적당하게", 30) })
-                BoxCard(baseViewModel, 100.dp, 100.dp, "열심히", 20,"50개", 30, (dailySetting == "열심히"), onClick = { viewModel.selectDailySetting("열심히", 50) })
-                BoxCard(baseViewModel, 100.dp, 100.dp, "열정적으로", 20,"100개", 30, (dailySetting == "열정적으로"), onClick = {viewModel.selectDailySetting("열정적으로", 100)})
+                BoxCard(baseViewModel, screenWidth/3, 100.dp, "여유롭게", 15,"20",  30, (dailySetting == "여유롭게"), onClick = { viewModel.selectDailySetting("여유롭게", 20) })
+                BoxCard(baseViewModel, screenWidth/3, 100.dp, "적당하게", 15,"30", 30, (dailySetting == "적당하게"), onClick = { viewModel.selectDailySetting("적당하게", 30) })
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround
+            ){
+                BoxCard(baseViewModel, screenWidth/3, 100.dp, "열심히", 15,"50", 30, (dailySetting == "열심히"), onClick = { viewModel.selectDailySetting("열심히", 50) })
+                BoxCard(baseViewModel, screenWidth/3, 100.dp, "열정적", 15,"100", 30, (dailySetting == "열정적으로"), onClick = {viewModel.selectDailySetting("열정적으로", 100)})
 
             }
 
@@ -115,17 +129,19 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                 modifier = Modifier
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.Center
             ) {
 
                 ConstraintLayout (
                     modifier = Modifier
-                        .width(200.dp)
+                        .width(screenWidth / 3 * 2)
                         .height(100.dp)
                         .background(Color(0xFFFAFAFA))
                         .border(
                             width = if (dailySetting == "나만의 목표") 3.dp else 1.dp, // 조건에 따라 테두리 두께 설정
-                            color = if (dailySetting == "나만의 목표") Color(0xFF1429A0) else Color(0xFF000000), // 조건에 따라 테두리 색상 설정
+                            color = if (dailySetting == "나만의 목표") Color(0xFF1429A0) else Color(
+                                0xFF000000
+                            ), // 조건에 따라 테두리 색상 설정
                             shape = RoundedCornerShape(10.dp) // 테두리 모양 설정
                         )
                         .clickable(
@@ -229,6 +245,7 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                 }
 
             }
+                }
         }
 
         Row(
@@ -236,9 +253,10 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                 .fillMaxWidth()
                 .padding(20.dp)
                 .constrainAs(selectBox) {
-                    top.linkTo(contentBox.bottom, margin = 10.dp)
+                    //top.linkTo(contentBox.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom, margin = 10.dp)
                 },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -248,7 +266,6 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                     .width(150.dp)
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
-                    .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
@@ -272,7 +289,6 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                     .width(150.dp)
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
-                    .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
