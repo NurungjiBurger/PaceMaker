@@ -151,6 +151,11 @@ class MainActivity : BaseActivity() {
             if (screenType == ScreenType.CSRANKING) {
                 popUpTo("csMantleScreen") { inclusive = true } // CSMantleScreen을 포함하여 제거
             }
+            else {
+                popUpTo(route) {
+                    inclusive = true // 포함하여 제거
+                }
+            }
             launchSingleTop = true
         }
     }

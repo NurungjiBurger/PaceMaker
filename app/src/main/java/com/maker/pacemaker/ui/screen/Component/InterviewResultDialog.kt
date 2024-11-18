@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -144,6 +145,7 @@ fun InterviewResultDialog(
                                 // 인터뷰 질문을 클릭하면 두 번째 다이얼로그 열기
                                 selectedInterview.value = interviews[index]
                             }
+                            Spacer(modifier = Modifier.height(8.dp))
                         }
                     }
                 }
@@ -245,13 +247,18 @@ fun formatTime(time: String): String {
 @Composable
 fun InterviewCard(index: Int, interview: Interview, onClick: () -> Unit) {
     // 인터뷰 카드 내용 표시, 클릭 시 onClick 호출
-    Text(
-        text = "질문 ${index + 1} : ${interview.question}",
-        fontSize = 15.sp,
+    Box(
         modifier = Modifier
-            .padding(8.dp)
-            .background(Color.White)
-            .clickable { onClick() })
+            .background(Color(0xFFDFE9FE), shape = RoundedCornerShape(8.dp))
+    ) {
+        Text(
+            text = "질문 ${index + 1} : ${interview.question}",
+            fontSize = 15.sp,
+            modifier = Modifier
+                .padding(8.dp)
+                .background(Color.Transparent)
+                .clickable { onClick() })
+    }
 }
 
 @Composable
