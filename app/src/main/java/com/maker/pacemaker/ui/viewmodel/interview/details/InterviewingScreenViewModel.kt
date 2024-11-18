@@ -378,7 +378,7 @@ open class InterviewingScreenViewModel @Inject constructor(
         } catch (e: Exception) {
             Log.e("InterviewingScreenViewModel", "Error stopping recording: ${e.message}")
         } finally {
-            audioFile?.delete() // 불필요한 녹음 파일 삭제
+            //audioFile?.delete() // 불필요한 녹음 파일 삭제
         }
     }
 
