@@ -322,7 +322,8 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
                 TextButton(onClick = { viewModel.hideModal() }) {
                     Text("확인")
                 }
-            }
+            },
+            containerColor = Color.White
         )
     }
 }
