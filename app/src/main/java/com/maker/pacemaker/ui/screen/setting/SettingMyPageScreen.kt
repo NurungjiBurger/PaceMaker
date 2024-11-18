@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -156,7 +157,7 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
             }
         }
 
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .background(Color(0xFFD9D9D9))
                 .fillMaxWidth()
@@ -165,24 +166,26 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
                     end.linkTo(parent.end)
                     top.linkTo(profileBox.bottom, margin = 30.dp)
                 },
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            NavCard(baseViewModel, "1일 학습 목표", user.daily_cnt.toString(), { baseViewModel.goScreen(ScreenType.DAILY) })
-            NavCard(baseViewModel, "퀴즈 카테고리", "", { baseViewModel.goScreen(ScreenType.CATEGORY) })
-            NavCard(baseViewModel, "복습 단어 비율", ratioMode, { })//baseViewModel.goScreen(ScreenType.RATIO) })
+            verticalArrangement = Arrangement.spacedBy(16.dp), // 각 항목 간 간격 추가
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            item {
+                NavCard(baseViewModel, "1일 학습 목표", user.daily_cnt.toString()) {
+                    baseViewModel.goScreen(ScreenType.DAILY)
+                }
+            }
+            item {
+                NavCard(baseViewModel, "퀴즈 카테고리", "") {
+                    baseViewModel.goScreen(ScreenType.CATEGORY)
+                }
+            }
+            item {
+                NavCard(baseViewModel, "복습 단어 비율", ratioMode) {
+                    baseViewModel.goScreen(ScreenType.RATIO)
+                }
+            }
         }
+
     }
 
-}
-
-@Composable
-@Preview
-fun MainMyPageScreenPreview() {
-
-//    val baseViewModel = DummyBaseViewModel()
-//    val mainViewModel = DummySettingBaseViewModel()
-//    val viewModel = DummyMainMyPageScreenViewModel()
-//
-//    SettingMyPageScreen(baseViewModel, mainViewModel, viewModel)
 }
