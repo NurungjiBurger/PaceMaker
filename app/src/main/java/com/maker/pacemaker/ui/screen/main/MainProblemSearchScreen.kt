@@ -120,7 +120,7 @@ fun MainProblemSearchScreen(viewModel: MainProblemSearchScreenViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFFFAFAFA))
+            .background(color = Color(0xFFDFE9FE))
     ) {
         val (upBar, searchBox, hashTagBox, contentBox) = createRefs()
 

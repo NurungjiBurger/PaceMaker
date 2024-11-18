@@ -61,7 +61,7 @@ fun InterviewingScreen(viewModel: InterviewingScreenViewModel) {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(0xFFFAFAFA))
+                .background(color = Color(0xFFDFE9FE))
         ){
             val (description, progress) = createRefs()
 
