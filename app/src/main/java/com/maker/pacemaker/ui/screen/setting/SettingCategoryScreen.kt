@@ -49,12 +49,12 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFFFAFAFA))
+            .background(color = Color(0xFFDFE9FE))
     ) {
         val (dialog, description, contentBox, selectBox) = createRefs()
 
         Text(
-            text = "문제를 풀 카테고리를\n선택해 보세요.",
+            text = "문제를 풀 카테고리를\n선택해 보세요",
             fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
@@ -89,10 +89,10 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                         .width(100.dp)
                         .height(100.dp)
                         .background(
-                            color = if (isSelected) Color(0xFF1429A0) else Color.White,
+                            color = Color.White,
                             shape = RoundedCornerShape(10.dp)
                         )
-                        .border(2.dp, if (isSelected) Color(0xFF1429A0) else Color.Black, RoundedCornerShape(10.dp))
+                        .border(2.dp, if (isSelected) Color(0xFF1429A0) else Color(0xFFD9D9D9) , RoundedCornerShape(10.dp))
                         .clickable {
                             viewModel.toggleCategorySelection(category.category_id)
                         },
@@ -100,7 +100,7 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                 ) {
                     Text(
                         text = category.name,
-                        color = if (isSelected) Color.White else Color.Black,
+                        color = if (isSelected) Color(0xFF1429A0) else Color(0xFFD9D9D9),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
@@ -126,7 +126,6 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                     .width(150.dp)
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
-                    .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
                     .clickable {
                         // 취소 클릭 시 아무 것도 저장하지 않음
                         baseViewModel.goScreen(ScreenType.MYPAGE)
@@ -146,7 +145,6 @@ fun SettingCategoryScreen(viewModel: SettingCategoryScreenViewModel) {
                     .width(150.dp)
                     .height(50.dp)
                     .background(Color(0xFF1429A0), shape = RoundedCornerShape(50.dp))
-                    .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(50.dp))
                     .clickable {
                         // 선택된 카테고리 서버에 저장
                         viewModel.completeSelection()
