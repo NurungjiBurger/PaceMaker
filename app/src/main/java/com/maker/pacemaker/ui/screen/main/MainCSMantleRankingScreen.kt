@@ -27,6 +27,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,27 +53,35 @@ fun MainCSMantleRankingScreen(viewModel: MainCSMantleRankingScreenViewModel) {
 
     if (solvedDialog) {
         AlertDialog(
-            onDismissRequest = { solvedDialog = false },
+            onDismissRequest = {
+                solvedDialog = false
+            },
             title = {
                 Text(
-                    text = "오늘의 문제는 모두 풀었어요.",
+                    text = "오늘의 문제는 이미 맞췄어요.",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
             },
             text = {
                 Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Icon(
-                        painter = painterResource(id = R.drawable.done),
+                        painter = painterResource(id = R.drawable.done), // 엄지 척 아이콘 리소스
                         contentDescription = "Thumb Up",
                         tint = Color(0xFFFFCC00),
-                        modifier = Modifier.size(64.dp).clip(CircleShape)
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape)
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -80,13 +89,17 @@ fun MainCSMantleRankingScreen(viewModel: MainCSMantleRankingScreenViewModel) {
                     Text(
                         text = "문제는 한국 표준(KST) 기준 자정에 바뀝니다.",
                         fontSize = 14.sp,
-                        color = Color.Gray
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             },
             confirmButton = {
                 TextButton(
-                    onClick = { solvedDialog = false },
+                    onClick = {
+                        solvedDialog = false
+                    },
                 ) {
                     Text("닫기", color = Color.Black)
                 }
