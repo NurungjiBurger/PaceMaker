@@ -59,7 +59,7 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
             .fillMaxSize()
             .background(color = Color(0xFF14299F))
         ) {
-        val (leftBar, exitButton, navBox, settingButton) = createRefs()
+        val (leftBar, navBox, settingButton) = createRefs()
 
         Box(
            modifier = Modifier
@@ -72,21 +72,6 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
                    top.linkTo(parent.top)
                    bottom.linkTo(parent.bottom)
                }
-        )
-
-        Image(
-            painter = painterResource(id = R.drawable.exit),
-            contentDescription = "Exit",
-            modifier = Modifier
-                .size(30.dp)
-                .constrainAs(exitButton) {
-                    end.linkTo(parent.end, margin = 20.dp)
-                    top.linkTo(parent.top, margin = 20.dp)
-                }
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
-                ) { baseViewModel.goScreen(ScreenType.MAIN) }
         )
 
         Column(
@@ -140,6 +125,10 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
 
         Row(
             modifier = Modifier
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) { baseViewModel.goActivity(ActivityType.SETTING) }
                 .constrainAs(settingButton) {
                     start.linkTo(leftBar.start, margin = 20.dp)
                     bottom.linkTo(leftBar.bottom, margin = 20.dp)
@@ -169,15 +158,4 @@ fun MainMenuScreen(viewModel: MainMenuScreenViewModel) {
         }
 
     }
-}
-
-@Composable
-@Preview
-fun MainMenuScreenPreview() {
-
-//    val baseViewModel = DummyBaseViewModel()
-//    val mainViewModel = DummyMainBaseViewModel()
-//    val viewModel = DummyMainMenuScreenViewModel()
-//
-//    MainMenuScreen(baseViewModel, mainViewModel, viewModel)
 }

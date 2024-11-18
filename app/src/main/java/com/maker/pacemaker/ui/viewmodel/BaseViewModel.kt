@@ -5,6 +5,8 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
@@ -112,7 +114,6 @@ open class BaseViewModel @Inject constructor(
 
     // allQuizSolved 값을 SharedPreferences에서 불러오는 함수
     private fun loadAllQuizSolved(): Boolean {
-        Log.d("loadAllQuizSolved", sharedPreferences.getBoolean("allQuizSolved", false).toString())
         return sharedPreferences.getBoolean("allQuizSolved", false)
     }
 
@@ -207,8 +208,14 @@ open class BaseViewModel @Inject constructor(
         _screenNavigationTo.value = ScreenNavigationTo(screen)
     }
 
-    fun triggerToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    // time 설정 안하면 2초동안 화면에 표시
+    fun triggerToast(message: String, time: Long = 2000) {
+        val toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
+        toast.show()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            toast.cancel()
+        }, time)
     }
 
     fun sendFCMTokenToServer(userId: String, fcmToken: String) {

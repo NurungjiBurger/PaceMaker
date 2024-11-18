@@ -70,13 +70,6 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
     val showModal by viewModel.showModal.collectAsState()
     val submitedWords by viewModel.submitedWords.collectAsState()
 
-    // 유사도
-    val similarity = 55.55
-    LaunchedEffect(Unit) {
-        baseViewModel.setCSMantleSolved(false)
-
-    }
-
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -181,7 +174,6 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
                 ),
                 keyboardActions = KeyboardActions(
                     onNext = {
-                        //keyboardController?.hide() // 키패드 숨기기
                         viewModel.onSearchButtonClicked()
                     }
                 )
@@ -330,7 +322,8 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
                 TextButton(onClick = { viewModel.hideModal() }) {
                     Text("확인")
                 }
-            }
+            },
+            containerColor = Color.White
         )
     }
 }

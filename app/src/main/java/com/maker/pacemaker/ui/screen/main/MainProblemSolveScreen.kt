@@ -112,11 +112,15 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                     text = "오늘의 문제는 모두 풀었어요.",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
             },
             text = {
                 Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -136,7 +140,9 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                     Text(
                         text = "문제는 한국 표준(KST) 기준 자정에 바뀝니다.",
                         fontSize = 14.sp,
-                        color = Color.Gray
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             },
