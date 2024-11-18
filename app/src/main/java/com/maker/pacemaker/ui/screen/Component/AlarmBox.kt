@@ -83,86 +83,91 @@ fun AlarmBox(
                     .padding(start = 10.dp, end = 10.dp, top = 0.dp, bottom = 0.dp)
                     .background(Color(0xFFFAFAFA))
             ) {
-                Column(modifier = Modifier.fillMaxWidth()) {
+                val (upBorder, icon, title, contents, date, downBorder) = createRefs()
 
-                    Box(
-                        modifier = Modifier
-                            .background(color = Color(0xFFDFDFDF))
-                            .fillMaxWidth()
-                            .height(3.dp)
-                    )
+                Box(
+                    modifier = Modifier
+                        .background(color = Color(0xFFDFDFDF))
+                        .fillMaxWidth()
+                        .height(3.dp)
+                        .constrainAs(upBorder) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                )
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 20.dp, end = 20.dp, top = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painter = painterResource(
-                                id = when {
-                                    alarmType.contains("학습") -> R.drawable.alarmicon
-                                    alarmType.contains("공지") -> R.drawable.noticeicon
-                                    alarmType.contains("경험치") -> R.drawable.expicon
-                                    alarmType.contains("친구") -> R.drawable.followicon
-                                    else -> R.drawable.checkicon
-                                }
-                            ),
-                            contentDescription = "alarm",
-                            modifier = Modifier.size(20.dp)
-                        )
+                Image(
+                    painter = painterResource(
+                        id = when {
+                            alarmType.contains("학습") -> R.drawable.alarmicon
+                            alarmType.contains("공지") -> R.drawable.noticeicon
+                            alarmType.contains("경험치") -> R.drawable.expicon
+                            alarmType.contains("친구") -> R.drawable.followicon
+                            else -> R.drawable.checkicon
+                        }
+                    ),
+                    contentDescription = "alarm",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .constrainAs(icon) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start, margin = 10.dp)
+                            bottom.linkTo(parent.bottom)
+                        }
+                )
 
-                        Spacer(modifier = Modifier.size(3.dp))
+                Text(
+                    text = alarmType,
+                    fontSize = 15.sp,
+                    modifier = Modifier
+                        .constrainAs(title) {
+                            top.linkTo(upBorder.bottom, margin = 5.dp)
+                            start.linkTo(icon.end, margin = 10.dp)
+                        },
+                    fontWeight = FontWeight.Bold
+                )
 
-                        Text(
-                            text = alarmType,
-                            modifier = Modifier.padding(start = 10.dp),
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                Text(
+                    text = content,
+                    fontSize = 15.sp,
+                    modifier = Modifier
+                        .constrainAs(contents) {
+                            top.linkTo(title.bottom, margin = 5.dp)
+                            start.linkTo(icon.end, margin = 10.dp)
+                            bottom.linkTo(date.top, margin = 5.dp)
+                        }
+                )
 
-                    Text(
-                        text = content,
-                        fontSize = 15.sp,
-                        modifier = Modifier.padding(start = 20.dp)
-                    )
+                Text(
+                    text = formatDateTime(dateTime),
+                    fontSize = 10.sp,
+                    modifier = Modifier
+                        .background(Color.White)
+                        .constrainAs(date) {
+                            top.linkTo(contents.bottom, margin = 5.dp)
+                            start.linkTo(icon.end, margin = 10.dp)
+                            bottom.linkTo(downBorder.top, margin = 5.dp)
+                        }
+                )
 
-                    Text(
-                        text = formatDateTime(dateTime),
-                        fontSize = 10.sp,
-                        modifier = Modifier
-                            .padding(start = 20.dp, top = 5.dp)
-                            .background(Color.White)
-                    )
-
-                    // 마지막 아이템은 아래쪽 추가
+                // 마지막 아이템은 아래쪽 추가
+                if (type) {
                     Box(
                         modifier = Modifier
                             .background(color = if (type) Color(0xFFDFDFDF) else Color.Transparent)
                             .fillMaxWidth()
                             .height(3.dp)
+                            .constrainAs(downBorder) {
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom)
+                            }
                     )
                 }
             }
         }
     )
-}
-
-@Composable
-@Preview
-fun PreviewAlarmBox() {
-    // Dummy ViewModel을 사용한 미리보기
-//    val baseViewModel = DummyMainBaseViewModel()
-//
-//    AlarmBox(
-//        baseViewModel = baseViewModel,
-//        alarmId = 1L,
-//        alarmType = "공지",
-//        content = "새로운 공지가 있습니다.",
-//        dateTime = "2024-10-24 12:00:00",
-//        type = false,
-//        onDismiss = { /* 삭제 처리 로직 */ }
-//    )
 }
 
 fun formatDateTime(dateTime: String): String {
