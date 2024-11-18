@@ -60,7 +60,7 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFFFAFAFA))
+            .background(color = Color(0xFFDFE9FE))
     ) {
         val (upBar, divider, profileBox, contentBox) = createRefs()
 
@@ -159,13 +159,36 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
 
         LazyColumn(
             modifier = Modifier
-                .background(Color(0xFFD9D9D9))
+                .background(Color.Transparent)
                 .fillMaxWidth()
                 .constrainAs(contentBox) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     top.linkTo(profileBox.bottom, margin = 30.dp)
                 },
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            item {
+                NavCard(
+                    baseViewModel,
+                    "1일 학습 목표",
+                    user.daily_cnt.toString(),
+                    { baseViewModel.goScreen(ScreenType.DAILY) })
+            }
+            item {
+                NavCard(
+                    baseViewModel,
+                    "퀴즈 카테고리",
+                    "",
+                    { baseViewModel.goScreen(ScreenType.CATEGORY) })
+            }
+            item {
+                NavCard(
+                    baseViewModel,
+                    "복습 단어 비율",
+                    ratioMode,
+                    { baseViewModel.goScreen(ScreenType.RATIO) })
             verticalArrangement = Arrangement.spacedBy(16.dp), // 각 항목 간 간격 추가
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -185,7 +208,5 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
                 }
             }
         }
-
     }
-
 }

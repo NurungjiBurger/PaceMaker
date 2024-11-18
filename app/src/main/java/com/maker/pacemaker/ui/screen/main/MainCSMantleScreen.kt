@@ -73,7 +73,7 @@ fun MainCSMantleScreen(viewModel: MainCSMantleScreenViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFFFAFAFA))
+            .background(color = Color(0xFFDFE9FE))
     ) {
         val (upBar, divider, description, searchBox, contentDescription, contentBoxBorder, contentBox) = createRefs()
 
