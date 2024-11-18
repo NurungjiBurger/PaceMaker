@@ -240,7 +240,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                             .height(120.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .background(Color(0xFFDFE9FE))
-                            .clickable { baseViewModel.goScreen(ScreenType.LAB) },
+                            .clickable { baseViewModel.goActivity(ActivityType.INTERVIEW) },
                         contentAlignment = Alignment.Center
 
                     ) {
