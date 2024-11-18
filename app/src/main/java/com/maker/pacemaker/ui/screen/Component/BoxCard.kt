@@ -42,7 +42,7 @@ fun BoxCard(
         modifier = Modifier
             .width(width)
             .height(height)
-            .background(Color(0xFFFAFAFA))
+            .background(Color(0xFFFAFAFA), RoundedCornerShape(10.dp))
             .border(
                 width = if (isSelect) 3.dp else 1.dp, // 조건에 따라 테두리 두께 설정
                 color = if (isSelect) Color(0xFF1429A0) else Color(0xFF000000), // 조건에 따라 테두리 색상 설정

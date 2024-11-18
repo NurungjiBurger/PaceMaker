@@ -281,6 +281,7 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent
                     ),
+                    shape = RoundedCornerShape(10.dp),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Next
                     ),

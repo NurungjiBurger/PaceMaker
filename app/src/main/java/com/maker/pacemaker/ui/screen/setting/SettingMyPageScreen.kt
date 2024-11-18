@@ -165,6 +165,7 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     top.linkTo(profileBox.bottom, margin = 30.dp)
+                    bottom.linkTo(parent.bottom)
                 },
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally

@@ -136,7 +136,7 @@ fun SettingDailyScreen(viewModel: SettingDailyScreenViewModel) {
                     modifier = Modifier
                         .width(screenWidth / 3 * 2)
                         .height(100.dp)
-                        .background(Color(0xFFFAFAFA))
+                        .background(Color(0xFFFAFAFA), RoundedCornerShape(10.dp))
                         .border(
                             width = if (dailySetting == "나만의 목표") 3.dp else 1.dp, // 조건에 따라 테두리 두께 설정
                             color = if (dailySetting == "나만의 목표") Color(0xFF1429A0) else Color(

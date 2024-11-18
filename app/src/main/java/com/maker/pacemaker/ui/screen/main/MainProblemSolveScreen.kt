@@ -484,6 +484,7 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent
                     ),
+                    shape = RoundedCornerShape(10.dp),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Next
                     ),
@@ -518,8 +519,6 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                     )
                 }
 
-                Log.d("MainProblemSolveScreen", "wrongCnt: $wrongCnt")
-
                 Box(
                     modifier = Modifier
                         .width(100.dp)
@@ -544,8 +543,6 @@ fun MainProblemSolveScreen(viewModel: MainProblemSolveScreenViewModel) {
                         color = Color.White
                     )
                 }
-
-
             }
 
             LazyColumn(

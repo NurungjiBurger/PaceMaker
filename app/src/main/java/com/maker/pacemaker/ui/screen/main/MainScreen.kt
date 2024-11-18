@@ -107,7 +107,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                     .fillMaxWidth(0.9f) // 너비를 90%로 설정
                     .height(60.dp)
                     .constrainAs(upBar) {
-                        top.linkTo(parent.top)
+                        top.linkTo(parent.top, margin = 20.dp)
                         start.linkTo(parent.start) // 수평 중앙에 배치
                         end.linkTo(parent.end)
                     }
