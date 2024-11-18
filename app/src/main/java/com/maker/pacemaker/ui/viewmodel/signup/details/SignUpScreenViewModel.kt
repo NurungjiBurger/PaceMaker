@@ -1,5 +1,7 @@
 package com.maker.pacemaker.ui.viewmodel.signup.details
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,17 +13,21 @@ import com.maker.pacemaker.MyApplication
 import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.ui.viewmodel.signup.SignUpBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+
+
 //import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
 
 @HiltViewModel
 open class SignUpScreenViewModel @Inject constructor(
     private val base: SignUpBaseViewModel,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     val baseViewModel = base.baseViewModel
@@ -36,6 +42,9 @@ open class SignUpScreenViewModel @Inject constructor(
     private val _registrationResult = MutableLiveData<String>()
     private val _isLoggedIn = MutableLiveData<Boolean>() // 로그인 상태 LiveData
     val registrationResult: LiveData<String> get() = _registrationResult
+
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+    //private val sharedPreferences: SharedPreferences = MyApplication.context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 
     fun enrollUserToServer(email: String, password: String, nickName: String) {
         // 서버에 유저 등록하기
@@ -55,6 +64,30 @@ open class SignUpScreenViewModel @Inject constructor(
             }
         }
     }
+
+    fun Anonymous() {
+        val auth = FirebaseAuth.getInstance()
+
+        auth.signInAnonymously()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
+                        if (tokenTask.isSuccessful) {
+                            val idToken = tokenTask.result?.token
+                            sharedPreferences.edit().putString("idToken", idToken).apply()
+                            Log.d("AnonymousAuth", "ID Token: $idToken")
+                            _registrationResult.value = "이메일 인증 완료."
+                        } else {
+                            Log.e("AnonymousAuth", "ID Token 획득 실패: ${tokenTask.exception?.message}")
+                        }
+                    }
+                } else {
+                    Log.e("AnonymousAuth", "익명 인증 실패: ${task.exception?.message}")
+                }
+            }
+    }
+
 
     private fun loginUser(email: String, password: String) {
         viewModelScope.launch {
@@ -106,6 +139,7 @@ open class SignUpScreenViewModel @Inject constructor(
                                 _registrationResult.value = "메일 전송 실패"
                             }
                         }
+
                 } else {
                     baseViewModel.triggerToast("회원가입 실패")
                     _registrationResult.value = "회원가입 실패"
@@ -127,6 +161,7 @@ open class SignUpScreenViewModel @Inject constructor(
                         saveUserDataToDatabase()
                         baseViewModel.triggerToast("이메일 인증 완료. 회원가입에 성공하였습니다.")
                         _registrationResult.value = "이메일 인증 완료."
+                        //Anonymous()
                         handler.removeCallbacks(this) // 반복 중지
                     } else {
                         // 이메일 인증이 완료되지 않은 경우 일정 시간 후 다시 확인

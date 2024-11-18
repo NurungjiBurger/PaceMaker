@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -57,16 +59,16 @@ fun UserCard(
         "level_$correctedLevel", "drawable", context.packageName
     )
 
-    ConstraintLayout(
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
-            .width(width)
-            .height(height)
-            .background(if (followToggle != null) Color.White else Color(0xFFFAFAFA))
-            .border(
-                width = 1.dp,
-                color = if (followToggle != null) Color.Transparent else Color(0xFF000000),
-                shape = RoundedCornerShape(10.dp)
-            )
+            .fillMaxWidth()
+            //padding(horizontal = 16.dp, vertical = 8.dp)
+            //.background(color = Color(0xFFDFE9FE), shape = RoundedCornerShape(15.dp))
+            .padding(12.dp)
+            //.width(250.dp)
             .clickable(
                 onClick = onClick,
                 interactionSource = remember { MutableInteractionSource() },
@@ -74,50 +76,38 @@ fun UserCard(
             )
     ) {
 
-        val (infoBox, image) = createRefs()
 
-        Column(
+        Text(
+            text = user.nickname,
+            fontSize = 18.sp,
+            maxLines = 1,
+            softWrap = true,
+            color = Color.Black,
             modifier = Modifier
-                .constrainAs(infoBox) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(image.start)
-                    bottom.linkTo(parent.bottom)
-                }
-        ){
-            Text(
-                text = user.nickname,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(10.dp)
-            )
-//"${user.followers} followers",
-            Text(
-                text = "followers",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Normal,
-                color = Color.Gray,
-                modifier = Modifier
-                    .padding(10.dp)
-            )
-        }
-
-        Image(
-            painter = painterResource(id = resourceId),
-            contentDescription = null,
-            modifier = Modifier
-                .width(width/2)
-                .height(height)
-                .padding(10.dp)
-                .constrainAs(image) {
-                    top.linkTo(parent.top)
-                    start.linkTo(infoBox.end)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                }
+                .weight(1f)
+                .padding(start = 60.dp)
         )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(end = 10.dp)
+        ) {
+            Text(
+                text = "${user.exp}xp",
+                fontSize = 18.sp,
+                color = Color.Black,
+                modifier = Modifier
+                    .padding(start = 80.dp)
+            )
+            Image(
+                painter = painterResource(id = resourceId),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(25.dp)
+                    //.padding(10.dp)
+            )
+
+        }
     }
-
-
 }
