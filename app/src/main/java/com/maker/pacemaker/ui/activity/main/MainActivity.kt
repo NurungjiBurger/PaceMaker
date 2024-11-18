@@ -147,8 +147,9 @@ class MainActivity : BaseActivity() {
         }
 
         navController.navigate(route) {
-            popUpTo(route) {
-                inclusive = true // 포함하여 제거
+            // 기존 페이지는 스택에서 제외하고 바로 이동
+            if (screenType == ScreenType.CSRANKING) {
+                popUpTo("csMantleScreen") { inclusive = true } // CSMantleScreen을 포함하여 제거
             }
             launchSingleTop = true
         }

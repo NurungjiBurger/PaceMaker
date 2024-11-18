@@ -49,6 +49,7 @@ import com.maker.pacemaker.ui.viewmodel.main.MainBaseViewModel
 import com.maker.pacemaker.ui.viewmodel.main.details.MainScreenViewModel
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.maker.pacemaker.R
+import com.maker.pacemaker.data.model.ActivityType
 import com.maker.pacemaker.ui.screen.Component.BottomNavBar
 import com.maker.pacemaker.ui.screen.Component.Loading
 import com.maker.pacemaker.ui.screen.Component.Logo
@@ -231,6 +232,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                 }
 
                 // "CS 면접" Box
+
                 item {
                     Box(
                         modifier = Modifier
@@ -240,6 +242,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                             .background(Color(0xFFDFE9FE))
                             .clickable { baseViewModel.goScreen(ScreenType.LAB) },
                         contentAlignment = Alignment.Center
+
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
