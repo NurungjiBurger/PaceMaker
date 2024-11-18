@@ -189,23 +189,6 @@ fun SettingMyPageScreen(viewModel: SettingMyPageScreenViewModel) {
                     "복습 단어 비율",
                     ratioMode,
                     { baseViewModel.goScreen(ScreenType.RATIO) })
-            verticalArrangement = Arrangement.spacedBy(16.dp), // 각 항목 간 간격 추가
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
-                NavCard(baseViewModel, "1일 학습 목표", user.daily_cnt.toString()) {
-                    baseViewModel.goScreen(ScreenType.DAILY)
-                }
-            }
-            item {
-                NavCard(baseViewModel, "퀴즈 카테고리", "") {
-                    baseViewModel.goScreen(ScreenType.CATEGORY)
-                }
-            }
-            item {
-                NavCard(baseViewModel, "복습 단어 비율", ratioMode) {
-                    baseViewModel.goScreen(ScreenType.RATIO)
-                }
             }
         }
     }

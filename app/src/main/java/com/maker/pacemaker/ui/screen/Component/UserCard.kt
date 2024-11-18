@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,7 @@ import com.maker.pacemaker.ui.viewmodel.BaseViewModel
 
 @Composable
 fun UserCard(
+    index: Int,
     baseViewModel: BaseViewModel,
     width: Dp,
     height: Dp,
@@ -65,17 +67,22 @@ fun UserCard(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
-            //padding(horizontal = 16.dp, vertical = 8.dp)
-            //.background(color = Color(0xFFDFE9FE), shape = RoundedCornerShape(15.dp))
             .padding(12.dp)
-            //.width(250.dp)
             .clickable(
                 onClick = onClick,
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             )
     ) {
-
+        Text(
+            text = "${index}",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.ExtraBold, // 최대한 굵게 설정
+            fontStyle = FontStyle.Italic,
+            color = Color.Black,
+            modifier = Modifier
+                .padding(start = 15.dp, top = 8.dp)
+        )
 
         Text(
             text = user.nickname,
@@ -83,31 +90,20 @@ fun UserCard(
             maxLines = 1,
             softWrap = true,
             color = Color.Black,
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = 60.dp)
         )
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .padding(end = 10.dp)
-        ) {
-            Text(
-                text = "${user.exp}xp",
-                fontSize = 18.sp,
-                color = Color.Black,
-                modifier = Modifier
-                    .padding(start = 80.dp)
-            )
-            Image(
-                painter = painterResource(id = resourceId),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(25.dp)
-                    //.padding(10.dp)
-            )
+        Text(
+            text = "${user.exp}xp",
+            fontSize = 18.sp,
+            color = Color.Black,
+        )
 
-        }
+        Image(
+            painter = painterResource(id = resourceId),
+            contentDescription = null,
+            modifier = Modifier
+                .size(50.dp)
+                .padding(end = 15.dp)
+        )
     }
 }

@@ -53,7 +53,7 @@ fun SettingRatioScreen(viewModel: SettingRatioScreenViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFFFAFAFA))
+            .background(color = Color(0xFFDFE9FE))
     ) {
         // 레이아웃 구현
         val (dialog, contentBox, selectBox) = createRefs()

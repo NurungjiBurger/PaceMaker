@@ -98,6 +98,12 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
                 fontWeight = FontWeight.SemiBold,
                 color = Color.Gray
             )
+            Text(
+                text = "레벨",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.Gray
+            )
         }
 
         // 사용자 랭킹 리스트
@@ -116,18 +122,8 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
                 }
         ) {
             itemsIndexed(userList) { index, user ->
-                Row {
-                    Text(
-                        text = "${index + 1}",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.ExtraBold, // 최대한 굵게 설정
-                        fontStyle = FontStyle.Italic,
-                        //fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                        modifier = Modifier
-                            .padding(start = 15.dp, top = 8.dp)
-                    )
                     UserCard(
+                        index + 1,
                         baseViewModel,
                         userCardWidth,
                         userCardHeight,
@@ -137,7 +133,6 @@ fun MainRankingScreen(viewModel: MainRankingScreenViewModel) {
                             showDialog = true
                         }
                     )
-                }
             }
         }
     }

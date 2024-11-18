@@ -37,13 +37,6 @@ fun InterviewResultScreen(viewModel: InterviewResultScreenViewModel) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color(0xFFDFE9FE))
-    ) {
-        val (upBar, divider, contentBox) = createRefs()
-        
     val interviewing by interviewViewModel.interviewing.collectAsState()
     val interviewResults by viewModel.interviewResults.collectAsState()
     val interviews by viewModel.interviews.collectAsState()
@@ -56,7 +49,7 @@ fun InterviewResultScreen(viewModel: InterviewResultScreenViewModel) {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(0xFFFAFAFA))
+                .background(color = Color(0xFFDFE9FE))
         ) {
             val (description, progress) = createRefs()
 
@@ -88,7 +81,7 @@ fun InterviewResultScreen(viewModel: InterviewResultScreenViewModel) {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(0xFFFAFAFA))
+                .background(color = Color(0xFFDFE9FE))
         ) {
             val (upBar, divider, contentBox) = createRefs()
 
@@ -158,3 +151,4 @@ fun InterviewResultScreen(viewModel: InterviewResultScreenViewModel) {
         }
     }
 }
+
