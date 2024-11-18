@@ -146,7 +146,7 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = ment,
+                    text = ment ?: "테스트를 완료했습니다!",
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -202,27 +202,34 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                // 문제 수만큼 동그라미 표시
-                testProblems.forEachIndexed { index, _ ->
-                    Box(
-                        modifier = Modifier
-                            .width(50.dp)
-                            .height(50.dp)
-                            .background(
-                                if (circleStates.value[index] == 0) Color.White
-                                else if (circleStates.value[index] == 1) Color.Green
-                                else Color.Red,
-                                shape = RoundedCornerShape(50.dp)
-                            )
-                            .border(
-                                1.dp,
-                                if (circleStates.value[index] == 0) Color.Black
-                                else if (circleStates.value[index] == 1) Color.Green
-                                else Color.Red,
-                                shape = RoundedCornerShape(50.dp)
-                            )
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
+                if (testProblems.size == circleStates.value.size) {
+                    testProblems.forEachIndexed { index, _ ->
+                        Box(
+                            modifier = Modifier
+                                .width(50.dp)
+                                .height(50.dp)
+                                .background(
+                                    when (circleStates.value[index]) {
+                                        0 -> Color.White
+                                        1 -> Color.Green
+                                        else -> Color.Red
+                                    },
+                                    shape = RoundedCornerShape(50.dp)
+                                )
+                                .border(
+                                    1.dp,
+                                    when (circleStates.value[index]) {
+                                        0 -> Color.Black
+                                        1 -> Color.Green
+                                        else -> Color.Red
+                                    },
+                                    shape = RoundedCornerShape(50.dp)
+                                )
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                    }
+                } else {
+                    Log.e("MainLevelTestScreen", "Mismatch between testProblems and circleStates sizes.")
                 }
             }
 
@@ -239,16 +246,20 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
                 val (problemPart, answerPart, skipButton, submitButton) = createRefs()
 
                 if (!testProblems.isEmpty()) {
-                    Text(
-                        text = testProblems[nowProblemIndex.value].description,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.constrainAs(problemPart) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }
-                    )
+                    if (nowProblemIndex.value in testProblems.indices) {
+                        Text(
+                            text = testProblems[nowProblemIndex.value].description,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.constrainAs(problemPart) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                            }
+                        )
+                    } else {
+                        Log.e("MainLevelTestScreen", "Invalid problem index: ${nowProblemIndex.value}")
+                    }
                 }
 
                 TextField(
@@ -303,8 +314,6 @@ fun MainLevelTestScreen(viewModel: MainLevelTestScreenViewModel) {
                         color = Color.White
                     )
                 }
-
-                Log.d("MainProblemSolveScreen", "wrongCnt: $wrongCnt")
 
                 Box(
                     modifier = Modifier
