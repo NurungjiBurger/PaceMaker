@@ -243,7 +243,7 @@ private fun checkIfEmailVerifiedPeriodically() {
 
 ### 아키텍처
 
-![아키텍처](/images/pacemaker-아키텍처.PNG)
+![아키텍처](images/pacemaker-아키텍처.png)
 
 ### 흐름도
 
